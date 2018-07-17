@@ -3,7 +3,11 @@ guid: 52b1c12e4d8a85b49acb03bd983747c7
 MonoImporter:
   externalObjects: {}
   serializedVersion: 2
-  defaultReferences: []
+  defaultReferences:
+  - RedCard: {fileID: 1738134320104072, guid: 5f4bac6a202b14147aa178ffe29f096b, type: 2}
+  - GreenCard: {fileID: 1486826579885564, guid: 4ddebdd0b49e7494eb0da3a12ddbb496,
+      type: 2}
+  - BlueCard: {fileID: 1796448811167096, guid: f45402ed4882a954bb059bf3ddee79c1, type: 2}
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 
