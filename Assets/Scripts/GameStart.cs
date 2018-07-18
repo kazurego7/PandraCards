@@ -3,20 +3,26 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using CardRacipe = System.Tuple<System.String, System.Int32>;
 
 public class GameStart : MonoBehaviour {
-	[SerializeField] GameObject emptyCard;
-
-	public class FieldDeck {
+	class CardRacipe : Tuple<String, Int32> {
+		public String Name { get; }
+		public Int32 Number { get; }
+		public CardRacipe (String name, Int32 number) : base (name, number) {
+			Name = name;
+			Number = number;
+		}
+	}
+	class FieldDeck {
 		IList<GameObject> holder = new List<GameObject> ();
 		GameObject emptyCard;
-		public FieldDeck (IList<Tuple<GameObject, Int32>> cardObjAndNums) {
+		public FieldDeck (IList<CardRacipe> cardRacipes) {
 			var cards = new List<GameObject> ();
-			foreach (var cardAndNum in cardObjAndNums) {
-				var card = cardAndNum.Item1;
-				var num = cardAndNum.Item2;
-				foreach (var item in new int[num]) {
-					cards.Add (Instantiate (card));
+			foreach (var cardRacipe in cardRacipes) {
+				var cardObj = Resources.Load<GameObject> ("Prefabs/Cards/" + cardRacipe.Name);
+				foreach (var item in new int[cardRacipe.Number]) {
+					cards.Add (Instantiate (cardObj));
 				}
 			}
 			holder = cards;
@@ -42,21 +48,23 @@ public class GameStart : MonoBehaviour {
 		}
 	}
 
-	FieldDeck myDeck;
+	FieldDeck yourDeck;
+	FieldDeck opponentDeck;
+
+	FieldDeck DeckInit () {
+
+		var cardAndNums = new List<CardRacipe> () {
+			new CardRacipe ("redCard", 10),
+				new CardRacipe ("blueCard", 10),
+				new CardRacipe ("greenCard", 10)
+		};
+		return new FieldDeck (cardAndNums);
+	}
 
 	// Use this for initialization
 	void Start () {
-		var redCard = Resources.Load<GameObject> ("Prefabs/Cards/RedCard");
-		var blueCard = Resources.Load<GameObject> ("Prefabs/Cards/BlueCard");
-		var greenCard = Resources.Load<GameObject> ("Prefabs/Cards/GreenCard");
-
-		var cardAndNums = new List<Tuple<GameObject, Int32>> () {
-				new Tuple<GameObject, Int32> (redCard, 10),
-					new Tuple<GameObject, Int32> (blueCard, 10),
-					new Tuple<GameObject, Int32> (greenCard, 10)
-			};
-		var myDeck = new FieldDeck (cardAndNums);
-		Debug.Log (myDeck.TopDraw ());
+		yourDeck = DeckInit ();
+		opponentDeck = DeckInit ();
 	}
 
 	// Update is called once per frame
