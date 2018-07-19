@@ -20,6 +20,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4697797707041864}
   - component: {fileID: 212255179493981894}
+  - component: {fileID: 114176834175155830}
   m_Layer: 19
   m_Name: NonColorCard
   m_TagString: Untagged
@@ -40,6 +41,17 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &114176834175155830
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1945361302396188}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a4e25d6383a3bb0419e3f291cb871b6f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!212 &212255179493981894
 SpriteRenderer:
   m_ObjectHideFlags: 1
