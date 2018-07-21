@@ -41,12 +41,6 @@ TagManager:
   - name: Default
     uniqueID: 0
     locked: 0
-  - name: WhiteCard
-    uniqueID: 1359955697
-    locked: 0
-  - name: CardBuckGround
-    uniqueID: 4185410975
-    locked: 0
-  - name: CardFrame
-    uniqueID: 4078784613
+  - name: Deck
+    uniqueID: 1457748967
     locked: 0
