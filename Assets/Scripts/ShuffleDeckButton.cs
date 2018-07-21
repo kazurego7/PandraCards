@@ -12,7 +12,7 @@ public class ShuffleDeckButton : MonoBehaviour {
 
 	}
 
-	public void OneClick () {
+	public void OnClick () {
 		foreach (IShufflable deck in FindObjectsOfType<Deck> ()) {
 			deck.DrawShuffle ();
 		}
