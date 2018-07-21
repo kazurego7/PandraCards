@@ -51,17 +51,12 @@ public class Deck : MonoBehaviour {
 	bool IsNoCard () {
 		return deck.Count == 0;
 	}
-	void DrawHeightAdjustedCards () {
+	public void DrawHeightAdjustedCards () {
 		// デッキのそれぞれのカードの高さを厚みによって調節
 		var cardThickness = 0.0005f; // 遊戯王カードの厚みが0.5mm = 0.0005m
 		foreach (var index in Enumerable.Range (0, deck.Count)) {
 			deck[index].transform.Translate (0, 0, -index * cardThickness);
 		}
-	}
-	public void Shuffle () {
-		// Guidは一意でランダムな値を表す構造体
-		deck = deck.OrderBy (i => Guid.NewGuid ()).ToList ();
-		return;
 	}
 
 	public GameObject TopDraw () {
@@ -75,19 +70,34 @@ public class Deck : MonoBehaviour {
 		}
 	}
 
-	public void DrawShuffle () {
-		StartCoroutine (DrawCardsShuffle ());
+	/*********************************************
+	/*	シャッフル系
+	/*********************************************/
+	public void Shuffle () {
+		// Guidは一意でランダムな値を表す構造体
+		deck = deck.OrderBy (i => Guid.NewGuid ()).ToList ();
+		return;
 	}
+	bool drawShuffleRunning = false;
+	public void DrawShuffle () {
+		if (!drawShuffleRunning) {
+			StartCoroutine (DrawCardsShuffle ());
+		}
+	}
+
+	// ほんとはDrawShuffleの内部関数にしたいが、C#6.0ではできない......
 	IEnumerator DrawCardsShuffle () {
+		drawShuffleRunning = true;
 		// 各カードが動き始めるのを何秒遅延するか
 		var startDelaySecond = 0.01f;
 		foreach (var index in Enumerable.Range (0, deck.Count)) {
 			StartCoroutine (DrawKthCardShuffle (deck[index], index));
 			yield return new WaitForSeconds (startDelaySecond);
 		}
+		drawShuffleRunning = false;
 	}
 
-	// ほんとはDrawShuffleの内部関数にしたいが、C#6.0ではできない......
+	// ほんとはDrawCardsShuffleの内部関数にしたいが、C#6.0ではできない......
 	IEnumerator DrawKthCardShuffle (GameObject card, Int32 kth) {
 		// 設定項目
 		var moveingFrame = 10;
