@@ -20,7 +20,7 @@ public class Deck : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 		DeckInit ();
-		StartCoroutine (DrawShuffle ());
+		DrawShuffle ();
 	}
 
 	// Update is called once per frame
@@ -75,7 +75,10 @@ public class Deck : MonoBehaviour {
 		}
 	}
 
-	IEnumerator DrawShuffle () {
+	public void DrawShuffle () {
+		StartCoroutine (DrawCardsShuffle ());
+	}
+	IEnumerator DrawCardsShuffle () {
 		// 各カードが動き始めるのを何秒遅延するか
 		var startDelaySecond = 0.01f;
 		foreach (var index in Enumerable.Range (0, deck.Count)) {
