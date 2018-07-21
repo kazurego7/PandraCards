@@ -92,11 +92,12 @@ public class Deck : MonoBehaviour {
 
 		var start = card.transform.position;
 		var middle = start + moveVec;
-
+		// middleまでmoveingFrameで動かす
 		foreach (var currentFrame in Enumerable.Range (1, moveingFrame)) {
 			card.transform.position = Vector3.Lerp (start, middle, (float) currentFrame / moveingFrame);
 			yield return null;
 		}
+		// startまでmoveingFrameで動かす
 		foreach (var currentFrame in Enumerable.Range (1, moveingFrame)) {
 			card.transform.position = Vector3.Lerp (middle, start, (float) currentFrame / moveingFrame);
 			yield return null;
