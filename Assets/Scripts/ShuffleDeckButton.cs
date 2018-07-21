@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class ShuffleDeckButton : MonoBehaviour {
-
 	Deck deck;
 	// Use this for initialization
 	void Start () { }
@@ -14,7 +13,7 @@ public class ShuffleDeckButton : MonoBehaviour {
 	}
 
 	public void OneClick () {
-		foreach (var deck in FindObjectsOfType<Deck> ()) {
+		foreach (IShufflable deck in FindObjectsOfType<Deck> ()) {
 			deck.DrawShuffle ();
 		}
 	}

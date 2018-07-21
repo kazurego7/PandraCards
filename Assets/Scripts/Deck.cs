@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-public class Deck : MonoBehaviour {
+public class Deck : MonoBehaviour, IDeck {
 	class CardRacipe : Tuple<String, Int32> {
 		public String Name { get; }
 		public Int32 Number { get; }
@@ -25,6 +25,7 @@ public class Deck : MonoBehaviour {
 
 	// Update is called once per frame
 	void Update () { }
+
 	void DeckInit () {
 
 		// 仮のデッキレシピを作成 *** いずれ消す
