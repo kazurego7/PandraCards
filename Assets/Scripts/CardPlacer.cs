@@ -17,20 +17,28 @@ public class CardPlacer : MonoBehaviour {
 	}
 
 	void InitPlaces () {
-		var playArea = transform.Find ("PlayArea").transform;
-		places = playArea.GetComponentsInChildren<Transform> ().OrderBy (t => t.name).ToList ();
+		var placer = transform.Find ("Placer").transform;
+		places = placer.GetComponentsInChildren<Transform> ().Where (t => t != placer).OrderBy (t => t.name).ToList ();
 	}
 
 	IEnumerator DrawFirstCardPlaced () {
 		yield return deck.DrawShuffle ();
-		DrawReplenishCard ();
-		yield return null;
+		yield return DrawReplenishCards ();
 	}
 
-	void DrawReplenishCard () {
+	IEnumerator DrawReplenishCards () {
 		foreach (var place in places) {
 			var card = deck.TopDraw ();
-			card.transform.position = place.position;
+			yield return StartCoroutine (DrawReplenish (card.transform, place.position));
+		}
+	}
+
+	IEnumerator DrawReplenish (Transform card, Vector3 target) {
+		var moveingFrame = 10;
+		var start = card.position;
+		foreach (var currentFrame in Enumerable.Range (1, moveingFrame)) {
+			card.position = Vector3.Lerp (start, target, (float) currentFrame / moveingFrame);
+			yield return null;
 		}
 	}
 }

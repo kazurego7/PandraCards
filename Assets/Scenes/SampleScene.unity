@@ -388,6 +388,12 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 4453258106350954, guid: a8093a623e161ff438d52507a206ad72,
     type: 2}
   m_PrefabInternal: {fileID: 771678345}
+--- !u!114 &930960251 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 114716187016904958, guid: a517225cd27046a4ab15e5639120e418,
+    type: 2}
+  m_PrefabInternal: {fileID: 972770767}
+  m_Script: {fileID: 11500000, guid: 74534a4f14587f24e92138fec98cd427, type: 3}
 --- !u!1001 &972770767
 Prefab:
   m_ObjectHideFlags: 0
@@ -434,6 +440,30 @@ Prefab:
     - target: {fileID: 4369055989681808, guid: a517225cd27046a4ab15e5639120e418, type: 2}
       propertyPath: m_LocalEulerAnglesHint.z
       value: -180
+      objectReference: {fileID: 0}
+    - target: {fileID: 1251622823927174, guid: a517225cd27046a4ab15e5639120e418, type: 2}
+      propertyPath: m_Name
+      value: Placer
+      objectReference: {fileID: 0}
+    - target: {fileID: 1557095008330480, guid: a517225cd27046a4ab15e5639120e418, type: 2}
+      propertyPath: m_Name
+      value: Decker
+      objectReference: {fileID: 0}
+    - target: {fileID: 1518119775836078, guid: a517225cd27046a4ab15e5639120e418, type: 2}
+      propertyPath: m_Name
+      value: CardPlace3
+      objectReference: {fileID: 0}
+    - target: {fileID: 1953989007251332, guid: a517225cd27046a4ab15e5639120e418, type: 2}
+      propertyPath: m_Name
+      value: CardPlace2
+      objectReference: {fileID: 0}
+    - target: {fileID: 1183906705170742, guid: a517225cd27046a4ab15e5639120e418, type: 2}
+      propertyPath: m_Name
+      value: CardPlace0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1888358925456908, guid: a517225cd27046a4ab15e5639120e418, type: 2}
+      propertyPath: m_Name
+      value: CardPlace1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: a517225cd27046a4ab15e5639120e418, type: 2}
@@ -573,6 +603,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7005bd119e707f940b1c3f4379f467ae, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  deck: {fileID: 930960251}
 --- !u!1001 &1025261470
 Prefab:
   m_ObjectHideFlags: 0

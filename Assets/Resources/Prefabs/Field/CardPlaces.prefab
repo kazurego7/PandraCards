@@ -36,7 +36,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4662184678007240}
   m_Layer: 0
-  m_Name: PlayArea
+  m_Name: Placer
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -52,7 +52,7 @@ GameObject:
   - component: {fileID: 4980178073198470}
   - component: {fileID: 212302538161265300}
   m_Layer: 0
-  m_Name: CardPlace2
+  m_Name: CardPlace3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -98,6 +98,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4369055989681808}
+  - component: {fileID: 114402520101676216}
   m_Layer: 0
   m_Name: CardPlaces
   m_TagString: Untagged
@@ -131,7 +132,7 @@ GameObject:
   - component: {fileID: 4153486984437684}
   - component: {fileID: 212807893103141392}
   m_Layer: 0
-  m_Name: CardPlace3
+  m_Name: CardPlace2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -161,7 +162,7 @@ Transform:
   m_LocalScale: {x: 1.5, y: 2, z: 1}
   m_Children: []
   m_Father: {fileID: 4662184678007240}
-  m_RootOrder: 3
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &4329483668968804
 Transform:
@@ -217,8 +218,8 @@ Transform:
   m_Children:
   - {fileID: 4008515538542324}
   - {fileID: 4372451769838374}
-  - {fileID: 4980178073198470}
   - {fileID: 4153486984437684}
+  - {fileID: 4980178073198470}
   m_Father: {fileID: 4369055989681808}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -246,8 +247,19 @@ Transform:
   m_LocalScale: {x: 1.5, y: 2, z: 1}
   m_Children: []
   m_Father: {fileID: 4662184678007240}
-  m_RootOrder: 2
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &114402520101676216
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1705301930438670}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 90619191da69d8c478fa4ea90a6f7616, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &114716187016904958
 MonoBehaviour:
   m_ObjectHideFlags: 1
