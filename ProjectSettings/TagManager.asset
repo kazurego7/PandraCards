@@ -24,7 +24,7 @@ TagManager:
   - 
   - 
   - 
-  - Cards
+  - 
   - 
   - 
   - 
@@ -43,4 +43,7 @@ TagManager:
     locked: 0
   - name: Deck
     uniqueID: 1457748967
+    locked: 0
+  - name: UI
+    uniqueID: 883421613
     locked: 0
