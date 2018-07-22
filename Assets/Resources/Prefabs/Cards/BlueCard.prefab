@@ -69,7 +69,7 @@ GameObject:
   - component: {fileID: 4240896783951466}
   - component: {fileID: 212052609032997854}
   m_Layer: 19
-  m_Name: NonColorCard
+  m_Name: WhiteBackground
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

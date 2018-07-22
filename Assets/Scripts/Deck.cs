@@ -17,16 +17,7 @@ public class Deck : MonoBehaviour, IDeck {
 	readonly String pathForCards = "Prefabs/Cards/";
 	IList<GameObject> deck;
 
-	// Use this for initialization
-	void Start () {
-		DeckInit ();
-		DrawShuffle ();
-	}
-
-	// Update is called once per frame
-	void Update () { }
-
-	void DeckInit () {
+	public void InitDeck () {
 
 		// 仮のデッキレシピを作成 *** いずれ消す
 		var tmpCardRacipes = new List<CardRacipe> () {
@@ -79,23 +70,18 @@ public class Deck : MonoBehaviour, IDeck {
 		deck = deck.OrderBy (i => Guid.NewGuid ()).ToList ();
 		return;
 	}
-	bool drawShuffleRunning = false;
-	public void DrawShuffle () {
-		if (!drawShuffleRunning) {
-			StartCoroutine (DrawCardsShuffle ());
-		}
-	}
 
-	// ほんとはDrawShuffleの内部関数にしたいが、C#6.0ではできない......
-	IEnumerator DrawCardsShuffle () {
-		drawShuffleRunning = true;
+	public IEnumerator DrawShuffle () {
 		// 各カードが動き始めるのを何秒遅延するか
 		var startDelaySecond = 0.01f;
-		foreach (var index in Enumerable.Range (0, deck.Count)) {
+		foreach (var index in Enumerable.Range (0, deck.Count - 1)) {
 			StartCoroutine (DrawKthCardShuffle (deck[index], index));
 			yield return new WaitForSeconds (startDelaySecond);
 		}
-		drawShuffleRunning = false;
+
+		// 最後のコルーチンだけ返すことで、順序処理が行える
+		var lastIndex = deck.Count - 1;
+		yield return StartCoroutine (DrawKthCardShuffle (deck[lastIndex], lastIndex));
 	}
 
 	// ほんとはDrawCardsShuffleの内部関数にしたいが、C#6.0ではできない......

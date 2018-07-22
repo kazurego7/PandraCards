@@ -1,20 +1,16 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class ShuffleDeckButton : MonoBehaviour {
-	Deck deck;
-	// Use this for initialization
-	void Start () { }
+	[SerializeField] Deck deck;
 
-	// Update is called once per frame
-	void Update () {
+	void Start () {
 
 	}
 
 	public void OnClick () {
-		foreach (IShufflable deck in FindObjectsOfType<Deck> ()) {
-			deck.DrawShuffle ();
-		}
+		StartCoroutine (deck.DrawShuffle ());
 	}
 }
