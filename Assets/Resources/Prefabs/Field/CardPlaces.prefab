@@ -21,7 +21,7 @@ GameObject:
   - component: {fileID: 4008515538542324}
   - component: {fileID: 212642287212701742}
   m_Layer: 0
-  m_Name: HandPlace0
+  m_Name: HandPlace
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -52,7 +52,7 @@ GameObject:
   - component: {fileID: 4980178073198470}
   - component: {fileID: 212302538161265300}
   m_Layer: 0
-  m_Name: HandPlace3
+  m_Name: HandPlace (3)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -116,7 +116,7 @@ GameObject:
   - component: {fileID: 4372451769838374}
   - component: {fileID: 212122364395072348}
   m_Layer: 0
-  m_Name: HandPlace1
+  m_Name: HandPlace (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -132,7 +132,7 @@ GameObject:
   - component: {fileID: 4153486984437684}
   - component: {fileID: 212807893103141392}
   m_Layer: 0
-  m_Name: HandPlace2
+  m_Name: HandPlace (2)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
