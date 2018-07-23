@@ -8,7 +8,16 @@ public class HandState : MonoBehaviour {
 		get;
 	}
 
-	public void ShowName () {
-		Debug.Log (this.name);
+	public void ChangeSelect () {
+		IsSelected = !IsSelected;
+		Debug.Log (this.name + ":" + IsSelected.ToString ());
+	}
+
+	public void DrawSelect () {
+		if (IsSelected) {
+			// UI表示
+		} else {
+			// UI非表示
+		}
 	}
 }
