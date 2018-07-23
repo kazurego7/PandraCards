@@ -11,7 +11,8 @@ public class HandState : MonoBehaviour {
 	GameObject selectionFrame;
 	void Start () {
 		selectionFrame = transform.GetChild (0).gameObject;
-		Debug.Log (selectionFrame);
+		IsSelected = selectionFrame.activeInHierarchy;
+		//Debug.Log (selectionFrame);
 	}
 
 	public void ChangeSelect () {
