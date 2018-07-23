@@ -17,7 +17,7 @@ public class CardPlacer : MonoBehaviour {
 	}
 
 	void InitPlaces () {
-		var placer = transform.Find ("Placer").transform;
+		var placer = transform.Find ("HandPlacer").transform;
 		places = placer.GetComponentsInChildren<Transform> ().Where (t => t != placer).OrderBy (t => t.name).ToList ();
 	}
 

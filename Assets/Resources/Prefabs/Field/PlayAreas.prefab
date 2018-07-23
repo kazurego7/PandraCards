@@ -21,7 +21,7 @@ GameObject:
   - component: {fileID: 4809275499300068}
   - component: {fileID: 212748352494038626}
   m_Layer: 0
-  m_Name: LeftPlayArea
+  m_Name: OpponentPlayArea
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -37,7 +37,7 @@ GameObject:
   - component: {fileID: 4558189944257770}
   - component: {fileID: 212425978671234690}
   m_Layer: 0
-  m_Name: RightPlayArea
+  m_Name: YourPlayArea
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
