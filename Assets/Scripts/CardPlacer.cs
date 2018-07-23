@@ -29,6 +29,7 @@ public class CardPlacer : MonoBehaviour {
 	IEnumerator DrawReplenishCards () {
 		foreach (var place in places) {
 			var card = deck.TopDraw ();
+			card.transform.SetParent (place);
 			yield return StartCoroutine (DrawReplenishOne (card.transform, place.position));
 		}
 	}

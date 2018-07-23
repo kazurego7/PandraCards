@@ -240,6 +240,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cd78b5759454f6f48a6ab5d18464e7ef, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  cardPlace: {fileID: 0}
 --- !u!114 &114231023190179310
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -309,18 +310,7 @@ MonoBehaviour:
       m_PersistentCalls:
         m_Calls:
         - m_Target: {fileID: 114985656825586522}
-          m_MethodName: ChangeSelect
-          m_Mode: 1
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 0
-          m_CallState: 2
-        - m_Target: {fileID: 114985656825586522}
-          m_MethodName: DrawSelect
+          m_MethodName: Select
           m_Mode: 1
           m_Arguments:
             m_ObjectArgument: {fileID: 0}
@@ -350,18 +340,7 @@ MonoBehaviour:
       m_PersistentCalls:
         m_Calls:
         - m_Target: {fileID: 114964590609415232}
-          m_MethodName: ChangeSelect
-          m_Mode: 1
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 0
-          m_CallState: 2
-        - m_Target: {fileID: 114964590609415232}
-          m_MethodName: DrawSelect
+          m_MethodName: Select
           m_Mode: 1
           m_Arguments:
             m_ObjectArgument: {fileID: 0}
@@ -418,18 +397,7 @@ MonoBehaviour:
       m_PersistentCalls:
         m_Calls:
         - m_Target: {fileID: 114226830217394676}
-          m_MethodName: ChangeSelect
-          m_Mode: 1
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 0
-          m_CallState: 2
-        - m_Target: {fileID: 114226830217394676}
-          m_MethodName: DrawSelect
+          m_MethodName: Select
           m_Mode: 1
           m_Arguments:
             m_ObjectArgument: {fileID: 0}
@@ -485,18 +453,7 @@ MonoBehaviour:
       m_PersistentCalls:
         m_Calls:
         - m_Target: {fileID: 114837485862741318}
-          m_MethodName: ChangeSelect
-          m_Mode: 1
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 0
-          m_CallState: 2
-        - m_Target: {fileID: 114837485862741318}
-          m_MethodName: DrawSelect
+          m_MethodName: Select
           m_Mode: 1
           m_Arguments:
             m_ObjectArgument: {fileID: 0}
@@ -520,6 +477,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cd78b5759454f6f48a6ab5d18464e7ef, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  cardPlace: {fileID: 0}
 --- !u!114 &114932935290975724
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -584,6 +542,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cd78b5759454f6f48a6ab5d18464e7ef, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  cardPlace: {fileID: 0}
 --- !u!114 &114985656825586522
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -595,6 +554,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cd78b5759454f6f48a6ab5d18464e7ef, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  cardPlace: {fileID: 0}
 --- !u!222 &222053885594543758
 CanvasRenderer:
   m_ObjectHideFlags: 1

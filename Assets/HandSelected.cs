@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -9,6 +10,7 @@ public class HandSelected : MonoBehaviour {
 	}
 	HandSelector handSelector;
 	GameObject selectionFrame;
+	[SerializeField] Transform handPlace;
 	void Start () {
 		handSelector = transform.GetComponentInParent<HandSelector> ();
 		selectionFrame = transform.GetChild (0).gameObject;

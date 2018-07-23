@@ -65,7 +65,7 @@ MonoBehaviour:
       m_PersistentCalls:
         m_Calls:
         - m_Target: {fileID: 114189475635933452}
-          m_MethodName: ChangeSelect
+          m_MethodName: Select
           m_Mode: 1
           m_Arguments:
             m_ObjectArgument: {fileID: 0}
@@ -115,6 +115,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cd78b5759454f6f48a6ab5d18464e7ef, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  cardPlace: {fileID: 0}
 --- !u!114 &114298554041368842
 MonoBehaviour:
   m_ObjectHideFlags: 1
