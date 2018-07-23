@@ -40,6 +40,12 @@ public class Deck : MonoBehaviour, IDeck {
 		DrawHeightAdjustedCards ();
 	}
 
+	public void DeleteDeck () {
+		foreach (var card in deck) {
+			Destroy (card);
+		}
+	}
+
 	bool IsNoCard () {
 		return deck.Count == 0;
 	}
