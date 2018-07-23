@@ -13,7 +13,7 @@ public class CardPlacer : MonoBehaviour {
 		deck = GetComponentInChildren<Deck> ();
 		deck.InitDeck ();
 		InitPlaces ();
-		StartCoroutine (DrawFirstCardPlaced ());
+		StartCoroutine (DrawFirstCardPlacing ());
 	}
 
 	void InitPlaces () {
@@ -21,7 +21,7 @@ public class CardPlacer : MonoBehaviour {
 		places = placer.GetComponentsInChildren<Transform> ().Where (t => t != placer).OrderBy (t => t.name).ToList ();
 	}
 
-	IEnumerator DrawFirstCardPlaced () {
+	IEnumerator DrawFirstCardPlacing () {
 		yield return deck.DrawShuffle ();
 		yield return DrawReplenishCards ();
 	}
@@ -29,11 +29,11 @@ public class CardPlacer : MonoBehaviour {
 	IEnumerator DrawReplenishCards () {
 		foreach (var place in places) {
 			var card = deck.TopDraw ();
-			yield return StartCoroutine (DrawReplenish (card.transform, place.position));
+			yield return StartCoroutine (DrawReplenishOne (card.transform, place.position));
 		}
 	}
 
-	IEnumerator DrawReplenish (Transform card, Vector3 target) {
+	IEnumerator DrawReplenishOne (Transform card, Vector3 target) {
 		var moveingFrame = 10;
 		var start = card.position;
 		foreach (var currentFrame in Enumerable.Range (1, moveingFrame)) {

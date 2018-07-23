@@ -21,7 +21,7 @@ GameObject:
   - component: {fileID: 4613775481942858}
   - component: {fileID: 212071354642044974}
   m_Layer: 0
-  m_Name: cardBorder
+  m_Name: UICardBorder
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
