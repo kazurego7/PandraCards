@@ -21,7 +21,7 @@ GameObject:
   - component: {fileID: 4775401395835902}
   - component: {fileID: 212763956545188998}
   m_Layer: 19
-  m_Name: EmptyCard
+  m_Name: Place
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

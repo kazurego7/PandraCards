@@ -16,7 +16,7 @@ public class HandPlace : MonoBehaviour {
 		SetFrameActive (frame.activeInHierarchy);
 	}
 	public string PlacedCardName {
-		get { return place.GetChild (0).name; }
+		get { return place.GetChild (0).name;}
 	}
 
 	public void SetFrameActive (bool flag) {
