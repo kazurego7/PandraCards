@@ -11,17 +11,30 @@ public class HandSelector : MonoBehaviour {
     }
     public void SelectFrame (int sentPlaceNum) {
         //Debug.Log ($"SelectFrame{sentPlaceNum}");
+
         var sentPlace = handPlaces[sentPlaceNum];
         if (sentPlace.FrameActivity) {
             sentPlace.SetFrameActive (false);
         } else {
-            sentPlace.SetFrameActive (true);
+            var isSamePlacedCard = handPlaces.Where (place => place.FrameActivity).All (place => place.PlacedCardName == sentPlace.PlacedCardName);
+            if (isSamePlacedCard) {
+                sentPlace.SetFrameActive (true);
+            } else {
+                foreach (var place in handPlaces) {
+                    place.SetFrameActive (false);
+                }
+                sentPlace.SetFrameActive (true);
+            }
         }
         DrawFrames ();
     }
 
     public void DeselectFrame () {
         //Debug.Log ("DeselectFrame");
+        foreach (var place in handPlaces) {
+            place.SetFrameActive (false);
+        }
+        DrawFrames ();
     }
     public void DrawFrames () {
         //Debug.Log ("DrawFrames");
