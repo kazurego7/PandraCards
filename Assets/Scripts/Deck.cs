@@ -93,6 +93,7 @@ public class Deck : MonoBehaviour, IDeck {
 
 	// ほんとはDrawCardsShuffleの内部関数にしたいが、C#6.0ではできない......
 	IEnumerator DrawKthCardShuffle (GameObject card, Int32 kth) {
+
 		// 設定項目
 		var moveingFrame = 10;
 		var moveVec = card.transform.right * 3f;
@@ -101,13 +102,21 @@ public class Deck : MonoBehaviour, IDeck {
 		var middle = start + moveVec;
 		// middleまでmoveingFrameで動かす
 		foreach (var currentFrame in Enumerable.Range (1, moveingFrame)) {
-			card.transform.position = Vector3.Lerp (start, middle, (float) currentFrame / moveingFrame);
-			yield return null;
+			if (card != null) {
+				card.transform.position = Vector3.Lerp (start, middle, (float) currentFrame / moveingFrame);
+				yield return null;
+			} else {
+				yield break;
+			}
 		}
 		// startまでmoveingFrameで動かす
 		foreach (var currentFrame in Enumerable.Range (1, moveingFrame)) {
-			card.transform.position = Vector3.Lerp (middle, start, (float) currentFrame / moveingFrame);
-			yield return null;
+			if (card != null) {
+				card.transform.position = Vector3.Lerp (middle, start, (float) currentFrame / moveingFrame);
+				yield return null;
+			} else {
+				yield break;
+			}
 		}
 	}
 }
