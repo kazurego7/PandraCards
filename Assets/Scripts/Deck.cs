@@ -41,6 +41,7 @@ public class Deck : MonoBehaviour, IDeck {
 	}
 
 	public void Delete () {
+		StopAllCoroutines();
 		foreach (var card in deck) {
 			Destroy (card);
 		}
