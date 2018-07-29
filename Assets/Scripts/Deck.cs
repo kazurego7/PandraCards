@@ -17,7 +17,7 @@ public class Deck : MonoBehaviour, IDeck {
 	readonly String pathForCards = "Prefabs/Cards/";
 	IList<GameObject> deck;
 
-	public void InitDeck () {
+	public void Initialize () {
 
 		// 仮のデッキレシピを作成 *** いずれ消す
 		var tmpCardRacipes = new List<CardRacipe> () {
@@ -40,7 +40,7 @@ public class Deck : MonoBehaviour, IDeck {
 		DrawHeightAdjustedCards ();
 	}
 
-	public void DeleteDeck () {
+	public void Delete () {
 		foreach (var card in deck) {
 			Destroy (card);
 		}

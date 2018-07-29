@@ -11,7 +11,7 @@ public class HandPlace : MonoBehaviour {
 		private set;
 	}
 
-	void Start () {
+	void Awake () {
 		frame = transform.GetChild (0).gameObject;
 		SetFrameActive (frame.activeInHierarchy);
 	}

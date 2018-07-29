@@ -10,22 +10,19 @@ public class CardPlacer : MonoBehaviour {
 
 	[SerializeField] Transform handPlacer;
 
-	// Use this for initialization
-	void Start () {
+	void Awake () {
 		deck = GetComponentInChildren<Deck> ();
-		deck.InitDeck ();
-		InitPlaces ();
-		ReplenishCards();
+		places = handPlacer.GetComponentsInChildren<Transform> ().Where (t => t != handPlacer).OrderBy (t => t.name).ToList ();
+	}
+	public void Initialize () {
+		deck.Initialize ();
+		ReplenishCards ();
 		StartCoroutine (DrawFirstCardPlacing ());
 	}
 
-	void InitPlaces () {
-		places = handPlacer.GetComponentsInChildren<Transform> ().Where (t => t != handPlacer).OrderBy (t => t.name).ToList ();
-	}
-
-	void ReplenishCards() {
+	void ReplenishCards () {
 		foreach (var place in places) {
-		var card = deck.TopDraw ();
+			var card = deck.TopDraw ();
 			card.transform.SetParent (place);
 		}
 	}
@@ -36,7 +33,7 @@ public class CardPlacer : MonoBehaviour {
 
 	IEnumerator DrawReplenishCards () {
 		foreach (var place in places) {
-			yield return StartCoroutine (DrawReplenishOne (place.GetChild(0).transform, place.position));
+			yield return StartCoroutine (DrawReplenishOne (place.GetChild (0).transform, place.position));
 		}
 	}
 

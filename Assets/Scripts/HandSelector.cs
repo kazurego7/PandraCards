@@ -6,7 +6,7 @@ using UnityEngine;
 public class HandSelector : MonoBehaviour {
     IList<HandPlace> handPlaces;
 
-    void Start () {
+    void Awake () {
         handPlaces = GetComponentsInChildren<HandPlace> ().OrderBy (o => o.name).ToList ();
     }
     public void SelectFrame (int sentPlaceNum) {

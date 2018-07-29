@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public interface IDeck {
-	void InitDeck ();
+	void Initialize ();
 	void DrawHeightAdjustedCards ();
 	GameObject TopDraw ();
 	void Shuffle ();
