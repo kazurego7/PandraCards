@@ -8,6 +8,8 @@ public class CardPlacer : MonoBehaviour {
 	IDeck deck;
 	IList<Transform> places;
 
+	[SerializeField] Transform handPlacer;
+
 	// Use this for initialization
 	void Start () {
 		deck = GetComponentInChildren<Deck> ();
@@ -18,8 +20,7 @@ public class CardPlacer : MonoBehaviour {
 	}
 
 	void InitPlaces () {
-		var placer = transform.Find ("HandPlacer").transform;
-		places = placer.GetComponentsInChildren<Transform> ().Where (t => t != placer).OrderBy (t => t.name).ToList ();
+		places = handPlacer.GetComponentsInChildren<Transform> ().Where (t => t != handPlacer).OrderBy (t => t.name).ToList ();
 	}
 
 	void ReplenishCards() {

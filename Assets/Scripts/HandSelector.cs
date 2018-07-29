@@ -13,18 +13,16 @@ public class HandSelector : MonoBehaviour {
         //Debug.Log ($"SelectFrame{sentPlaceNum}");
 
         var sentPlace = handPlaces[sentPlaceNum];
+        var isSamePlacedCard = handPlaces.Where (place => place.FrameActivity).All (place => place.PlacedCardName == sentPlace.PlacedCardName);
         if (sentPlace.FrameActivity) {
             sentPlace.SetFrameActive (false);
+        } else if (isSamePlacedCard) {
+            sentPlace.SetFrameActive (true);
         } else {
-            var isSamePlacedCard = handPlaces.Where (place => place.FrameActivity).All (place => place.PlacedCardName == sentPlace.PlacedCardName);
-            if (isSamePlacedCard) {
-                sentPlace.SetFrameActive (true);
-            } else {
-                foreach (var place in handPlaces) {
-                    place.SetFrameActive (false);
-                }
-                sentPlace.SetFrameActive (true);
+            foreach (var place in handPlaces) {
+                place.SetFrameActive (false);
             }
+            sentPlace.SetFrameActive (true);
         }
         DrawFrames ();
     }
