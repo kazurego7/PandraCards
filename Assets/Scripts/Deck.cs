@@ -41,7 +41,7 @@ public class Deck : MonoBehaviour, IDeck {
 	}
 
 	public void Delete () {
-		StopAllCoroutines();
+		StopAllCoroutines ();
 		foreach (var card in deck) {
 			Destroy (card);
 		}
@@ -79,6 +79,33 @@ public class Deck : MonoBehaviour, IDeck {
 	}
 
 	public IEnumerator DrawShuffle () {
+		IEnumerator DrawKthCardShuffle (GameObject card, Int32 kth) {
+
+			// 設定項目
+			var moveingFrame = 10;
+			var moveVec = card.transform.right * 3f;
+
+			var start = card.transform.position;
+			var middle = start + moveVec;
+			// middleまでmoveingFrameで動かす
+			foreach (var currentFrame in Enumerable.Range (1, moveingFrame)) {
+				if (card != null) {
+					card.transform.position = Vector3.Lerp (start, middle, (float) currentFrame / moveingFrame);
+					yield return null;
+				} else {
+					yield break;
+				}
+			}
+			// startまでmoveingFrameで動かす
+			foreach (var currentFrame in Enumerable.Range (1, moveingFrame)) {
+				if (card != null) {
+					card.transform.position = Vector3.Lerp (middle, start, (float) currentFrame / moveingFrame);
+					yield return null;
+				} else {
+					yield break;
+				}
+			}
+		}
 		// 各カードが動き始めるのを何秒遅延するか
 		var startDelaySecond = 0.01f;
 		foreach (var index in Enumerable.Range (0, deck.Count - 1)) {
@@ -89,34 +116,5 @@ public class Deck : MonoBehaviour, IDeck {
 		// 最後のコルーチンだけ返すことで、順序処理が行える
 		var lastIndex = deck.Count - 1;
 		yield return StartCoroutine (DrawKthCardShuffle (deck[lastIndex], lastIndex));
-	}
-
-	// ほんとはDrawCardsShuffleの内部関数にしたいが、C#6.0ではできない......
-	IEnumerator DrawKthCardShuffle (GameObject card, Int32 kth) {
-
-		// 設定項目
-		var moveingFrame = 10;
-		var moveVec = card.transform.right * 3f;
-
-		var start = card.transform.position;
-		var middle = start + moveVec;
-		// middleまでmoveingFrameで動かす
-		foreach (var currentFrame in Enumerable.Range (1, moveingFrame)) {
-			if (card != null) {
-				card.transform.position = Vector3.Lerp (start, middle, (float) currentFrame / moveingFrame);
-				yield return null;
-			} else {
-				yield break;
-			}
-		}
-		// startまでmoveingFrameで動かす
-		foreach (var currentFrame in Enumerable.Range (1, moveingFrame)) {
-			if (card != null) {
-				card.transform.position = Vector3.Lerp (middle, start, (float) currentFrame / moveingFrame);
-				yield return null;
-			} else {
-				yield break;
-			}
-		}
 	}
 }
