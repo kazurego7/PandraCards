@@ -17,32 +17,31 @@ public class CardPlacer : MonoBehaviour {
 	public void Initialize () {
 		deck.Initialize ();
 		ReplenishCards ();
-		StartCoroutine (DrawFirstCardPlacing ());
 	}
 
 	void ReplenishCards () {
+		// 手札
 		foreach (var place in places) {
 			var card = deck.TopDraw ();
 			card.transform.SetParent (place);
 		}
 	}
-	IEnumerator DrawFirstCardPlacing () {
+	public IEnumerator DrawFirstCardPlacing () {
+		IEnumerator DrawReplenishCards () {
+			IEnumerator DrawReplenishOne (Transform card, Vector3 target) {
+				var moveingFrame = 10;
+				var start = card.position;
+				foreach (var currentFrame in Enumerable.Range (1, moveingFrame)) {
+					card.position = Vector3.Lerp (start, target, (float) currentFrame / moveingFrame);
+					yield return null;
+				}
+			}
+			foreach (var place in places) {
+				yield return StartCoroutine (DrawReplenishOne (place.GetChild (0).transform, place.position));
+			}
+		}
 		yield return deck.DrawShuffle ();
 		yield return DrawReplenishCards ();
 	}
 
-	IEnumerator DrawReplenishCards () {
-		foreach (var place in places) {
-			yield return StartCoroutine (DrawReplenishOne (place.GetChild (0).transform, place.position));
-		}
-	}
-
-	IEnumerator DrawReplenishOne (Transform card, Vector3 target) {
-		var moveingFrame = 10;
-		var start = card.position;
-		foreach (var currentFrame in Enumerable.Range (1, moveingFrame)) {
-			card.position = Vector3.Lerp (start, target, (float) currentFrame / moveingFrame);
-			yield return null;
-		}
-	}
 }

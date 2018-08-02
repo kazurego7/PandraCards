@@ -18,4 +18,11 @@ public class FieldPlacer : MonoBehaviour {
 		}
 	}
 
+	public void DrawFirstCardPlacing() {
+		foreach (var cardPlacer in cardPlacers)
+		{
+			StartCoroutine(cardPlacer.DrawFirstCardPlacing());
+		}
+	}
+
 }
