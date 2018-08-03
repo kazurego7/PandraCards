@@ -17,6 +17,9 @@ public class FieldPlacer : MonoBehaviour {
 	public void Initialize () {
 		foreach (var cardPlacer in cardPlacers) {
 			cardPlacer.Initialize ();
+			foreach (var i in Enumerable.Range (0, decks.Count)) {
+				playAreas[0].PlayCard (decks[0].TopDraw ());
+			}
 		}
 	}
 
@@ -24,10 +27,6 @@ public class FieldPlacer : MonoBehaviour {
 		foreach (var cardPlacer in cardPlacers) {
 			StartCoroutine (cardPlacer.DrawFirstCardPlacing ());
 		}
-		
-		// foreach (var i in Enumerable.Range (0, decks.Count)) {
-		// 	playAreas[0].PlayCard (decks[0].TopDraw ());
-		// }
 	}
 
 }

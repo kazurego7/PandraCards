@@ -4,6 +4,6 @@ using UnityEngine;
 
 public class PlayArea : MonoBehaviour {
 	public void PlayCard(GameObject card){
-		transform.SetParent(card.transform);
+		card.transform.SetParent(transform);
 	}
 }
