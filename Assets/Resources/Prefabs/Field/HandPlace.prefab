@@ -20,6 +20,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4482390847281338}
   - component: {fileID: 212860817441891496}
+  - component: {fileID: 114695120890570750}
   m_Layer: 0
   m_Name: HandPlace
   m_TagString: Untagged
@@ -40,6 +41,17 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &114695120890570750
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1213358559738010}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 27209f674add36d47a7b5dd192683557, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!212 &212860817441891496
 SpriteRenderer:
   m_ObjectHideFlags: 1
