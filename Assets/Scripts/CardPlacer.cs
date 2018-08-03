@@ -6,13 +6,11 @@ using UnityEngine;
 
 public class CardPlacer : MonoBehaviour {
 	IDeck deck;
-	IList<Transform> places;
-
-	[SerializeField] Transform handPlacer;
+	IList<HandPlace> handPlaces;
 
 	void Awake () {
 		deck = GetComponentInChildren<Deck> ();
-		places = handPlacer.GetComponentsInChildren<Transform> ().Where (t => t != handPlacer).OrderBy (t => t.name).ToList ();
+		handPlaces = GetComponentsInChildren<HandPlace> ().ToList ();
 	}
 	public void Initialize () {
 		deck.Initialize ();
@@ -21,9 +19,8 @@ public class CardPlacer : MonoBehaviour {
 
 	void ReplenishCards () {
 		// 手札
-		foreach (var place in places) {
-			var card = deck.TopDraw ();
-			card.transform.SetParent (place);
+		foreach (var place in handPlaces) {
+			place.SetCard(deck.TopDraw ());
 		}
 	}
 	public IEnumerator DrawFirstCardPlacing () {
@@ -36,8 +33,8 @@ public class CardPlacer : MonoBehaviour {
 					yield return null;
 				}
 			}
-			foreach (var place in places) {
-				yield return StartCoroutine (DrawReplenishOne (place.GetChild (0).transform, place.position));
+			foreach (var place in handPlaces) {
+				yield return StartCoroutine (DrawReplenishOne (place.GetCard(), place.transform.position));
 			}
 		}
 		yield return deck.DrawShuffle ();
