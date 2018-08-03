@@ -5,24 +5,29 @@ using UnityEngine;
 
 public class FieldPlacer : MonoBehaviour {
 	IList<CardPlacer> cardPlacers;
-	[SerializeField] Transform playAreas;
+	IList<Deck> decks;
+	IList<PlayArea> playAreas;
 
-	void Awake(){
-		cardPlacers = GetComponentsInChildren<CardPlacer> ().OrderBy(o=>o.name).ToList();
+	void Awake () {
+		cardPlacers = GetComponentsInChildren<CardPlacer> ().ToList ();
+		decks = GetComponentsInChildren<Deck> ().ToList ();
+		playAreas = GetComponentsInChildren<PlayArea> ().ToList ();
 	}
-	
-	public void Initialize() {
-		foreach (var cardPlacer in cardPlacers)
-		{
-			cardPlacer.Initialize();
+
+	public void Initialize () {
+		foreach (var cardPlacer in cardPlacers) {
+			cardPlacer.Initialize ();
 		}
 	}
 
-	public void DrawFirstCardPlacing() {
-		foreach (var cardPlacer in cardPlacers)
-		{
-			StartCoroutine(cardPlacer.DrawFirstCardPlacing());
+	public void DrawFirstCardPlacing () {
+		foreach (var cardPlacer in cardPlacers) {
+			StartCoroutine (cardPlacer.DrawFirstCardPlacing ());
 		}
+		
+		// foreach (var i in Enumerable.Range (0, decks.Count)) {
+		// 	playAreas[0].PlayCard (decks[0].TopDraw ());
+		// }
 	}
 
 }

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class HandPlace : MonoBehaviour {
+public class UIHandPlace : MonoBehaviour {
 
 	[SerializeField] Transform place;
 	GameObject frame;

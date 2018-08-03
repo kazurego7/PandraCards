@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-public class HandSelector : MonoBehaviour {
-    IList<HandPlace> handPlaces;
+public class UIHandSelector : MonoBehaviour {
+    IList<UIHandPlace> handPlaces;
 
     void Awake () {
-        handPlaces = GetComponentsInChildren<HandPlace> ().OrderBy (o => o.name).ToList ();
+        handPlaces = GetComponentsInChildren<UIHandPlace> ().OrderBy (o => o.name).ToList ();
     }
     public void SelectFrame (int sentPlaceNum) {
         //Debug.Log ($"SelectFrame{sentPlaceNum}");
