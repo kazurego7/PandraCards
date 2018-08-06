@@ -6,6 +6,6 @@ public class GameManager : MonoBehaviour {
 	[SerializeField] FieldPlacer fieldPlacer;
 	void Start () {
 		fieldPlacer.Initialize();
-		fieldPlacer.DrawFirstCardPlacing ();
+		StartCoroutine(fieldPlacer.DrawFirstCardPlacing ());
 	}
 }

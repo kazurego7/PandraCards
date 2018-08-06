@@ -30,7 +30,7 @@ public class ShuffleDrawer : MonoBehaviour {
         shuffleMoveing = CreateShuffleMoveing (transform.right * 3f, 100);
     }
 
-    public void DrawKthCardShuffle () {
+    public void DrawCardShuffle () {
         shuffleMoveing
             .Subscribe (pos => transform.position = pos);
     }

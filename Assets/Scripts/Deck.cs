@@ -15,7 +15,7 @@ public class Deck : MonoBehaviour, IDeck {
 	}
 
 	readonly String pathForCards = "Prefabs/Cards/";
-	IList<GameObject> deck;
+	IList<GameObject> cards;
 
 	public void Initialize () {
 
@@ -34,7 +34,7 @@ public class Deck : MonoBehaviour, IDeck {
 				cards.Add (Instantiate<GameObject> (card, transform));
 			}
 		}
-		deck = cards;
+		this.cards = cards;
 
 		Shuffle ();
 		DrawHeightAdjustedCards ();
@@ -42,19 +42,19 @@ public class Deck : MonoBehaviour, IDeck {
 
 	public void Delete () {
 		StopAllCoroutines ();
-		foreach (var card in deck) {
+		foreach (var card in cards) {
 			Destroy (card);
 		}
 	}
 
 	bool IsNoCard () {
-		return deck.Count == 0;
+		return cards.Count == 0;
 	}
 	public void DrawHeightAdjustedCards () {
 		// デッキのそれぞれのカードの高さを厚みによって調節
 		var cardThickness = 0.0005f; // 遊戯王カードの厚みが0.5mm = 0.0005m
-		foreach (var index in Enumerable.Range (0, deck.Count)) {
-			deck[index].transform.Translate (0, 0, -index * cardThickness);
+		foreach (var index in Enumerable.Range (0, cards.Count)) {
+			cards[index].transform.Translate (0, 0, -index * cardThickness);
 		}
 	}
 
@@ -63,8 +63,8 @@ public class Deck : MonoBehaviour, IDeck {
 			var emptyCard = Resources.Load<GameObject> (pathForCards + "EmptyCard");
 			return Instantiate (emptyCard, transform.position, Quaternion.identity, transform);
 		} else {
-			var top = deck[0];
-			deck.RemoveAt (0);
+			var top = cards[0];
+			cards.RemoveAt (0);
 			return top;
 		}
 	}
@@ -74,47 +74,20 @@ public class Deck : MonoBehaviour, IDeck {
 	/*********************************************/
 	public void Shuffle () {
 		// Guidは一意でランダムな値を表す構造体
-		deck = deck.OrderBy (i => Guid.NewGuid ()).ToList ();
+		cards = cards.OrderBy (i => Guid.NewGuid ()).ToList ();
 		return;
 	}
 
 	public IEnumerator DrawShuffle () {
-		IEnumerator DrawKthCardShuffle (GameObject card, Int32 kth) {
-
-			// 設定項目
-			var moveingFrame = 10;
-			var moveVec = card.transform.right * 3f;
-
-			var start = card.transform.position;
-			var middle = start + moveVec;
-			// middleまでmoveingFrameで動かす
-			foreach (var currentFrame in Enumerable.Range (1, moveingFrame)) {
-				if (card != null) {
-					card.transform.position = Vector3.Lerp (start, middle, (float) currentFrame / moveingFrame);
-					yield return null;
-				} else {
-					yield break;
-				}
-			}
-			// startまでmoveingFrameで動かす
-			foreach (var currentFrame in Enumerable.Range (1, moveingFrame)) {
-				if (card != null) {
-					card.transform.position = Vector3.Lerp (middle, start, (float) currentFrame / moveingFrame);
-					yield return null;
-				} else {
-					yield break;
-				}
-			}
-		}
 		// 各カードが動き始めるのを何秒遅延するか
 		var startDelaySecond = 0.01f;
-		foreach (var index in Enumerable.Range (0, deck.Count - 1)) {
-			StartCoroutine (DrawKthCardShuffle (deck[index], index));
+		foreach (var index in Enumerable.Range (0, cards.Count - 1)) {
+			StartCoroutine (cards[index].GetComponent<Card>().DrawShuffle());
 			yield return new WaitForSeconds (startDelaySecond);
 		}
 
 		// 最後のコルーチンだけ返すことで、順序処理が行える
-		var lastIndex = deck.Count - 1;
-		yield return StartCoroutine (DrawKthCardShuffle (deck[lastIndex], lastIndex));
+		var lastIndex = cards.Count - 1;
+		yield return StartCoroutine (cards[lastIndex].GetComponent<Card>().DrawShuffle());
 	}
 }

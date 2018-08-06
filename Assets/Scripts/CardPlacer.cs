@@ -25,16 +25,9 @@ public class CardPlacer : MonoBehaviour {
 	}
 	public IEnumerator DrawFirstCardPlacing () {
 		IEnumerator DrawReplenishCards () {
-			IEnumerator DrawReplenishOne (Transform card, Vector3 target) {
-				var moveingFrame = 10;
-				var start = card.position;
-				foreach (var currentFrame in Enumerable.Range (1, moveingFrame)) {
-					card.position = Vector3.Lerp (start, target, (float) currentFrame / moveingFrame);
-					yield return null;
-				}
-			}
 			foreach (var place in handPlaces) {
-				yield return StartCoroutine (DrawReplenishOne (place.GetCard(), place.transform.position));
+				var card = place.GetCard().GetComponent<Card>();
+				yield return StartCoroutine(card.DrawMove(place.transform.position));
 			}
 		}
 		yield return deck.DrawShuffle ();

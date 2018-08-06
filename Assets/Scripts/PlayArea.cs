@@ -6,4 +6,5 @@ public class PlayArea : MonoBehaviour {
 	public void PlayCard(GameObject card){
 		card.transform.SetParent(transform);
 	}
+	
 }

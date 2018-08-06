@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class UIHandPlace : MonoBehaviour {
 
-	[SerializeField] Transform place;
+	[SerializeField] Transform handPlace;
 	GameObject frame;
 	public bool FrameActivity {
 		get;
@@ -16,7 +16,7 @@ public class UIHandPlace : MonoBehaviour {
 		SetFrameActive (frame.activeInHierarchy);
 	}
 	public string PlacedCardName {
-		get { return place.GetChild (0).name;}
+		get { return handPlace.GetChild (0).name;}
 	}
 
 	public void SetFrameActive (bool flag) {
