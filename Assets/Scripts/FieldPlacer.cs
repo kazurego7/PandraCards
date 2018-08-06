@@ -22,10 +22,11 @@ public class FieldPlacer : MonoBehaviour {
 	}
 
 	public IEnumerator DrawFirstCardPlacing () {
-		foreach (var cardPlacer in cardPlacers) {
-			StartCoroutine (cardPlacer.DrawFirstCardPlacing ());
-		}
-		yield return null;
+		// foreach (var cardPlacer in cardPlacers) {
+		// 	StartCoroutine (cardPlacer.DrawFirstCardPlacing ());
+		// }
+		var coroutines = cardPlacers.Select((cardPlacer) => StartCoroutine(cardPlacer.DrawFirstCardPlacing()));
+		yield return coroutines.Last((coroutine)=> coroutine != null);
 	}
 
 }
