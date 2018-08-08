@@ -9,7 +9,7 @@ public class HandPlace : MonoBehaviour {
 	public Transform GetCard() {
 		return transform.GetChild(0);
 	}
-	public void SetCard(GameObject card){
+	public void SetCard(Card card){
 		card.transform.SetParent(transform);
 	}
 }

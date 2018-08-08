@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-public class Deck : MonoBehaviour, IDeck {
+public class Deck : MonoBehaviour{
 	class CardRacipe : Tuple<String, Int32> {
 		public String Name { get; }
 		public Int32 Number { get; }
@@ -58,14 +58,14 @@ public class Deck : MonoBehaviour, IDeck {
 		}
 	}
 
-	public GameObject TopDraw () {
+	public Card TopDraw () {
 		if (this.IsNoCard ()) {
 			var emptyCard = Resources.Load<GameObject> (pathForCards + "EmptyCard");
-			return Instantiate (emptyCard, transform.position, Quaternion.identity, transform);
+			return Instantiate (emptyCard, transform.position, Quaternion.identity, transform).GetComponent<Card>();
 		} else {
 			var top = cards[0];
 			cards.RemoveAt (0);
-			return top;
+			return top.GetComponent<Card>();
 		}
 	}
 
@@ -85,7 +85,6 @@ public class Deck : MonoBehaviour, IDeck {
 			StartCoroutine (cards[index].GetComponent<Card>().DrawShuffle());
 			yield return new WaitForSeconds (startDelaySecond);
 		}
-
 		// 最後のコルーチンだけ返すことで、順序処理が行える
 		var lastIndex = cards.Count - 1;
 		yield return StartCoroutine (cards[lastIndex].GetComponent<Card>().DrawShuffle());

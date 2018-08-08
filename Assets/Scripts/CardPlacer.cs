@@ -5,7 +5,7 @@ using System.Linq;
 using UnityEngine;
 
 public class CardPlacer : MonoBehaviour {
-	IDeck deck;
+	Deck deck;
 	IList<HandPlace> handPlaces;
 
 	void Awake () {

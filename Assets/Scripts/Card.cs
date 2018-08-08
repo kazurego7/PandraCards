@@ -15,21 +15,21 @@ public class Card : MonoBehaviour {
 
 	public IEnumerator DrawShuffle () {
 
-			// 設定項目
-			var moveingFrame = 10;
-			var moveVec = transform.right * 3f;
+		// 設定項目
+		var moveingFrame = 10;
+		var moveVec = transform.right * 3f;
 
-			var start = transform.position;
-			var middle = start + moveVec;
-			// middleまでmoveingFrameで動かす
-			foreach (var currentFrame in Enumerable.Range (1, moveingFrame)) {
-				transform.position = Vector3.Lerp (start, middle, (float) currentFrame / moveingFrame);
-				yield return null;
-			}
-			// startまでmoveingFrameで動かす
-			foreach (var currentFrame in Enumerable.Range (1, moveingFrame)) {
-				transform.position = Vector3.Lerp (middle, start, (float) currentFrame / moveingFrame);
-				yield return null;
-			}
+		var start = transform.position;
+		var middle = start + moveVec;
+		// middleまでmoveingFrameで動かす
+		foreach (var currentFrame in Enumerable.Range (1, moveingFrame)) {
+			transform.position = Vector3.Lerp (start, middle, (float) currentFrame / moveingFrame);
+			yield return null;
 		}
+		// startまでmoveingFrameで動かす
+		foreach (var currentFrame in Enumerable.Range (1, moveingFrame)) {
+			transform.position = Vector3.Lerp (middle, start, (float) currentFrame / moveingFrame);
+			yield return null;
+		}
+	}
 }

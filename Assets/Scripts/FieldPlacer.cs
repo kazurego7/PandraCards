@@ -17,16 +17,18 @@ public class FieldPlacer : MonoBehaviour {
 	public void Initialize () {
 		foreach (var i in Enumerable.Range (0, cardPlacers.Count)) {
 			cardPlacers[i].Initialize ();
-			playAreas[i].PlayCard (decks[i].TopDraw ());
+			playAreas[i].PlayCards (new List<Card>() {decks[i].TopDraw ()});
 		}
 	}
 
 	public IEnumerator DrawFirstCardPlacing () {
-		// foreach (var cardPlacer in cardPlacers) {
-		// 	StartCoroutine (cardPlacer.DrawFirstCardPlacing ());
-		// }
-		var coroutines = cardPlacers.Select((cardPlacer) => StartCoroutine(cardPlacer.DrawFirstCardPlacing()));
-		yield return coroutines.Last((coroutine)=> coroutine != null);
+		// 手札配置
+		var placeHands = cardPlacers.Select((cardPlacer) => StartCoroutine(cardPlacer.DrawFirstCardPlacing()));
+		yield return placeHands.Last((coroutine)=> coroutine != null);
+
+		// プレイエリア配置
+		var placePlayAreas = playAreas.Select((playArea) => StartCoroutine(playArea.DrawFirstCardPlacing()));
+		yield return placePlayAreas.Last((coroutine)=> coroutine != null);
 	}
 
 }
