@@ -16,9 +16,24 @@ public class PlayArea : MonoBehaviour {
 		placedCards.Add (cards);
 	}
 
+	// public bool CanPlayCards (IList<Card> card) {
+	// 	var topPlaced = placedCards.First ();
+	// 	var stronger2ndColors = new List<(Card.Color, Card.Color)> () {
+	// 		(Card.Color.Blue, Card.Color.Red),
+	// 		(Card.Color.Red, Card.Color.Green),
+	// 		(Card.Color.Green, Card.Color.Blue)
+	// 		};
+	// 	bool canPlayStrongers() {
+
+	// 	} 
+	// 	bool canPlayWeakers(){
+
+	// 	}
+	// }
+
 	public IEnumerator DrawFirstCardPlacing () {
 		var topPlacedCards = placedCards.First ();
-		var placeToPlayArea = topPlacedCards.Select( (card)=> StartCoroutine(card.DrawMove(transform.position)));
-		yield return placeToPlayArea.Last((coroutine) => coroutine != null);
+		var placeToPlayArea = topPlacedCards.Select ((card) => StartCoroutine (card.DrawMove (transform.position)));
+		yield return placeToPlayArea.Last ((coroutine) => coroutine != null);
 	}
 }
