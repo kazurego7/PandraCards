@@ -220,10 +220,10 @@ MonoBehaviour:
         m_Calls:
         - m_Target: {fileID: 114351185404839738}
           m_MethodName: SelectFrame
-          m_Mode: 3
+          m_Mode: 2
           m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_ObjectArgument: {fileID: 114530180008638686}
+            m_ObjectArgumentAssemblyTypeName: UIHandPlace, Assembly-CSharp
             m_IntArgument: 2
             m_FloatArgument: 0
             m_StringArgument: 
@@ -296,7 +296,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 58ab5a08aaface247adc470a5bcccc58, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  place: {fileID: 0}
+  handPlace: {fileID: 0}
 --- !u!114 &114198226237497010
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -342,10 +342,10 @@ MonoBehaviour:
         m_Calls:
         - m_Target: {fileID: 114351185404839738}
           m_MethodName: SelectFrame
-          m_Mode: 3
+          m_Mode: 2
           m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_ObjectArgument: {fileID: 114566134802333912}
+            m_ObjectArgumentAssemblyTypeName: UIHandPlace, Assembly-CSharp
             m_IntArgument: 0
             m_FloatArgument: 0
             m_StringArgument: 
@@ -403,7 +403,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 58ab5a08aaface247adc470a5bcccc58, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  place: {fileID: 0}
+  handPlace: {fileID: 0}
 --- !u!114 &114560866095080508
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -422,10 +422,10 @@ MonoBehaviour:
         m_Calls:
         - m_Target: {fileID: 114351185404839738}
           m_MethodName: SelectFrame
-          m_Mode: 3
+          m_Mode: 2
           m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_ObjectArgument: {fileID: 114659874913127042}
+            m_ObjectArgumentAssemblyTypeName: UIHandPlace, Assembly-CSharp
             m_IntArgument: 1
             m_FloatArgument: 0
             m_StringArgument: 
@@ -445,7 +445,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 58ab5a08aaface247adc470a5bcccc58, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  place: {fileID: 0}
+  handPlace: {fileID: 0}
 --- !u!114 &114659874913127042
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -457,7 +457,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 58ab5a08aaface247adc470a5bcccc58, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  place: {fileID: 0}
+  handPlace: {fileID: 0}
 --- !u!114 &114709561497670308
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -529,10 +529,10 @@ MonoBehaviour:
         m_Calls:
         - m_Target: {fileID: 114351185404839738}
           m_MethodName: SelectFrame
-          m_Mode: 3
+          m_Mode: 2
           m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_ObjectArgument: {fileID: 114156972325729266}
+            m_ObjectArgumentAssemblyTypeName: UIHandPlace, Assembly-CSharp
             m_IntArgument: 3
             m_FloatArgument: 0
             m_StringArgument: 

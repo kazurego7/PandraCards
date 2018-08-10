@@ -9,20 +9,19 @@ public class UIHandSelector : MonoBehaviour {
     void Awake () {
         handPlaces = GetComponentsInChildren<UIHandPlace> ().OrderBy (o => o.name).ToList ();
     }
-    public void SelectFrame (int sentPlaceNum) {
+    public void SelectFrame (UIHandPlace selectedPlace) {
         //Debug.Log ($"SelectFrame{sentPlaceNum}");
 
-        var sentPlace = handPlaces[sentPlaceNum];
-        var isSamePlacedCard = handPlaces.Where (place => place.FrameActivity).All (place => place.PlacedCardName == sentPlace.PlacedCardName);
-        if (sentPlace.FrameActivity) {
-            sentPlace.SetFrameActive (false);
+        var isSamePlacedCard = handPlaces.Where (place => place.FrameActivity).All (place => place.PlacedCardName == selectedPlace.PlacedCardName);
+        if (selectedPlace.FrameActivity) {
+            selectedPlace.SetFrameActive (false);
         } else if (isSamePlacedCard) {
-            sentPlace.SetFrameActive (true);
+            selectedPlace.SetFrameActive (true);
         } else {
             foreach (var place in handPlaces) {
                 place.SetFrameActive (false);
             }
-            sentPlace.SetFrameActive (true);
+            selectedPlace.SetFrameActive (true);
         }
         DrawFrames ();
     }
