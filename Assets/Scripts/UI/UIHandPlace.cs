@@ -15,8 +15,8 @@ public class UIHandPlace : MonoBehaviour {
 		frame = transform.GetChild (0).gameObject;
 		SetFrameActive (frame.activeInHierarchy);
 	}
-	public string PlacedCardName {
-		get { return handPlace.GetChild (0).name;}
+	public Card.Color PlacedCardName {
+		get { return handPlace.GetComponent<HandPlace>().GetCard().MyColor;}
 	}
 
 	public void SetFrameActive (bool flag) {

@@ -26,7 +26,7 @@ public class CardPlacer : MonoBehaviour {
 	public IEnumerator DrawFirstCardPlacing () {
 		IEnumerator DrawReplenishCards () {
 			foreach (var place in handPlaces) {
-				var card = place.GetCard().GetComponent<Card>();
+				var card = place.GetCard();
 				yield return StartCoroutine(card.DrawMove(place.transform.position));
 			}
 		}

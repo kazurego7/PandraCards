@@ -6,8 +6,8 @@ using System.Linq;
 
 public class HandPlace : MonoBehaviour {
 	
-	public Transform GetCard() {
-		return transform.GetChild(0);
+	public Card GetCard() {
+		return transform.GetChild(0).GetComponent<Card>();
 	}
 	public void SetCard(Card card){
 		card.transform.SetParent(transform);

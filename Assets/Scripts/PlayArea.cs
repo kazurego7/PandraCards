@@ -10,31 +10,42 @@ public class PlayArea : MonoBehaviour {
 		placedCards = new List<IList<Card>> ();
 	}
 	public void PlayCards (IList<Card> cards) {
-		foreach (var card in cards) {
-			card.transform.SetParent (transform);
+		Debug.Log(CanPlayCards(cards));
+		if (CanPlayCards (cards)) {
+			foreach (var card in cards) {
+				card.transform.SetParent (transform);
+			}
+			placedCards.Add (cards);
 		}
-		placedCards.Add (cards);
 	}
 
-	public bool CanPlayCards (IList<Card> playCard) {
-		var playColor = playCard.First ().MyColor;
-
-		var topPlacedCards = placedCards.First ();
-		var topPlacedColor = topPlacedCards.First ().MyColor;
+	public bool CanPlayCards (IList<Card> playCards) {
+		var playColor = playCards.First ().MyColor;
+		
+		var topPlacedCards = placedCards?.FirstOrDefault ();
+		var topPlacedColor = topPlacedCards?.FirstOrDefault ()?.MyColor ?? Card.Color.NoColor;
 
 		var stronger2ndColors = new List<(Card.Color, Card.Color)> () {
 			(Card.Color.Blue, Card.Color.Red),
 			(Card.Color.Red, Card.Color.Green),
 			(Card.Color.Green, Card.Color.Blue)
 		};
-		
-		var isStrongerColor = stronger2ndColors.Any (stronger2ndColor => stronger2ndColor.Item1 == playColor && stronger2ndColor.Item2 == topPlacedColor);
-		var canPlayStrongers = isStrongerColor && playCard.Count == topPlacedCards.Count;
 
-		var isWeakerColor = stronger2ndColors.Any (stronger2ndColor => stronger2ndColor.Item2 == playColor && stronger2ndColor.Item1 == topPlacedColor);
-		var canPlayWeakers = isWeakerColor && playCard.Count == topPlacedCards.Count + 1;
+		var isStrongerColor = stronger2ndColors
+			.Any (stronger2ndColor =>
+				stronger2ndColor.Item1 == playColor &&
+				stronger2ndColor.Item2 == topPlacedColor);
+		var canPlayStrongers = isStrongerColor && playCards.Count == topPlacedCards.Count;
 
-		return canPlayStrongers && canPlayWeakers;
+		var isWeakerColor = stronger2ndColors
+			.Any (stronger2ndColor =>
+				stronger2ndColor.Item1 == topPlacedColor &&
+				stronger2ndColor.Item2 == playColor);
+		var canPlayWeakers = isWeakerColor && playCards.Count == topPlacedCards.Count + 1;
+
+		var isNoColor = topPlacedColor == Card.Color.NoColor;
+
+		return canPlayStrongers && canPlayWeakers || isNoColor;
 	}
 
 	public IEnumerator DrawFirstCardPlacing () {
