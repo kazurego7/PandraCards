@@ -20,7 +20,7 @@ public class PlayArea : MonoBehaviour {
 	}
 
 	public bool CanPlayCards (IList<Card> playCards) {
-		var playColor = playCards.First ().MyColor;
+		var playColor = playCards.FirstOrDefault ()?.MyColor ?? Card.Color.NoColor;
 		
 		var topPlacedCards = placedCards?.FirstOrDefault ();
 		var topPlacedColor = topPlacedCards?.FirstOrDefault ()?.MyColor ?? Card.Color.NoColor;
@@ -43,9 +43,9 @@ public class PlayArea : MonoBehaviour {
 				stronger2ndColor.Item2 == playColor);
 		var canPlayWeakers = isWeakerColor && playCards.Count == topPlacedCards.Count + 1;
 
-		var isNoColor = topPlacedColor == Card.Color.NoColor;
+		var topPlacedCardIsNoColor = topPlacedColor == Card.Color.NoColor;
 
-		return canPlayStrongers && canPlayWeakers || isNoColor;
+		return canPlayStrongers || canPlayWeakers || topPlacedCardIsNoColor;
 	}
 
 	public IEnumerator DrawFirstCardPlacing () {

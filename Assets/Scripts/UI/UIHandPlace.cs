@@ -5,6 +5,8 @@ using UnityEngine;
 public class UIHandPlace : MonoBehaviour {
 
 	[SerializeField] Transform handPlace;
+	
+	UIHandSelector UIHandSelector;
 	GameObject frame;
 	public bool FrameActivity {
 		get;
@@ -14,9 +16,11 @@ public class UIHandPlace : MonoBehaviour {
 	void Awake () {
 		frame = transform.GetChild (0).gameObject;
 		SetFrameActive (frame.activeInHierarchy);
+		UIHandSelector = transform.GetComponentInParent<UIHandSelector>();
 	}
-	public Card.Color PlacedCardName {
-		get { return handPlace.GetComponent<HandPlace>().GetCard().MyColor;}
+
+	public Card PlacedCard {
+		get { return handPlace.GetComponent<HandPlace>().GetCard();}
 	}
 
 	public void SetFrameActive (bool flag) {
@@ -24,5 +28,10 @@ public class UIHandPlace : MonoBehaviour {
 	}
 	public void DrawFrame () {
 		frame.SetActive (FrameActivity);
+	}
+
+	public void SelectFrame() {
+		UIHandSelector.SelectFrame(this);
+		UIHandSelector.DrawFrames();
 	}
 }
