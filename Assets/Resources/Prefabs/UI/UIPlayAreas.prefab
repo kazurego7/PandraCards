@@ -55,7 +55,7 @@ GameObject:
   - component: {fileID: 224502355531710802}
   - component: {fileID: 225335159733149402}
   m_Layer: 5
-  m_Name: UIPlayArea
+  m_Name: UIPlayAreas
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
