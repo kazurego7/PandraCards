@@ -532,6 +532,12 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 224030827079854436, guid: 94fc569a200cc614d9d66eb43a57201b,
     type: 2}
   m_PrefabInternal: {fileID: 417849453}
+--- !u!114 &492753918 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 114402520101676216, guid: a517225cd27046a4ab15e5639120e418,
+    type: 2}
+  m_PrefabInternal: {fileID: 622078768}
+  m_Script: {fileID: 11500000, guid: 90619191da69d8c478fa4ea90a6f7616, type: 3}
 --- !u!114 &500230787 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 114203635593893970, guid: a8093a623e161ff438d52507a206ad72,
@@ -661,6 +667,10 @@ Prefab:
     - target: {fileID: 1557095008330480, guid: a517225cd27046a4ab15e5639120e418, type: 2}
       propertyPath: m_Name
       value: DeckPlacer
+      objectReference: {fileID: 0}
+    - target: {fileID: 4329483668968804, guid: a517225cd27046a4ab15e5639120e418, type: 2}
+      propertyPath: m_LocalPosition.x
+      value: -6
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 114271264294918028, guid: a517225cd27046a4ab15e5639120e418, type: 2}
@@ -1672,6 +1682,16 @@ Prefab:
       propertyPath: m_RootOrder
       value: 3
       objectReference: {fileID: 0}
+    - target: {fileID: 114238074175879236, guid: a8093a623e161ff438d52507a206ad72,
+        type: 2}
+      propertyPath: cardPlacer
+      value: 
+      objectReference: {fileID: 492753918}
+    - target: {fileID: 114203635593893970, guid: a8093a623e161ff438d52507a206ad72,
+        type: 2}
+      propertyPath: cardPlacer
+      value: 
+      objectReference: {fileID: 492753918}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: a8093a623e161ff438d52507a206ad72, type: 2}
   m_IsPrefabAsset: 0
