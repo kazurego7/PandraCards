@@ -15,7 +15,7 @@ public class PlayArea : MonoBehaviour {
 	bool CanPlayCards (IList<Card> playCards) {
 		var playColor = playCards.FirstOrDefault ()?.MyColor ?? Card.Color.NoColor;
 
-		var topPlacedCards = placedCards?.LastOrDefault (); // 一番下が最初(first)
+		var topPlacedCards = placedCards.LastOrDefault (); // 一番下が最初(first)
 		var topPlacedColor = topPlacedCards?.FirstOrDefault ()?.MyColor ?? Card.Color.NoColor;
 
 		var stronger2ndColors = new List<(Card.Color, Card.Color)> () {
@@ -74,6 +74,12 @@ public class PlayArea : MonoBehaviour {
 		}
 
 		fieldPlacer.JudgeCanNextPlay();
+	}
+
+	public bool ExistPlayableCards(CardPlacer cardPlacer){
+		var handCards = cardPlacer.GetHands();
+		var topPlacedCards = placedCards.LastOrDefault ();
+		return true; /****************************      これから        ********************************************/
 	}
 
 	public IEnumerator DrawFirstCardPlacing () {

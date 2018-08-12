@@ -27,6 +27,10 @@ public class CardPlacer : MonoBehaviour {
 		}
 	}
 
+	public IList<Card> GetHands(){
+		return handPlaces.Select(handPlace => handPlace.GetCard()).Where(card => card != null).ToList();
+	}
+
 	public IEnumerator DrawReplenishCards (int moveingFrame) {
 		foreach (var place in handPlaces) {
 			var card = place.GetCard ();
