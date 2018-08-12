@@ -19,8 +19,8 @@ public class UIHandPlace : MonoBehaviour {
 		UIHandSelector = transform.GetComponentInParent<UIHandSelector>();
 	}
 
-	public Card PlacedCard {
-		get { return handPlace.GetComponent<HandPlace>().GetCard();}
+	public HandPlace HandPlace {
+		get { return handPlace.GetComponent<HandPlace>(); }
 	}
 
 	public void SetFrameActive (bool flag) {

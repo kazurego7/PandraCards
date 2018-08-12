@@ -5,6 +5,7 @@ using UnityEngine;
 
 public class UIHandSelector : MonoBehaviour {
     IList<UIHandPlace> UIHandPlaces;
+    [SerializeField] CardPlacer cardPlacer;
 
     void Awake () {
         UIHandPlaces = GetComponentsInChildren<UIHandPlace> ().OrderBy (o => o.name).ToList ();
@@ -12,7 +13,7 @@ public class UIHandSelector : MonoBehaviour {
     public void SelectFrame (UIHandPlace selectedPlace) {
         //Debug.Log ($"SelectFrame{sentPlaceNum}");
 
-        var isSameColorCard = UIHandPlaces.Where (place => place.FrameActivity).All (place => place.PlacedCard.MyColor == selectedPlace.PlacedCard.MyColor);
+        var isSameColorCard = UIHandPlaces.Where (place => place.FrameActivity).All (place => place.HandPlace.GetCard().MyColor == selectedPlace.HandPlace.GetCard().MyColor);
         if (selectedPlace.FrameActivity) {
             selectedPlace.SetFrameActive (false);
         } else if (isSameColorCard) {
@@ -25,7 +26,7 @@ public class UIHandSelector : MonoBehaviour {
         }
     }
 
-    public void DeselectFrame () {
+    public void DeselectFrames () {
         // 処理
         foreach (var place in UIHandPlaces) {
             place.SetFrameActive (false);
@@ -40,7 +41,7 @@ public class UIHandSelector : MonoBehaviour {
         }
     }
 
-    public IList<Card> GetSelectedCards(){
-        return UIHandPlaces.Where(UIHandPlace => UIHandPlace.FrameActivity).Select(UIHandPlace => UIHandPlace.PlacedCard).ToList();
+    public IList<HandPlace> GetSelectedHandPlaces(){
+        return UIHandPlaces.Where(UIHandPlace => UIHandPlace.FrameActivity).Select(UIHandPlace => UIHandPlace.HandPlace).ToList();
     }
 }

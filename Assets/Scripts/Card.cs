@@ -5,16 +5,19 @@ using System.Linq;
 using UnityEngine;
 
 public class Card : MonoBehaviour {
-	public enum Color {Red, Green, Blue, NoColor};
-
+	public enum Color { Red, Green, Blue, NoColor };
+ 	const float thickness = 0.0005f; // 遊戯王カードの厚みが0.5mm = 0.0005m
+	public float Thickness {
+		get {return thickness;}
+	}
 	[SerializeField] Color _myColor;
 	public Color MyColor {
 		get {
 			return _myColor;
 		}
 	}
-	public IEnumerator DrawMove (Vector3 target) {
-		var moveingFrame = 10;
+
+	public IEnumerator DrawMove (Vector3 target, float height = thickness, int moveingFrame = 1) {
 		var start = transform.position;
 		foreach (var currentFrame in Enumerable.Range (1, moveingFrame)) {
 			transform.position = Vector3.Lerp (start, target, (float) currentFrame / moveingFrame);

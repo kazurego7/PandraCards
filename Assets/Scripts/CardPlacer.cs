@@ -14,24 +14,25 @@ public class CardPlacer : MonoBehaviour {
 	}
 	public void Initialize () {
 		deck.Initialize ();
-		ReplenishCards ();
+		ReplenishHands (handPlaces);
 	}
 
-	void ReplenishCards () {
+	public void ReplenishHands (IList<HandPlace> replenishHandPlaces) {
 		// 手札
+		foreach (var place in replenishHandPlaces) {
+			place.SetCard (deck.TopDraw ());
+		}
+	}
+
+	public IEnumerator DrawReplenishCards (int moveingFrame) {
 		foreach (var place in handPlaces) {
-			place.SetCard(deck.TopDraw ());
+			var card = place.GetCard ();
+			yield return StartCoroutine (card.DrawMove (place.transform.position, moveingFrame: moveingFrame));
 		}
 	}
 	public IEnumerator DrawFirstCardPlacing () {
-		IEnumerator DrawReplenishCards () {
-			foreach (var place in handPlaces) {
-				var card = place.GetCard();
-				yield return StartCoroutine(card.DrawMove(place.transform.position));
-			}
-		}
 		yield return deck.DrawShuffle ();
-		yield return DrawReplenishCards ();
+		yield return DrawReplenishCards (10);
 	}
 
 }

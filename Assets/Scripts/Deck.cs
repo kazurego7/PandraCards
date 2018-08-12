@@ -52,9 +52,8 @@ public class Deck : MonoBehaviour{
 	}
 	public void DrawHeightAdjustedCards () {
 		// デッキのそれぞれのカードの高さを厚みによって調節
-		var cardThickness = 0.0005f; // 遊戯王カードの厚みが0.5mm = 0.0005m
 		foreach (var index in Enumerable.Range (0, cards.Count)) {
-			cards[index].transform.Translate (0, 0, -index * cardThickness);
+			cards[index].transform.Translate (0, 0, -index * cards[index].GetComponent<Card>().Thickness);
 		}
 	}
 
@@ -63,9 +62,9 @@ public class Deck : MonoBehaviour{
 			var emptyCard = Resources.Load<GameObject> (pathForCards + "EmptyCard");
 			return Instantiate (emptyCard, transform.position, Quaternion.identity, transform).GetComponent<Card>();
 		} else {
-			var top = cards[0];
+			var top = cards[0].GetComponent<Card>();
 			cards.RemoveAt (0);
-			return top.GetComponent<Card>();
+			return top;
 		}
 	}
 
