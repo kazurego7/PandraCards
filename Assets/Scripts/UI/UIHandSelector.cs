@@ -5,7 +5,6 @@ using UnityEngine;
 
 public class UIHandSelector : MonoBehaviour {
     IList<UIHandPlace> UIHandPlaces;
-    [SerializeField] CardPlacer cardPlacer;
 
     void Awake () {
         UIHandPlaces = GetComponentsInChildren<UIHandPlace> ().OrderBy (o => o.name).ToList ();

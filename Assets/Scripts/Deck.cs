@@ -37,7 +37,7 @@ public class Deck : MonoBehaviour{
 		this.cards = cards;
 
 		Shuffle ();
-		DrawHeightAdjustedCards ();
+		StartCoroutine(DrawHeightAdjustedCards ());
 	}
 
 	public void Delete () {
@@ -50,11 +50,13 @@ public class Deck : MonoBehaviour{
 	bool IsNoCard () {
 		return cards.Count == 0;
 	}
-	public void DrawHeightAdjustedCards () {
+	public IEnumerator DrawHeightAdjustedCards () {
 		// デッキのそれぞれのカードの高さを厚みによって調節
 		foreach (var index in Enumerable.Range (0, cards.Count)) {
-			cards[index].transform.Translate (0, 0, -index * cards[index].GetComponent<Card>().Thickness);
+			var heightAjustedPosition = cards[index].transform.position + index * Card.thickness * Vector3.back;
+			StartCoroutine(cards[index].GetComponent<Card>().DrawMove(heightAjustedPosition));
 		}
+		yield return null;
 	}
 
 	public Card TopDraw () {
@@ -62,8 +64,8 @@ public class Deck : MonoBehaviour{
 			var emptyCard = Resources.Load<GameObject> (pathForCards + "EmptyCard");
 			return Instantiate (emptyCard, transform.position, Quaternion.identity, transform).GetComponent<Card>();
 		} else {
-			var top = cards[0].GetComponent<Card>();
-			cards.RemoveAt (0);
+			var top = cards.Last().GetComponent<Card>();
+			cards.RemoveAt (cards.Count - 1);
 			return top;
 		}
 	}
