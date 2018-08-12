@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-public class Deck : MonoBehaviour{
+public class Deck : MonoBehaviour {
 	class CardRacipe : Tuple<String, Int32> {
 		public String Name { get; }
 		public Int32 Number { get; }
@@ -37,7 +37,7 @@ public class Deck : MonoBehaviour{
 		this.cards = cards;
 
 		Shuffle ();
-		StartCoroutine(DrawHeightAdjustedCards ());
+		StartCoroutine (DrawHeightAdjustedCards ());
 	}
 
 	public void Delete () {
@@ -46,28 +46,31 @@ public class Deck : MonoBehaviour{
 			Destroy (card);
 		}
 	}
-
-	bool IsNoCard () {
-		return cards.Count == 0;
-	}
 	public IEnumerator DrawHeightAdjustedCards () {
 		// デッキのそれぞれのカードの高さを厚みによって調節
 		foreach (var index in Enumerable.Range (0, cards.Count)) {
 			var heightAjustedPosition = cards[index].transform.position + index * Card.thickness * Vector3.back;
-			StartCoroutine(cards[index].GetComponent<Card>().DrawMove(heightAjustedPosition));
+			StartCoroutine (cards[index].GetComponent<Card> ().DrawMove (heightAjustedPosition));
 		}
 		yield return null;
 	}
 
 	public Card TopDraw () {
-		if (this.IsNoCard ()) {
+		bool IsNoCard () {
+			return cards.Count == 0;
+		}
+		if (IsNoCard ()) {
 			var emptyCard = Resources.Load<GameObject> (pathForCards + "EmptyCard");
-			return Instantiate (emptyCard, transform.position, Quaternion.identity, transform).GetComponent<Card>();
+			return Instantiate (emptyCard, transform.position, Quaternion.identity, transform).GetComponent<Card> ();
 		} else {
-			var top = cards.Last().GetComponent<Card>();
+			var top = cards.Last ().GetComponent<Card> ();
 			cards.RemoveAt (cards.Count - 1);
 			return top;
 		}
+	}
+
+	public IList<Card> TopDraw (int num) {
+		return Enumerable.Range (0, num).Select (_ => TopDraw ()).ToList ();
 	}
 
 	/*********************************************
@@ -83,11 +86,11 @@ public class Deck : MonoBehaviour{
 		// 各カードが動き始めるのを何秒遅延するか
 		var startDelaySecond = 0.01f;
 		foreach (var index in Enumerable.Range (0, cards.Count - 1)) {
-			StartCoroutine (cards[index].GetComponent<Card>().DrawShuffle());
+			StartCoroutine (cards[index].GetComponent<Card> ().DrawShuffle ());
 			yield return new WaitForSeconds (startDelaySecond);
 		}
 		// 最後のコルーチンだけ返すことで、順序処理が行える
 		var lastIndex = cards.Count - 1;
-		yield return StartCoroutine (cards[lastIndex].GetComponent<Card>().DrawShuffle());
+		yield return StartCoroutine (cards[lastIndex].GetComponent<Card> ().DrawShuffle ());
 	}
 }

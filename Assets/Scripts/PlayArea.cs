@@ -5,10 +5,11 @@ using UnityEngine;
 
 public class PlayArea : MonoBehaviour {
 	IList<IList<Card>> placedCards;
-	[SerializeField] CardPlacer cardPlacer;
+	FieldPlacer fieldPlacer;
 
 	public void Awake () {
 		placedCards = new List<IList<Card>> ();
+		fieldPlacer = GetComponentInParent<FieldPlacer>();
 	}
 
 	bool CanPlayCards (IList<Card> playCards) {
@@ -46,7 +47,13 @@ public class PlayArea : MonoBehaviour {
 		placedCards.Add (cards);
 	}
 
-	public void PlayCardsForHands (IList<HandPlace> selectedHandPlaces) {
+	public IList<IList<Card>> RemovePlacedCards() {
+		var discards = placedCards;
+		placedCards = new List<IList<Card>>();
+		return discards;
+	}
+
+	public void PlayCardsForHands (IList<HandPlace> selectedHandPlaces, CardPlacer cardPlacer) {
 		var selectedCards = selectedHandPlaces.Select (selected => selected.GetCard ()).ToList ();
 		IEnumerator DrawCardPlayMoves () {
 			var prevPlacedCardZ = placedCards[placedCards.Count-2].Last()?.transform.position.z ?? 0; // 注意!! 既にCardはPlayされ、placedCardsに格納されている
@@ -65,6 +72,8 @@ public class PlayArea : MonoBehaviour {
 			StartCoroutine (DrawCardPlayMoves ());
 			StartCoroutine (cardPlacer.DrawReplenishCards (7));
 		}
+
+		fieldPlacer.JudgeCanNextPlay();
 	}
 
 	public IEnumerator DrawFirstCardPlacing () {

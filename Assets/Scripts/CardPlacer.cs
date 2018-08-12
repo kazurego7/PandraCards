@@ -8,9 +8,12 @@ public class CardPlacer : MonoBehaviour {
 	Deck deck;
 	IList<HandPlace> handPlaces;
 
+	IList<PlayArea> playAreas;
+
 	void Awake () {
 		deck = GetComponentInChildren<Deck> ();
 		handPlaces = GetComponentsInChildren<HandPlace> ().ToList ();
+		playAreas = transform.parent.GetComponentsInChildren<PlayArea>().ToList();
 	}
 	public void Initialize () {
 		deck.Initialize ();
