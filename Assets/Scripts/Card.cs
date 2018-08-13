@@ -1,12 +1,11 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
 using UnityEngine;
 
 public class Card : MonoBehaviour {
-	public enum Color { Red, Green, Blue, NoColor };
- 	public const float thickness = 0.0005f; // 遊戯王カードの厚みが0.5mm = 0.0005m
+	public enum Color { Red, Green, Blue, NoColor}
+	public const float thickness = 0.0005f; // 遊戯王カードの厚みが0.5mm = 0.0005m
 	[SerializeField] Color _myColor;
 	public Color MyColor {
 		get {

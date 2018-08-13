@@ -9,7 +9,7 @@ public class PlayArea : MonoBehaviour {
 
 	public void Awake () {
 		placedCards = new List<IList<Card>> ();
-		fieldPlacer = GetComponentInParent<FieldPlacer>();
+		fieldPlacer = GetComponentInParent<FieldPlacer> ();
 	}
 
 	bool CanPlayCards (IList<Card> playCards) {
@@ -47,17 +47,26 @@ public class PlayArea : MonoBehaviour {
 		placedCards.Add (cards);
 	}
 
-	public IList<IList<Card>> RemovePlacedCards() {
+	public IList<IList<Card>> RemovePlacedCards () {
 		var discards = placedCards;
-		placedCards = new List<IList<Card>>();
+		placedCards = new List<IList<Card>> ();
 		return discards;
 	}
 
+	public void DebugLogPlacedCards () {
+		var cardColorAndNums = placedCards.Select (cards => (cards.First ().MyColor, cards.Count));
+		foreach (var cardColorAndNum in cardColorAndNums) {
+			Debug.Log ($"{cardColorAndNum.Item1} : {cardColorAndNum.Item2}");
+		}
+	}
 	public void PlayCardsForHands (IList<HandPlace> selectedHandPlaces, CardPlacer cardPlacer) {
 		var selectedCards = selectedHandPlaces.Select (selected => selected.GetCard ()).ToList ();
 		IEnumerator DrawCardPlayMoves () {
-			var prevPlacedCardZ = placedCards[placedCards.Count-2].Last()?.transform.position.z ?? 0; // 注意!! 既にCardはPlayされ、placedCardsに格納されている
-			foreach (var index in Enumerable.Range(0, selectedCards.Count)) {
+			var prevCardIndex = placedCards.Count - 2;
+			var prevPlacedCardZ = prevCardIndex >= 0 ?
+				placedCards[prevCardIndex].Last ()?.transform.position.z ?? 0 : // 注意!! 既にCardはPlayされ、placedCardsに格納されている
+				0;
+			foreach (var index in Enumerable.Range (0, selectedCards.Count)) {
 				var leftmostDistance = 0.2f * (-(selectedCards.Count - 1) + 2 * index);
 				var heightVector = (prevPlacedCardZ + -Card.thickness * (index + 1)) * Vector3.forward; // 注意!! 左手座標系(手前の方がマイナス)
 				var movePosition = transform.position + leftmostDistance * Vector3.left + heightVector;
@@ -73,18 +82,35 @@ public class PlayArea : MonoBehaviour {
 			StartCoroutine (cardPlacer.DrawReplenishCards (7));
 		}
 
-		fieldPlacer.JudgeCanNextPlay();
+		fieldPlacer.JudgeCanNextPlay ();
 	}
 
-	public bool ExistPlayableCards(CardPlacer cardPlacer){
-		var handCards = cardPlacer.GetHands();
-		var topPlacedCards = placedCards.LastOrDefault ();
-		return true; /****************************      これから        ********************************************/
+	public bool ExistPlayableCards (CardPlacer cardPlacer) {
+		var handCards = cardPlacer.GetHands ();
+		var playAreaCards = placedCards.LastOrDefault ();
+		var playAreaCardsColor = playAreaCards?.FirstOrDefault ()?.MyColor ?? Card.Color.NoColor;
+		var stronger2ndColors = new List<(Card.Color, Card.Color)> () {
+			(Card.Color.Blue, Card.Color.Red),
+			(Card.Color.Red, Card.Color.Green),
+			(Card.Color.Green, Card.Color.Blue),
+		};
+
+		var strongerColor = stronger2ndColors.FirstOrDefault (stronger2ndColor => stronger2ndColor.Item2 == playAreaCardsColor).Item2;
+		var canPlayStronger = handCards.Where (hand => hand.MyColor == strongerColor).Count () == (playAreaCards?.Count() ?? 0);
+
+		var weakerColor = stronger2ndColors.FirstOrDefault (stronger2ndColor => stronger2ndColor.Item1 == playAreaCardsColor).Item1;
+		var canPlayWeaker = handCards.Where (hand => hand.MyColor == weakerColor).Count () == (playAreaCards?.Count() ?? 0) + 1;
+
+		var playAreaIsNoColor = playAreaCardsColor == Card.Color.NoColor;
+
+		//Debug.Log($"{gameObject.name} : {canPlayStronger}, {canPlayWeaker}, {playAreaIsNoColor}");
+
+		return canPlayStronger || canPlayWeaker || playAreaIsNoColor;
 	}
 
 	public IEnumerator DrawFirstCardPlacing () {
-		var topPlacedCards = placedCards.First ();
-		var placeToPlayArea = topPlacedCards.Select ((card) => StartCoroutine (card.DrawMove (transform.position, moveingFrame : 10)));
-		yield return placeToPlayArea.Last ((coroutine) => coroutine != null);
+		var topPlacedCards = placedCards.FirstOrDefault ();
+		var placeToPlayArea = topPlacedCards?.Select ((card) => StartCoroutine (card.DrawMove (transform.position, moveingFrame : 10)));
+		yield return placeToPlayArea?.Last ((coroutine) => coroutine != null);
 	}
 }
