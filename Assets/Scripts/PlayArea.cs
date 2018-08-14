@@ -36,7 +36,7 @@ public class PlayArea : MonoBehaviour {
 				stronger2ndColor.Item2 == playColor);
 		var playCardsCanPlayForWeakers = isWeakerColor && playCards.Count == topPlacedCards.Count + 1;
 
-		var topPlacedCardsAreNoColor = topPlacedColor == Card.Color.NoColor;
+		var topPlacedCardsAreNoColor = topPlacedColor == Card.Color.NoColor && playCards.Count == 1;
 
 		return playCardsCanPlayForStrongers || playCardsCanPlayForWeakers || topPlacedCardsAreNoColor; // topが色無しなら無条件で置ける
 	}
@@ -70,7 +70,8 @@ public class PlayArea : MonoBehaviour {
 				var leftmostDistance = 0.2f * (-(selectedCards.Count - 1) + 2 * index);
 				var heightVector = (prevPlacedCardZ + -Card.thickness * (index + 1)) * Vector3.forward; // 注意!! 左手座標系(手前の方がマイナス)
 				var movePosition = transform.position + leftmostDistance * Vector3.left + heightVector;
-				StartCoroutine (selectedCards[index].DrawMove (movePosition, moveingFrame : 10));
+				selectedCards[index].DrawMove (selectedCards[index].transform.position + heightVector, moveingFrame : 1);
+				selectedCards[index].DrawMove (movePosition, moveingFrame : 10);
 			}
 			yield return null;
 		}
@@ -80,9 +81,9 @@ public class PlayArea : MonoBehaviour {
 
 			StartCoroutine (DrawCardPlayMoves ());
 			StartCoroutine (cardPlacer.DrawReplenishCards (7));
-		}
 
-		fieldPlacer.JudgeCanNextPlay ();
+			fieldPlacer.JudgeCanNextPlay ();
+		}
 	}
 
 	public bool ExistPlayableCards (CardPlacer cardPlacer) {
@@ -95,11 +96,11 @@ public class PlayArea : MonoBehaviour {
 			(Card.Color.Green, Card.Color.Blue),
 		};
 
-		var strongerColor = stronger2ndColors.FirstOrDefault (stronger2ndColor => stronger2ndColor.Item2 == playAreaCardsColor).Item2;
-		var canPlayStronger = handCards.Where (hand => hand.MyColor == strongerColor).Count () == (playAreaCards?.Count() ?? 0);
+		var strongerColor = stronger2ndColors.FirstOrDefault (stronger2ndColor => stronger2ndColor.Item2 == playAreaCardsColor).Item1;
+		var canPlayStronger = handCards.Where (hand => hand.MyColor == strongerColor).Count () >= (playAreaCards?.Count () ?? 0);
 
-		var weakerColor = stronger2ndColors.FirstOrDefault (stronger2ndColor => stronger2ndColor.Item1 == playAreaCardsColor).Item1;
-		var canPlayWeaker = handCards.Where (hand => hand.MyColor == weakerColor).Count () == (playAreaCards?.Count() ?? 0) + 1;
+		var weakerColor = stronger2ndColors.FirstOrDefault (stronger2ndColor => stronger2ndColor.Item1 == playAreaCardsColor).Item2;
+		var canPlayWeaker = handCards.Where (hand => hand.MyColor == weakerColor).Count () >= (playAreaCards?.Count () ?? 0) + 1;
 
 		var playAreaIsNoColor = playAreaCardsColor == Card.Color.NoColor;
 
@@ -110,7 +111,10 @@ public class PlayArea : MonoBehaviour {
 
 	public IEnumerator DrawFirstCardPlacing () {
 		var topPlacedCards = placedCards.FirstOrDefault ();
-		var placeToPlayArea = topPlacedCards?.Select ((card) => StartCoroutine (card.DrawMove (transform.position, moveingFrame : 10)));
+		var placeToPlayArea = topPlacedCards?.Select ((card) => {
+			card.DrawMove (transform.position, moveingFrame : 10);
+			return card.Moveing;
+		});
 		yield return placeToPlayArea?.Last ((coroutine) => coroutine != null);
 	}
 }

@@ -50,7 +50,8 @@ public class Deck : MonoBehaviour {
 		// デッキのそれぞれのカードの高さを厚みによって調節
 		foreach (var index in Enumerable.Range (0, cards.Count)) {
 			var heightAjustedPosition = cards[index].transform.position + index * Card.thickness * Vector3.back;
-			StartCoroutine (cards[index].GetComponent<Card> ().DrawMove (heightAjustedPosition));
+			var card = cards[index].GetComponent<Card> ();
+			card.DrawMove (heightAjustedPosition);
 		}
 		yield return null;
 	}

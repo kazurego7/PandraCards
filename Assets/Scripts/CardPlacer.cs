@@ -35,7 +35,8 @@ public class CardPlacer : MonoBehaviour {
 		foreach (var place in handPlaces) {
 			var card = place.GetCard ();
 			var movePosition = place.transform.position + Card.thickness * Vector3.back;
-			yield return StartCoroutine (card.DrawMove (movePosition, moveingFrame: moveingFrame));
+			card.DrawMove (movePosition, moveingFrame: moveingFrame);
+			yield return card.Moveing;
 		}
 	}
 	public IEnumerator DrawFirstCardPlacing () {
