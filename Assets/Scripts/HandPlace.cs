@@ -5,10 +5,8 @@ using System;
 using System.Linq;
 
 public class HandPlace : MonoBehaviour {
-
 	public Card PlacedCard{
 		get;
 		set;
 	}
-
 }
