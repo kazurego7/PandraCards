@@ -26,7 +26,7 @@ public class CardPlacer : MonoBehaviour {
 	}
 
 	public IList<Card> GetHands(){
-		return handPlaces.Select(handPlace => handPlace.PlacedCard)?.Where(card => card != null)?.ToList();
+		return handPlaces.Select(handPlace => handPlace.PlacedCard)?.Where(card => card != null).ToList();
 	}
 
 	public IEnumerator DrawReplenishCards (int moveingFrame) {

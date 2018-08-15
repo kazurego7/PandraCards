@@ -96,6 +96,8 @@ public class PlayArea : MonoBehaviour {
 			(Card.Color.Green, Card.Color.Blue),
 		};
 
+		var existHands = handCards.Count > 0;
+
 		var strongerColor = stronger2ndColors.FirstOrDefault (stronger2ndColor => stronger2ndColor.Item2 == playAreaCardsColor).Item1;
 		var canPlayStronger = (handCards?.Where (hand => hand.MyColor == strongerColor)?.Count () ?? 0) >= (playAreaCards?.Count () ?? 0);
 
@@ -106,7 +108,7 @@ public class PlayArea : MonoBehaviour {
 
 		//Debug.Log($"{gameObject.name} : {canPlayStronger}, {canPlayWeaker}, {playAreaIsNoColor}");
 
-		return canPlayStronger || canPlayWeaker || playAreaIsNoColor;
+		return existHands && (canPlayStronger || canPlayWeaker || playAreaIsNoColor);
 	}
 
 	public IEnumerator DrawFirstCardPlacing () {

@@ -21,9 +21,9 @@ public class Deck : MonoBehaviour {
 
 		// 仮のデッキレシピを作成 *** いずれ消す
 		var tmpCardRacipes = new List<CardRacipe> () {
-			new CardRacipe ("RedCard", 10),
-				new CardRacipe ("BlueCard", 10),
-				new CardRacipe ("GreenCard", 10)
+			new CardRacipe ("RedCard", 7),
+				new CardRacipe ("BlueCard", 0),
+				new CardRacipe ("GreenCard", 0)
 		};
 
 		// デッキレシピから、デッキのリストを作成
