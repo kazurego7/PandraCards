@@ -8,7 +8,6 @@ using UnityEngine.UI;
 
 public class ShuffleDrawer : MonoBehaviour {
     IObservable<Vector3> shuffleMoveing;
-    [SerializeField] int moveingFrame = 100;
 
     void Awake () {
         IObservable<Vector3> CreateShuffleMoveing (Vector3 moveVec, int moveingFrame) {
