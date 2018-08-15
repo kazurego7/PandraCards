@@ -57,21 +57,9 @@ public class Deck : MonoBehaviour {
 	}
 
 	public Card TopDraw () {
-		bool IsNoCard () {
-			return cards.Count == 0;
-		}
-		if (IsNoCard ()) {
-			var emptyCard = Resources.Load<GameObject> (pathForCards + "EmptyCard");
-			return Instantiate (emptyCard, transform.position, Quaternion.identity, transform).GetComponent<Card> ();
-		} else {
-			var top = cards.Last ().GetComponent<Card> ();
-			cards.RemoveAt (cards.Count - 1);
+			var top = cards.LastOrDefault ()?.GetComponent<Card> ();
+			if (cards.Count > 0) cards.RemoveAt (cards.Count - 1);
 			return top;
-		}
-	}
-
-	public IList<Card> TopDraw (int num) {
-		return Enumerable.Range (0, num).Select (_ => TopDraw ()).ToList ();
 	}
 
 	/*********************************************

@@ -13,7 +13,7 @@ public class UIHandSelector : MonoBehaviour {
     public void SelectFrame (UIHandPlace selectedPlace) {
         //Debug.Log ($"SelectFrame{sentPlaceNum}");
 
-        var isSameColorCard = UIHandPlaces.Where (place => place.FrameActivity).All (place => place.HandPlace.GetCard().MyColor == selectedPlace.HandPlace.GetCard().MyColor);
+        var isSameColorCard = UIHandPlaces.Where (place => place.FrameActivity).All (place => place.HandPlace.PlacedCard.MyColor == selectedPlace.HandPlace.PlacedCard.MyColor);
         if (selectedPlace.FrameActivity) {
             selectedPlace.SetFrameActive (false);
         } else if (isSameColorCard) {

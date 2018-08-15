@@ -60,7 +60,7 @@ public class PlayArea : MonoBehaviour {
 		}
 	}
 	public void PlayCardsForHands (IList<HandPlace> selectedHandPlaces, CardPlacer cardPlacer) {
-		var selectedCards = selectedHandPlaces.Select (selected => selected.GetCard ()).ToList ();
+		var selectedCards = selectedHandPlaces.Select (selected => selected.PlacedCard).ToList ();
 		IEnumerator DrawCardPlayMoves () {
 			var prevCardIndex = placedCards.Count - 2;
 			var prevPlacedCardZ = prevCardIndex >= 0 ?

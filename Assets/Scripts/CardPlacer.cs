@@ -23,17 +23,17 @@ public class CardPlacer : MonoBehaviour {
 	public void ReplenishHands (IList<HandPlace> replenishHandPlaces) {
 		// 手札
 		foreach (var place in replenishHandPlaces) {
-			place.SetCard (deck.TopDraw ());
+			place.PlacedCard = deck.TopDraw ();
 		}
 	}
 
 	public IList<Card> GetHands(){
-		return handPlaces.Select(handPlace => handPlace.GetCard()).Where(card => card != null).ToList();
+		return handPlaces.Select(handPlace => handPlace.PlacedCard).Where(card => card != null).ToList();
 	}
 
 	public IEnumerator DrawReplenishCards (int moveingFrame) {
 		foreach (var place in handPlaces) {
-			var card = place.GetCard ();
+			var card = place.PlacedCard;
 			var movePosition = place.transform.position + Card.thickness * Vector3.back;
 			card.DrawMove (movePosition, moveingFrame: moveingFrame);
 			yield return card.Moveing;
