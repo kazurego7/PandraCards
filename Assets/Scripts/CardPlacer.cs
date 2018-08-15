@@ -26,15 +26,15 @@ public class CardPlacer : MonoBehaviour {
 	}
 
 	public IList<Card> GetHands(){
-		return handPlaces.Select(handPlace => handPlace.PlacedCard).Where(card => card != null).ToList();
+		return handPlaces.Select(handPlace => handPlace.PlacedCard)?.Where(card => card != null)?.ToList();
 	}
 
 	public IEnumerator DrawReplenishCards (int moveingFrame) {
 		foreach (var place in handPlaces) {
 			var card = place.PlacedCard;
 			var movePosition = place.transform.position + Card.thickness * Vector3.back;
-			card.DrawMove (movePosition, moveingFrame: moveingFrame);
-			yield return card.Moveing;
+			card?.DrawMove (movePosition, moveingFrame: moveingFrame);
+			yield return card?.Moveing;
 		}
 	}
 	public IEnumerator DrawFirstCardPlacing () {

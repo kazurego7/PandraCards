@@ -42,7 +42,7 @@ public class PlayArea : MonoBehaviour {
 	}
 	public void PlayCards (IList<Card> cards) {
 		foreach (var card in cards) {
-			card.transform.SetParent (transform);
+			card?.transform?.SetParent (transform);
 		}
 		placedCards.Add (cards);
 	}
@@ -60,7 +60,7 @@ public class PlayArea : MonoBehaviour {
 		}
 	}
 	public void PlayCardsForHands (IList<HandPlace> selectedHandPlaces, CardPlacer cardPlacer) {
-		var selectedCards = selectedHandPlaces.Select (selected => selected.PlacedCard).ToList ();
+		var selectedCards = selectedHandPlaces.Select (selected => selected.PlacedCard).Where(selected => selected != null)?.ToList ();
 		IEnumerator DrawCardPlayMoves () {
 			var prevCardIndex = placedCards.Count - 2;
 			var prevPlacedCardZ = prevCardIndex >= 0 ?
@@ -97,10 +97,10 @@ public class PlayArea : MonoBehaviour {
 		};
 
 		var strongerColor = stronger2ndColors.FirstOrDefault (stronger2ndColor => stronger2ndColor.Item2 == playAreaCardsColor).Item1;
-		var canPlayStronger = handCards.Where (hand => hand.MyColor == strongerColor).Count () >= (playAreaCards?.Count () ?? 0);
+		var canPlayStronger = (handCards?.Where (hand => hand.MyColor == strongerColor)?.Count () ?? 0) >= (playAreaCards?.Count () ?? 0);
 
 		var weakerColor = stronger2ndColors.FirstOrDefault (stronger2ndColor => stronger2ndColor.Item1 == playAreaCardsColor).Item2;
-		var canPlayWeaker = handCards.Where (hand => hand.MyColor == weakerColor).Count () >= (playAreaCards?.Count () ?? 0) + 1;
+		var canPlayWeaker = (handCards?.Where (hand => hand.MyColor == weakerColor)?.Count () ?? 0) >= (playAreaCards?.Count () ?? 0) + 1;
 
 		var playAreaIsNoColor = playAreaCardsColor == Card.Color.NoColor;
 
@@ -112,9 +112,9 @@ public class PlayArea : MonoBehaviour {
 	public IEnumerator DrawFirstCardPlacing () {
 		var topPlacedCards = placedCards.FirstOrDefault ();
 		var placeToPlayArea = topPlacedCards?.Select ((card) => {
-			card.DrawMove (transform.position, moveingFrame : 10);
-			return card.Moveing;
+			card?.DrawMove (transform.position, moveingFrame : 10);
+			return card?.Moveing;
 		});
-		yield return placeToPlayArea?.Last ((coroutine) => coroutine != null);
+		yield return placeToPlayArea?.LastOrDefault ((coroutine) => coroutine != null);
 	}
 }
