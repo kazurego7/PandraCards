@@ -15,7 +15,7 @@ public class Deck : MonoBehaviour {
 	}
 
 	readonly String pathForCards = "Prefabs/Cards/";
-	IList<GameObject> cards;
+	IList<Card> cards;
 
 	public void Initialize () {
 
@@ -27,11 +27,11 @@ public class Deck : MonoBehaviour {
 		};
 
 		// デッキレシピから、デッキのリストを作成
-		var cards = new List<GameObject> ();
+		var cards = new List<Card> ();
 		foreach (var cardRacipe in tmpCardRacipes) {
 			var card = Resources.Load<GameObject> (pathForCards + cardRacipe.Name);
 			foreach (var item in Enumerable.Range (0, cardRacipe.Number)) {
-				cards.Add (Instantiate<GameObject> (card, transform));
+				cards.Add (Instantiate<GameObject> (card, transform).GetComponent<Card>());
 			}
 		}
 		this.cards = cards;
@@ -43,21 +43,21 @@ public class Deck : MonoBehaviour {
 	public void Delete () {
 		StopAllCoroutines ();
 		foreach (var card in cards) {
-			Destroy (card);
+			Destroy (card.gameObject);
 		}
 	}
 	public IEnumerator DrawHeightAdjustedCards () {
 		// デッキのそれぞれのカードの高さを厚みによって調節
 		foreach (var index in Enumerable.Range (0, cards.Count)) {
 			var heightAjustedPosition = cards[index].transform.position + index * Card.thickness * Vector3.back;
-			var card = cards[index].GetComponent<Card> ();
+			var card = cards[index];
 			card.DrawMove (heightAjustedPosition);
 		}
 		yield return null;
 	}
 
 	public Card TopDraw () {
-			var top = cards.LastOrDefault ()?.GetComponent<Card> ();
+			var top = cards.LastOrDefault ();
 			if (cards.Count > 0) cards.RemoveAt (cards.Count - 1);
 			return top;
 	}
@@ -75,11 +75,11 @@ public class Deck : MonoBehaviour {
 		// 各カードが動き始めるのを何秒遅延するか
 		var startDelaySecond = 0.01f;
 		foreach (var index in Enumerable.Range (0, cards.Count - 1)) {
-			StartCoroutine (cards[index].GetComponent<Card> ().DrawShuffle ());
+			StartCoroutine (cards[index].DrawShuffle ());
 			yield return new WaitForSeconds (startDelaySecond);
 		}
 		// 最後のコルーチンだけ返すことで、順序処理が行える
 		var lastIndex = cards.Count - 1;
-		yield return StartCoroutine (cards[lastIndex].GetComponent<Card> ().DrawShuffle ());
+		yield return StartCoroutine (cards[lastIndex].DrawShuffle ());
 	}
 }
