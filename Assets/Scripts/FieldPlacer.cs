@@ -8,13 +8,12 @@ public class FieldPlacer : MonoBehaviour {
 	IList<Deck> decks;
 	IList<PlayArea> playAreas;
 	DiscardsBox discardsBox;
-	
 
 	void Awake () {
 		cardPlacers = GetComponentsInChildren<CardPlacer> ().ToList ();
 		decks = GetComponentsInChildren<Deck> ().ToList ();
 		playAreas = GetComponentsInChildren<PlayArea> ().ToList ();
-		discardsBox = GetComponentInChildren<DiscardsBox>();
+		discardsBox = GetComponentInChildren<DiscardsBox> ();
 	}
 
 	public void Initialize () {
@@ -26,7 +25,8 @@ public class FieldPlacer : MonoBehaviour {
 
 	void PlayFristCards () {
 		foreach (var i in Enumerable.Range (0, cardPlacers.Count)) {
-			playAreas[i].PlayCards (new List<Card> () { decks[i].TopDraw () });
+			var drawCard = decks[i].TopDraw ();
+			if (drawCard != null) playAreas[i].PlayCards (new List<Card> () { drawCard });
 		}
 	}
 	public IEnumerator DrawFirstCardPlacing () {
@@ -40,7 +40,7 @@ public class FieldPlacer : MonoBehaviour {
 	}
 
 	IEnumerator DrawNextPlacing () {
-		yield return new WaitForSeconds(2);
+		yield return new WaitForSeconds (2);
 		yield return StartCoroutine (discardsBox.DrawRemovePlayAreaCards ());
 		foreach (var playArea in playAreas) {
 			StartCoroutine (playArea.DrawFirstCardPlacing ());
@@ -50,7 +50,7 @@ public class FieldPlacer : MonoBehaviour {
 
 	public void JudgeCanNextPlay () {
 		void RemovePlayAreaCards () {
-				discardsBox.Add (playAreas.Select(playArea => playArea.RemovePlacedCards ()).ToList());
+			discardsBox.Add (playAreas.Select (playArea => playArea?.RemovePlacedCards ())?.ToList ());
 		}
 		bool CanNextPlay () {
 			var existPlayableCards = playAreas.SelectMany (playArea =>

@@ -42,9 +42,9 @@ public class PlayArea : MonoBehaviour {
 	}
 	public void PlayCards (IList<Card> cards) {
 		foreach (var card in cards) {
-			card?.transform?.SetParent (transform);
+			card.transform.SetParent (transform);
 		}
-		placedCards.Add (cards);
+		if (cards != null) placedCards.Add (cards);
 	}
 
 	public IList<IList<Card>> RemovePlacedCards () {
@@ -60,7 +60,7 @@ public class PlayArea : MonoBehaviour {
 		}
 	}
 	public void PlayCardsForHands (IList<HandPlace> selectedHandPlaces, CardPlacer cardPlacer) {
-		var selectedCards = selectedHandPlaces.Select (selected => selected.PlacedCard).Where(selected => selected != null)?.ToList ();
+		var selectedCards = selectedHandPlaces.Select (selected => selected.PlacedCard).Where(selected => selected != null).ToList ();
 		IEnumerator DrawCardPlayMoves () {
 			var prevCardIndex = placedCards.Count - 2;
 			var prevPlacedCardZ = prevCardIndex >= 0 ?
