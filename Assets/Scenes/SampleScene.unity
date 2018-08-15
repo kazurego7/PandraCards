@@ -204,11 +204,16 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 4775401395835902, guid: 6426fec93647aaa449151a48a7b15e28, type: 2}
       propertyPath: m_RootOrder
-      value: 0
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 1602250836294322, guid: 6426fec93647aaa449151a48a7b15e28, type: 2}
       propertyPath: m_Name
       value: DiscardBox
+      objectReference: {fileID: 0}
+    - target: {fileID: 212763956545188998, guid: 6426fec93647aaa449151a48a7b15e28,
+        type: 2}
+      propertyPath: m_SortingOrder
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 6426fec93647aaa449151a48a7b15e28, type: 2}
@@ -246,10 +251,10 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
-  - {fileID: 153341952}
   - {fileID: 1586276951}
   - {fileID: 1954733332}
   - {fileID: 1833260851}
+  - {fileID: 153341952}
   m_Father: {fileID: 0}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -708,7 +713,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 4369055989681808, guid: a517225cd27046a4ab15e5639120e418, type: 2}
       propertyPath: m_RootOrder
-      value: 2
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1705301930438670, guid: a517225cd27046a4ab15e5639120e418, type: 2}
       propertyPath: m_Name
@@ -1039,7 +1044,7 @@ Transform:
   m_LocalScale: {x: 20, y: 12, z: 1}
   m_Children: []
   m_Father: {fileID: 193742339}
-  m_RootOrder: 1
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &1586276952
 SpriteRenderer:
@@ -1607,7 +1612,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 4453258106350954, guid: a8093a623e161ff438d52507a206ad72, type: 2}
       propertyPath: m_RootOrder
-      value: 3
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 114238074175879236, guid: a8093a623e161ff438d52507a206ad72,
         type: 2}
@@ -1635,7 +1640,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1918152967}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7dff5003d05f467478386bcd9df1256a, type: 3}
+  m_Script: {fileID: 11500000, guid: 8be6fb15adfffb34d870559d837082fd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!224 &1954389605 stripped
