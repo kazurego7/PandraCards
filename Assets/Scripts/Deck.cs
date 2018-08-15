@@ -67,7 +67,7 @@ public class Deck : MonoBehaviour {
 	/*********************************************/
 	public void Shuffle () {
 		// Guidは一意でランダムな値を表す構造体
-		cards = cards.OrderBy (i => Guid.NewGuid ()).ToList ();
+		cards = cards.OrderBy (_ => Guid.NewGuid ()).ToList ();
 		return;
 	}
 
