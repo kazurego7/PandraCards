@@ -5,8 +5,15 @@ using System;
 using System.Linq;
 
 public class HandPlace : MonoBehaviour {
+
 	public Card PlacedCard{
 		get;
 		set;
+	}
+
+	public Card RemoveCard() {
+		var removed = PlacedCard;
+		PlacedCard = null;
+		return removed;
 	}
 }

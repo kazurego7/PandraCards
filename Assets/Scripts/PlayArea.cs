@@ -76,8 +76,9 @@ public class PlayArea : MonoBehaviour {
 			yield return null;
 		}
 		if (CanPlayCards (selectedCards)) {
-			PlayCards (selectedCards);
-			cardPlacer.ReplenishHands (selectedHandPlaces);
+			var removedCards = selectedHandPlaces.Select(selected => selected.RemoveCard()).ToList();
+			PlayCards (removedCards);
+			cardPlacer.ReplenishHands ();
 
 			StartCoroutine (DrawCardPlayMoves ());
 			StartCoroutine (cardPlacer.DrawReplenishCards (7));

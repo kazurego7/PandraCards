@@ -15,13 +15,13 @@ public class CardPlacer : MonoBehaviour {
 
 	public void Initialize () {
 		deck.Initialize ();
-		ReplenishHands (handPlaces);
+		ReplenishHands ();
 	}
 
-	public void ReplenishHands (IList<HandPlace> replenishHandPlaces) {
-		// 手札
-		foreach (var place in replenishHandPlaces) {
-			place.PlacedCard = deck.TopDraw ();
+	public void ReplenishHands () {
+		foreach (var place in handPlaces)
+		{
+			if (place.PlacedCard == null) place.PlacedCard = deck.TopDraw();
 		}
 	}
 
