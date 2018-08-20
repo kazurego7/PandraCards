@@ -205,6 +205,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playArea: {fileID: 1495139840}
+  fieldPlacer: {fileID: 1321737475}
   UIHandSelector: {fileID: 121995116}
 --- !u!114 &59243704
 MonoBehaviour:
@@ -333,6 +334,22 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &196160008 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1251622823927174, guid: a517225cd27046a4ab15e5639120e418,
+    type: 2}
+  m_PrefabInternal: {fileID: 622078768}
+--- !u!114 &196160010
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 196160008}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 90619191da69d8c478fa4ea90a6f7616, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &387979851
 GameObject:
   m_ObjectHideFlags: 0
@@ -556,7 +573,7 @@ Prefab:
         type: 2}
       propertyPath: cardPlacer
       value: 
-      objectReference: {fileID: 492753918}
+      objectReference: {fileID: 196160010}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 94fc569a200cc614d9d66eb43a57201b, type: 2}
   m_IsPrefabAsset: 0
@@ -651,6 +668,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 13ac5127c5ef5b5409b57e78aa78e9bd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _redNum: 10
+  _blueNum: 10
+  _greenNum: 10
 --- !u!1 &471207098
 GameObject:
   m_ObjectHideFlags: 0
@@ -756,12 +776,6 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 224030827079854436, guid: 94fc569a200cc614d9d66eb43a57201b,
     type: 2}
   m_PrefabInternal: {fileID: 417849453}
---- !u!114 &492753918 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 114402520101676216, guid: a517225cd27046a4ab15e5639120e418,
-    type: 2}
-  m_PrefabInternal: {fileID: 622078768}
-  m_Script: {fileID: 11500000, guid: 90619191da69d8c478fa4ea90a6f7616, type: 3}
 --- !u!114 &500230787 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 114203635593893970, guid: a8093a623e161ff438d52507a206ad72,
@@ -971,7 +985,8 @@ Prefab:
       propertyPath: m_RootOrder
       value: 1
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 114402520101676216, guid: a517225cd27046a4ab15e5639120e418, type: 2}
   m_SourcePrefab: {fileID: 100100000, guid: a517225cd27046a4ab15e5639120e418, type: 2}
   m_IsPrefabAsset: 0
 --- !u!1 &768455197
@@ -1371,6 +1386,7 @@ GameObject:
   - component: {fileID: 1230523037}
   - component: {fileID: 1230523036}
   - component: {fileID: 1230523035}
+  - component: {fileID: 1230523038}
   m_Layer: 5
   m_Name: InputField
   m_TagString: Untagged
@@ -1436,17 +1452,28 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1230523036}
   m_TextComponent: {fileID: 1629651013}
   m_Placeholder: {fileID: 1748752860}
-  m_ContentType: 0
+  m_ContentType: 2
   m_InputType: 0
   m_AsteriskChar: 42
-  m_KeyboardType: 0
+  m_KeyboardType: 4
   m_LineType: 0
   m_HideMobileInput: 0
-  m_CharacterValidation: 0
-  m_CharacterLimit: 0
+  m_CharacterValidation: 1
+  m_CharacterLimit: 2
   m_OnEndEdit:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1230523038}
+        m_MethodName: ChangeBlueCardNum
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
     m_TypeName: UnityEngine.UI.InputField+SubmitEvent, UnityEngine.UI, Version=1.0.0.0,
       Culture=neutral, PublicKeyToken=null
   m_OnValueChanged:
@@ -1495,6 +1522,18 @@ CanvasRenderer:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1230523033}
   m_CullTransparentMesh: 0
+--- !u!114 &1230523038
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1230523033}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cbcf1e9459c7c5c4db5762976582e8de, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  deckRecier: {fileID: 465432416}
 --- !u!114 &1321737475
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2162,6 +2201,7 @@ GameObject:
   - component: {fileID: 1849678326}
   - component: {fileID: 1849678325}
   - component: {fileID: 1849678324}
+  - component: {fileID: 1849678327}
   m_Layer: 5
   m_Name: InputField
   m_TagString: Untagged
@@ -2227,25 +2267,20 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1849678325}
   m_TextComponent: {fileID: 1106101310}
   m_Placeholder: {fileID: 441654491}
-  m_ContentType: 0
+  m_ContentType: 2
   m_InputType: 0
   m_AsteriskChar: 42
-  m_KeyboardType: 0
+  m_KeyboardType: 4
   m_LineType: 0
   m_HideMobileInput: 0
-  m_CharacterValidation: 0
-  m_CharacterLimit: 0
+  m_CharacterValidation: 1
+  m_CharacterLimit: 2
   m_OnEndEdit:
     m_PersistentCalls:
-      m_Calls: []
-    m_TypeName: UnityEngine.UI.InputField+SubmitEvent, UnityEngine.UI, Version=1.0.0.0,
-      Culture=neutral, PublicKeyToken=null
-  m_OnValueChanged:
-    m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 465432416}
-        m_MethodName: set_RedNum
-        m_Mode: 3
+      - m_Target: {fileID: 1849678327}
+        m_MethodName: ChangeRedCardNum
+        m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -2254,6 +2289,11 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+    m_TypeName: UnityEngine.UI.InputField+SubmitEvent, UnityEngine.UI, Version=1.0.0.0,
+      Culture=neutral, PublicKeyToken=null
+  m_OnValueChanged:
+    m_PersistentCalls:
+      m_Calls: []
     m_TypeName: UnityEngine.UI.InputField+OnChangeEvent, UnityEngine.UI, Version=1.0.0.0,
       Culture=neutral, PublicKeyToken=null
   m_CaretColor: {r: 0.19607843, g: 0.19607843, b: 0.19607843, a: 1}
@@ -2297,6 +2337,18 @@ CanvasRenderer:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1849678322}
   m_CullTransparentMesh: 0
+--- !u!114 &1849678327
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1849678322}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cbcf1e9459c7c5c4db5762976582e8de, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  deckRecier: {fileID: 465432416}
 --- !u!1001 &1865492013
 Prefab:
   m_ObjectHideFlags: 0
@@ -2418,6 +2470,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playArea: {fileID: 500230787}
+  fieldPlacer: {fileID: 1321737475}
   UIHandSelector: {fileID: 121995116}
 --- !u!114 &1893348031
 MonoBehaviour:
@@ -2458,7 +2511,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1895474048}
   m_Layer: 5
-  m_Name: UICardPlacer
+  m_Name: UIField
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2527,12 +2580,12 @@ Prefab:
         type: 2}
       propertyPath: cardPlacer
       value: 
-      objectReference: {fileID: 492753918}
+      objectReference: {fileID: 0}
     - target: {fileID: 114203635593893970, guid: a8093a623e161ff438d52507a206ad72,
         type: 2}
       propertyPath: cardPlacer
       value: 
-      objectReference: {fileID: 492753918}
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: a8093a623e161ff438d52507a206ad72, type: 2}
   m_IsPrefabAsset: 0
@@ -2573,6 +2626,7 @@ GameObject:
   - component: {fileID: 1967097340}
   - component: {fileID: 1967097339}
   - component: {fileID: 1967097338}
+  - component: {fileID: 1967097341}
   m_Layer: 5
   m_Name: InputField
   m_TagString: Untagged
@@ -2638,33 +2692,33 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1967097339}
   m_TextComponent: {fileID: 987426069}
   m_Placeholder: {fileID: 31920184}
-  m_ContentType: 0
+  m_ContentType: 2
   m_InputType: 0
   m_AsteriskChar: 42
-  m_KeyboardType: 0
+  m_KeyboardType: 4
   m_LineType: 0
   m_HideMobileInput: 0
-  m_CharacterValidation: 0
-  m_CharacterLimit: 0
+  m_CharacterValidation: 1
+  m_CharacterLimit: 2
   m_OnEndEdit:
     m_PersistentCalls:
-      m_Calls: []
-    m_TypeName: UnityEngine.UI.InputField+SubmitEvent, UnityEngine.UI, Version=1.0.0.0,
-      Culture=neutral, PublicKeyToken=null
-  m_OnValueChanged:
-    m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 465432414}
-        m_MethodName: 
+      - m_Target: {fileID: 1967097341}
+        m_MethodName: ChangeGreenCardNum
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: 
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+    m_TypeName: UnityEngine.UI.InputField+SubmitEvent, UnityEngine.UI, Version=1.0.0.0,
+      Culture=neutral, PublicKeyToken=null
+  m_OnValueChanged:
+    m_PersistentCalls:
+      m_Calls: []
     m_TypeName: UnityEngine.UI.InputField+OnChangeEvent, UnityEngine.UI, Version=1.0.0.0,
       Culture=neutral, PublicKeyToken=null
   m_CaretColor: {r: 0.19607843, g: 0.19607843, b: 0.19607843, a: 1}
@@ -2708,12 +2762,18 @@ CanvasRenderer:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1967097336}
   m_CullTransparentMesh: 0
---- !u!114 &2012252756 stripped
+--- !u!114 &1967097341
 MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 114716187016904958, guid: a517225cd27046a4ab15e5639120e418,
-    type: 2}
-  m_PrefabInternal: {fileID: 622078768}
-  m_Script: {fileID: 11500000, guid: 74534a4f14587f24e92138fec98cd427, type: 3}
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1967097336}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cbcf1e9459c7c5c4db5762976582e8de, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  deckRecier: {fileID: 465432416}
 --- !u!1 &2070518298
 GameObject:
   m_ObjectHideFlags: 0
@@ -2725,6 +2785,7 @@ GameObject:
   - component: {fileID: 2070518302}
   - component: {fileID: 2070518301}
   - component: {fileID: 2070518300}
+  - component: {fileID: 2070518303}
   m_Layer: 5
   m_Name: FieldInit
   m_TagString: Untagged
@@ -2790,7 +2851,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 2012252756}
+      - m_Target: {fileID: 1321737475}
         m_MethodName: Delete
         m_Mode: 1
         m_Arguments:
@@ -2801,8 +2862,19 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-      - m_Target: {fileID: 2012252756}
-        m_MethodName: Initialize
+      - m_Target: {fileID: 1321737475}
+        m_MethodName: SetUp
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 2070518303}
+        m_MethodName: DrawFirstCardPlacing
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -2848,6 +2920,18 @@ CanvasRenderer:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 2070518298}
   m_CullTransparentMesh: 0
+--- !u!114 &2070518303
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 2070518298}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e304c5b36304cdc4b9e637acf059be62, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  fieldPlacer: {fileID: 1321737475}
 --- !u!1 &2079972853
 GameObject:
   m_ObjectHideFlags: 0
