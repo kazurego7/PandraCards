@@ -9,26 +9,34 @@ public class CardPlacer : MonoBehaviour {
 	IList<HandPlace> handPlaces;
 
 	void Awake () {
-		deck = GetComponentInChildren<Deck> ();
+		deck = transform.parent.GetComponentInChildren<Deck> ();
 		handPlaces = GetComponentsInChildren<HandPlace> ().ToList ();
 	}
 
-	public void Initialize () {
-		deck.Initialize ();
-		ReplenishHands ();
+    public void Delete() {
+		foreach (var hand in handPlaces)
+		{
+			hand.RemoveCard();
+		}
 	}
 
-	public void ReplenishHands () {
-		foreach (var place in handPlaces)
-		{
+	public void ReplenishHands (){
+		foreach (var place in handPlaces){
 			if (place.PlacedCard == null) place.PlacedCard = deck.TopDraw();
 		}
 	}
 
-	public IList<Card> GetHands(){
+	public IList<Card> GetHandsAll(){
 		return handPlaces.Select(handPlace => handPlace.PlacedCard)?.Where(card => card != null).ToList();
 	}
 
+	public IList<Card> GetSelectedHands() {
+		return handPlaces.Where(handPlace => handPlace.IsSelcted).Select(selected => selected.PlacedCard).ToList();
+	}
+
+	public IList<Card> RemoveSelectedHands(){
+		return handPlaces.Where(handPlace => handPlace.IsSelcted).Select(selected => selected.RemoveCard()).ToList();
+	}
 	public IEnumerator DrawReplenishCards (int moveingFrame) {
 		foreach (var place in handPlaces) {
 			var card = place.PlacedCard;
@@ -36,10 +44,6 @@ public class CardPlacer : MonoBehaviour {
 			card?.DrawMove (movePosition, moveingFrame: moveingFrame);
 			yield return card?.Moveing;
 		}
-	}
-	public IEnumerator DrawFirstCardPlacing () {
-		yield return deck.DrawShuffle ();
-		yield return DrawReplenishCards (10);
 	}
 
 }

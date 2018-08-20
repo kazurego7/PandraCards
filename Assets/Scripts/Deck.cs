@@ -13,11 +13,11 @@ public class Deck : MonoBehaviour {
 		deckReciper = GetComponent<DeckReciper>();
 	}
 
-	public void Initialize () {
+	public void SetUp () {
 		this.cards = deckReciper.CreateDeck();
 
 		Shuffle ();
-		StartCoroutine (DrawHeightAdjustedCards ());
+		AdjustCardHeights ();
 	}
 
 	public void Delete () {
@@ -26,14 +26,13 @@ public class Deck : MonoBehaviour {
 			Destroy (card.gameObject);
 		}
 	}
-	public IEnumerator DrawHeightAdjustedCards () {
+	void AdjustCardHeights () {
 		// デッキのそれぞれのカードの高さを厚みによって調節
 		foreach (var index in Enumerable.Range (0, cards.Count)) {
 			var heightAjustedPosition = cards[index].transform.position + index * Card.thickness * Vector3.back;
 			var card = cards[index];
 			card.DrawMove (heightAjustedPosition);
 		}
-		yield return null;
 	}
 
 	public Card TopDraw () {

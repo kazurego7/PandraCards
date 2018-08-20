@@ -25,6 +25,7 @@ public class UIHandPlace : MonoBehaviour {
 
 	public void SetFrameActive (bool flag) {
 		FrameActivity = flag;
+		handPlace.GetComponent<HandPlace>().IsSelcted = flag;
 	}
 	public void DrawFrame () {
 		frame.SetActive (FrameActivity);

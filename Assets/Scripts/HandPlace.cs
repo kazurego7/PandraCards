@@ -16,4 +16,9 @@ public class HandPlace : MonoBehaviour {
 		PlacedCard = null;
 		return removed;
 	}
+
+	public bool IsSelcted {
+		get;
+		set;
+	}
 }

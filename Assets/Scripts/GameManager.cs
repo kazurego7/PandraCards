@@ -5,7 +5,7 @@ using UnityEngine;
 public class GameManager : MonoBehaviour {
 	[SerializeField] FieldPlacer fieldPlacer;
 	void Start () {
-		fieldPlacer.Initialize();
+		fieldPlacer.SetUp();
 		StartCoroutine(fieldPlacer.DrawFirstCardPlacing ());
 	}
 }

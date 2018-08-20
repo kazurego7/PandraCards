@@ -16,41 +16,69 @@ public class FieldPlacer : MonoBehaviour {
 		discardsBox = GetComponentInChildren<DiscardsBox> ();
 	}
 
-	public void Initialize () {
-		foreach (var cardPlacer in cardPlacers) {
-			cardPlacer.Initialize ();
+	public void SetUp () {
+		void SetUpDecks () {
+			foreach (var deck in decks) {
+				deck.SetUp ();
+			}
 		}
-		PlayFristCards ();
+		void ReplenishHands () {
+			foreach (var placer in cardPlacers) {
+				placer.ReplenishHands ();
+			}
+		}
+		SetUpDecks ();
+		ReplenishHands ();
+		ReplenishPlayCards ();
 	}
 
-	void PlayFristCards () {
+	public void Delete () {
+		foreach (var deck in decks) {
+			deck.Delete ();
+		}
+		foreach (var cardPlacer in cardPlacers) {
+			cardPlacer.Delete ();
+		}
+		foreach (var playArea in playAreas) {
+			discardsBox.Add (playArea.RemovePlacedCards ());
+		}
+	}
+
+	void ReplenishPlayCards () {
 		foreach (var i in Enumerable.Range (0, cardPlacers.Count)) {
 			var drawCard = decks[i].TopDraw ();
 			if (drawCard != null) playAreas[i].PlayCards (new List<Card> () { drawCard });
 		}
 	}
 	public IEnumerator DrawFirstCardPlacing () {
+		// デッキシャッフル
+		var shuffleDecks = decks.Select (deck => StartCoroutine (deck.DrawShuffle ()));
+		yield return shuffleDecks.Last (coroutine => coroutine != null);
+
 		// 手札配置
-		var placeHands = cardPlacers.Select ((cardPlacer) => StartCoroutine (cardPlacer.DrawFirstCardPlacing ()));
-		yield return placeHands.Last ((coroutine) => coroutine != null);
+		var placeHands = cardPlacers.Select (cardPlacer => StartCoroutine (cardPlacer.DrawReplenishCards (7)));
+		yield return placeHands.Last (coroutine => coroutine != null);
 
 		// プレイエリア配置
-		var placePlayAreas = playAreas.Select ((playArea) => StartCoroutine (playArea.DrawFirstCardPlacing ()));
-		yield return placePlayAreas.Last ((coroutine) => coroutine != null);
+		var placePlayAreas = playAreas.Select (playArea => StartCoroutine (playArea.DrawCardPlacing ()));
+		yield return placePlayAreas.Last (coroutine => coroutine != null);
 	}
 
 	IEnumerator DrawNextPlacing () {
 		yield return new WaitForSeconds (2);
 		yield return StartCoroutine (discardsBox.DrawRemovePlayAreaCards ());
 		foreach (var playArea in playAreas) {
-			StartCoroutine (playArea.DrawFirstCardPlacing ());
+			StartCoroutine (playArea.DrawCardPlacing ());
 		}
 		yield return null;
 	}
 
-	public void JudgeCanNextPlay () {
+	void JudgeCanNextPlay () {
 		void RemovePlayAreaCards () {
-			discardsBox.Add (playAreas.Select (playArea => playArea?.RemovePlacedCards ())?.ToList ());
+			foreach (var playArea in playAreas)
+			{
+				discardsBox.Add(playArea.RemovePlacedCards());
+			}
 		}
 		bool CanNextPlay () {
 			var existPlayableCards = playAreas.SelectMany (playArea =>
@@ -61,10 +89,24 @@ public class FieldPlacer : MonoBehaviour {
 		}
 		if (!CanNextPlay ()) {
 			Debug.Log ("CannotPlay!");
-			RemovePlayAreaCards ();
-			PlayFristCards ();
+			RemovePlayAreaCards();
+			ReplenishPlayCards ();
 
 			StartCoroutine (DrawNextPlacing ());
+		}
+	}
+
+	public void PlayCardsForHands (CardPlacer cardPlacer, PlayArea playArea) {
+		var selectedCards = cardPlacer.GetSelectedHands ();
+		if (playArea.CanPlayCards (selectedCards)) {
+			var removedCards = cardPlacer.RemoveSelectedHands ();
+			playArea.PlayCards (removedCards);
+			cardPlacer.ReplenishHands ();
+
+			StartCoroutine (playArea.DrawCardPlayMoves ());
+			StartCoroutine (cardPlacer.DrawReplenishCards (7));
+
+			JudgeCanNextPlay ();
 		}
 	}
 

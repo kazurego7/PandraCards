@@ -8,7 +8,7 @@ public class UIHandSelector : MonoBehaviour {
     [SerializeField] CardPlacer cardPlacer;
 
     void Awake () {
-        UIHandPlaces = GetComponentsInChildren<UIHandPlace> ().OrderBy (o => o.name).ToList ();
+        UIHandPlaces = GetComponentsInChildren<UIHandPlace> ().ToList ();
     }
     public void SelectFrame (UIHandPlace selectedPlace) {
         //Debug.Log ($"SelectFrame{sentPlaceNum}");
@@ -46,10 +46,6 @@ public class UIHandSelector : MonoBehaviour {
         foreach (var handPlace in UIHandPlaces) {
             handPlace.DrawFrame ();
         }
-    }
-
-    public IList<HandPlace> GetSelectedHandPlaces(){
-        return UIHandPlaces.Where(UIHandPlace => UIHandPlace.FrameActivity).Select(UIHandPlace => UIHandPlace.HandPlace).ToList();
     }
 
     public CardPlacer GetCardPlacer() {

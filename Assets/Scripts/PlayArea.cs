@@ -12,13 +12,13 @@ public class PlayArea : MonoBehaviour {
 		fieldPlacer = GetComponentInParent<FieldPlacer> ();
 	}
 
-	bool CanPlayCards (IList<Card> playCards) {
+	public bool CanPlayCards (IList<Card> playCards) {
 		var playColor = playCards.FirstOrDefault ()?.MyColor ?? Card.Color.NoColor;
 
 		var topPlacedCards = placedCards.LastOrDefault (); // 一番下が最初(first)
 		var topPlacedColor = topPlacedCards?.FirstOrDefault ()?.MyColor ?? Card.Color.NoColor;
 
-		var stronger2ndColors = new List<(Card.Color, Card.Color)> () {
+		var stronger2ndColors = new List < (Card.Color, Card.Color) > () {
 			(Card.Color.Blue, Card.Color.Red),
 			(Card.Color.Red, Card.Color.Green),
 			(Card.Color.Green, Card.Color.Blue)
@@ -53,45 +53,27 @@ public class PlayArea : MonoBehaviour {
 		return discards;
 	}
 
-	public void DebugLogPlacedCards () {
-		var cardColorAndNums = placedCards.Select (cards => (cards.First ().MyColor, cards.Count));
-		foreach (var cardColorAndNum in cardColorAndNums) {
-			Debug.Log ($"{cardColorAndNum.Item1} : {cardColorAndNum.Item2}");
+	public IEnumerator DrawCardPlayMoves () {
+		var prevCardIndex = placedCards.Count - 2;
+		var prevPlacedCardZ = prevCardIndex >= 0 ?
+			placedCards[prevCardIndex].Last ()?.transform.position.z ?? 0 : // 注意!! 既にCardはPlayされ、placedCardsに格納されている
+			0;
+		var selectedCards = placedCards.Last();
+		foreach (var index in Enumerable.Range (0, selectedCards.Count)) {
+			var leftmostDistance = 0.2f * (-(selectedCards.Count - 1) + 2 * index);
+			var heightVector = (prevPlacedCardZ + -Card.thickness * (index + 1)) * Vector3.forward; // 注意!! 左手座標系(手前の方がマイナス)
+			var movePosition = transform.position + leftmostDistance * Vector3.left + heightVector;
+			selectedCards[index].DrawMove (selectedCards[index].transform.position + heightVector, moveingFrame : 1);
+			selectedCards[index].DrawMove (movePosition, moveingFrame : 10);
 		}
-	}
-	public void PlayCardsForHands (IList<HandPlace> selectedHandPlaces, CardPlacer cardPlacer) {
-		var selectedCards = selectedHandPlaces.Select (selected => selected.PlacedCard).Where(selected => selected != null).ToList ();
-		IEnumerator DrawCardPlayMoves () {
-			var prevCardIndex = placedCards.Count - 2;
-			var prevPlacedCardZ = prevCardIndex >= 0 ?
-				placedCards[prevCardIndex].Last ()?.transform.position.z ?? 0 : // 注意!! 既にCardはPlayされ、placedCardsに格納されている
-				0;
-			foreach (var index in Enumerable.Range (0, selectedCards.Count)) {
-				var leftmostDistance = 0.2f * (-(selectedCards.Count - 1) + 2 * index);
-				var heightVector = (prevPlacedCardZ + -Card.thickness * (index + 1)) * Vector3.forward; // 注意!! 左手座標系(手前の方がマイナス)
-				var movePosition = transform.position + leftmostDistance * Vector3.left + heightVector;
-				selectedCards[index].DrawMove (selectedCards[index].transform.position + heightVector, moveingFrame : 1);
-				selectedCards[index].DrawMove (movePosition, moveingFrame : 10);
-			}
-			yield return null;
-		}
-		if (CanPlayCards (selectedCards)) {
-			var removedCards = selectedHandPlaces.Select(selected => selected.RemoveCard()).ToList();
-			PlayCards (removedCards);
-			cardPlacer.ReplenishHands ();
-
-			StartCoroutine (DrawCardPlayMoves ());
-			StartCoroutine (cardPlacer.DrawReplenishCards (7));
-
-			fieldPlacer.JudgeCanNextPlay ();
-		}
+		yield return null;
 	}
 
 	public bool ExistPlayableCards (CardPlacer cardPlacer) {
-		var handCards = cardPlacer.GetHands ();
+		var handCards = cardPlacer.GetHandsAll ();
 		var playAreaCards = placedCards.LastOrDefault ();
 		var playAreaCardsColor = playAreaCards?.FirstOrDefault ()?.MyColor ?? Card.Color.NoColor;
-		var stronger2ndColors = new List<(Card.Color, Card.Color)> () {
+		var stronger2ndColors = new List < (Card.Color, Card.Color) > () {
 			(Card.Color.Blue, Card.Color.Red),
 			(Card.Color.Red, Card.Color.Green),
 			(Card.Color.Green, Card.Color.Blue),
@@ -112,7 +94,7 @@ public class PlayArea : MonoBehaviour {
 		return existHands && (canPlayStronger || canPlayWeaker || playAreaIsNoColor);
 	}
 
-	public IEnumerator DrawFirstCardPlacing () {
+	public IEnumerator DrawCardPlacing () {
 		var topPlacedCards = placedCards.FirstOrDefault ();
 		var placeToPlayArea = topPlacedCards?.Select ((card) => {
 			card?.DrawMove (transform.position, moveingFrame : 10);

@@ -10,8 +10,8 @@ public class DiscardsBox : MonoBehaviour {
 		discardsList = new List<IList<IList<Card>> > ();
 	}
 
-	public void Add (IList<IList<IList<Card>> > discards) {
-		discardsList = discards;
+	public void Add(IList<IList<Card>> disCards){
+		discardsList.Add(disCards);
 	}
 
 	public IEnumerator DrawRemovePlayAreaCards () {
