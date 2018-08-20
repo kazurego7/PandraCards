@@ -31,7 +31,7 @@ public class Deck : MonoBehaviour {
 		foreach (var index in Enumerable.Range (0, cards.Count)) {
 			var heightAjustedPosition = cards[index].transform.position + index * Card.thickness * Vector3.back;
 			var card = cards[index];
-			card.DrawMove (heightAjustedPosition);
+			card.transform.Rotate(heightAjustedPosition);
 		}
 	}
 
@@ -53,12 +53,13 @@ public class Deck : MonoBehaviour {
 	public IEnumerator DrawShuffle () {
 		// 各カードが動き始めるのを何秒遅延するか
 		var startDelaySecond = 0.01f;
-		foreach (var index in Enumerable.Range (0, cards.Count - 1)) {
-			StartCoroutine (cards[index].DrawShuffle ());
+		Coroutine lastCoroutine = null;
+		foreach (var card in cards) {
+			lastCoroutine = StartCoroutine (card.DrawShuffle ());
 			yield return new WaitForSeconds (startDelaySecond);
 		}
+
 		// 最後のコルーチンだけ返すことで、順序処理が行える
-		var lastIndex = cards.Count - 1;
-		yield return StartCoroutine (cards[lastIndex].DrawShuffle ());
+		yield return lastCoroutine;
 	}
 }

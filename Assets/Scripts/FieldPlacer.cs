@@ -33,6 +33,7 @@ public class FieldPlacer : MonoBehaviour {
 	}
 
 	public void Delete () {
+		StopAllCoroutines ();
 		foreach (var deck in decks) {
 			deck.Delete ();
 		}
@@ -40,8 +41,10 @@ public class FieldPlacer : MonoBehaviour {
 			cardPlacer.Delete ();
 		}
 		foreach (var playArea in playAreas) {
-			discardsBox.Add (playArea.RemovePlacedCards ());
+			playArea.Delete();
 		}
+
+		discardsBox.Delete();
 	}
 
 	void ReplenishPlayCards () {
@@ -53,15 +56,15 @@ public class FieldPlacer : MonoBehaviour {
 	public IEnumerator DrawFirstCardPlacing () {
 		// デッキシャッフル
 		var shuffleDecks = decks.Select (deck => StartCoroutine (deck.DrawShuffle ()));
-		yield return shuffleDecks.Last (coroutine => coroutine != null);
+		yield return shuffleDecks.LastOrDefault (coroutine => coroutine != null);
 
 		// 手札配置
 		var placeHands = cardPlacers.Select (cardPlacer => StartCoroutine (cardPlacer.DrawReplenishCards (7)));
-		yield return placeHands.Last (coroutine => coroutine != null);
+		yield return placeHands.LastOrDefault (coroutine => coroutine != null);
 
 		// プレイエリア配置
 		var placePlayAreas = playAreas.Select (playArea => StartCoroutine (playArea.DrawCardPlacing ()));
-		yield return placePlayAreas.Last (coroutine => coroutine != null);
+		yield return placePlayAreas.LastOrDefault (coroutine => coroutine != null);
 	}
 
 	IEnumerator DrawNextPlacing () {

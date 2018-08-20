@@ -14,12 +14,19 @@ public class DiscardsBox : MonoBehaviour {
 		discardsList.Add(disCards);
 	}
 
+	public void Delete(){
+		var linerDiscards = discardsList.SelectMany(x => x).SelectMany(x => x);
+		foreach (var discard in linerDiscards)
+		{
+			Destroy(discard.gameObject);
+		}
+	}
+
 	public IEnumerator DrawRemovePlayAreaCards () {
 		var linerDiscards = discardsList.SelectMany (x => x).SelectMany (x => x);
-		Debug.Log (linerDiscards.Count ());
 		var startDelaySecond = 0.07f;
 		foreach (var discard in linerDiscards) {
-			discard.DrawMove (transform.position, 15);
+			StartCoroutine(discard.DrawMove (transform.position, 15));
 			yield return new WaitForSeconds (startDelaySecond);
 		}
 		yield return null;

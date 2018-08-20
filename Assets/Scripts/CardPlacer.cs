@@ -14,9 +14,10 @@ public class CardPlacer : MonoBehaviour {
 	}
 
     public void Delete() {
+		StopAllCoroutines ();
 		foreach (var hand in handPlaces)
 		{
-			hand.RemoveCard();
+			Destroy(hand.RemoveCard()?.gameObject);
 		}
 	}
 
@@ -41,8 +42,8 @@ public class CardPlacer : MonoBehaviour {
 		foreach (var place in handPlaces) {
 			var card = place.PlacedCard;
 			var movePosition = place.transform.position + Card.thickness * Vector3.back;
-			card?.DrawMove (movePosition, moveingFrame: moveingFrame);
-			yield return card?.Moveing;
+			
+			if(card != null) yield return StartCoroutine(card.DrawMove (movePosition, moveingFrame: moveingFrame));
 		}
 	}
 

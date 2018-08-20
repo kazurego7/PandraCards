@@ -12,6 +12,14 @@ public class PlayArea : MonoBehaviour {
 		fieldPlacer = GetComponentInParent<FieldPlacer> ();
 	}
 
+	public void Delete () {
+		StopAllCoroutines ();
+		var linerRemoved = RemovePlacedCards ().SelectMany (x => x);
+		foreach (var removed in linerRemoved) {
+			Destroy (removed.gameObject);
+		}
+	}
+
 	public bool CanPlayCards (IList<Card> playCards) {
 		var playColor = playCards.FirstOrDefault ()?.MyColor ?? Card.Color.NoColor;
 
@@ -58,13 +66,13 @@ public class PlayArea : MonoBehaviour {
 		var prevPlacedCardZ = prevCardIndex >= 0 ?
 			placedCards[prevCardIndex].Last ()?.transform.position.z ?? 0 : // 注意!! 既にCardはPlayされ、placedCardsに格納されている
 			0;
-		var selectedCards = placedCards.Last();
+		var selectedCards = placedCards.Last ();
 		foreach (var index in Enumerable.Range (0, selectedCards.Count)) {
 			var leftmostDistance = 0.2f * (-(selectedCards.Count - 1) + 2 * index);
 			var heightVector = (prevPlacedCardZ + -Card.thickness * (index + 1)) * Vector3.forward; // 注意!! 左手座標系(手前の方がマイナス)
 			var movePosition = transform.position + leftmostDistance * Vector3.left + heightVector;
-			selectedCards[index].DrawMove (selectedCards[index].transform.position + heightVector, moveingFrame : 1);
-			selectedCards[index].DrawMove (movePosition, moveingFrame : 10);
+			StartCoroutine (selectedCards[index].DrawMove (selectedCards[index].transform.position + heightVector, moveingFrame : 1));
+			StartCoroutine (selectedCards[index].DrawMove (movePosition, moveingFrame : 10));
 		}
 		yield return null;
 	}
@@ -97,8 +105,7 @@ public class PlayArea : MonoBehaviour {
 	public IEnumerator DrawCardPlacing () {
 		var topPlacedCards = placedCards.FirstOrDefault ();
 		var placeToPlayArea = topPlacedCards?.Select ((card) => {
-			card?.DrawMove (transform.position, moveingFrame : 10);
-			return card?.Moveing;
+			return StartCoroutine (card?.DrawMove (transform.position, moveingFrame : 10));
 		});
 		yield return placeToPlayArea?.LastOrDefault ((coroutine) => coroutine != null);
 	}

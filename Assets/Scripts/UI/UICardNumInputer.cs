@@ -14,7 +14,6 @@ public class UICardNumInputer : MonoBehaviour {
 	}
 
 	public void ChangeRedCardNum(){
-		Debug.Log(cardNumInput.text);
 		int parsedNum;
 		var tryParsed = Int32.TryParse(cardNumInput.text, out parsedNum);
 		if (tryParsed) {

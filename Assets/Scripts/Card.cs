@@ -13,26 +13,13 @@ public class Card : MonoBehaviour {
 		}
 	}
 
-	public Coroutine Moveing {
-		private set;
-		get;
-	}
-
-	public void StopMove(){
-		StopCoroutine(Moveing);
-	}
-
-	public void DrawMove (Vector3 target, int moveingFrame = 1) {
-		IEnumerator DrawMove () {
+	public	IEnumerator DrawMove (Vector3 target, int moveingFrame = 1) {
 			var start = transform.position;
 			foreach (var currentFrame in Enumerable.Range (1, moveingFrame)) {
 				transform.position = Vector3.Lerp (start, target, (float) currentFrame / moveingFrame);
 				yield return null;
 			}
 		}
-		Moveing = StartCoroutine(DrawMove());
-	}
-
 	public IEnumerator DrawShuffle () {
 
 		// 設定項目
