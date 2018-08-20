@@ -5,36 +5,16 @@ using System.Linq;
 using UnityEngine;
 
 public class Deck : MonoBehaviour {
-	class CardRacipe : Tuple<String, Int32> {
-		public String Name { get; }
-		public Int32 Number { get; }
-		public CardRacipe (String name, Int32 number) : base (name, number) {
-			Name = name;
-			Number = number;
-		}
-	}
-
-	readonly String pathForCards = "Prefabs/Cards/";
 	IList<Card> cards;
 
+	DeckReciper deckReciper;
+
+	public void Awake() {
+		deckReciper = GetComponent<DeckReciper>();
+	}
+
 	public void Initialize () {
-
-		// 仮のデッキレシピを作成 *** いずれ消す
-		var tmpCardRacipes = new List<CardRacipe> () {
-			new CardRacipe ("RedCard", 10),
-				new CardRacipe ("BlueCard", 10),
-				new CardRacipe ("GreenCard", 10)
-		};
-
-		// デッキレシピから、デッキのリストを作成
-		var cards = new List<Card> ();
-		foreach (var cardRacipe in tmpCardRacipes) {
-			var card = Resources.Load<GameObject> (pathForCards + cardRacipe.Name);
-			foreach (var item in Enumerable.Range (0, cardRacipe.Number)) {
-				cards.Add (Instantiate<GameObject> (card, transform).GetComponent<Card>());
-			}
-		}
-		this.cards = cards;
+		this.cards = deckReciper.CreateDeck();
 
 		Shuffle ();
 		StartCoroutine (DrawHeightAdjustedCards ());
