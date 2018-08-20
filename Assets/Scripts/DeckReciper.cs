@@ -14,21 +14,31 @@ public class DeckReciper : MonoBehaviour {
 		}
 	}
 
+	[SerializeField] int _redNum = 10;
 	public int RedNum {
 		get;
 		set;
-	} = 3;
+	}
+
+	[SerializeField] int _blueNum = 10;
 	public int BlueNum {
 		get;
 		set;
-	} = 3;
+	}
 
+	[SerializeField] int _greenNum = 10;
 	public int GreenNum {
 		get;
 		set;
-	} = 3;
+	}
 
 	readonly String pathForCards = "Prefabs/Cards/";
+
+	void Awake () {
+		RedNum = _redNum;
+		BlueNum = _blueNum;
+		GreenNum = _greenNum;
+	}
 
 	public IList<Card> CreateDeck () {
 		// 仮のデッキレシピを作成 *** いずれ消す
