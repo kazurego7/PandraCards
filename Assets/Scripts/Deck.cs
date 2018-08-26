@@ -17,21 +17,13 @@ public class Deck : MonoBehaviour {
 		this.cards = deckReciper.CreateDeck();
 
 		Shuffle ();
-		AdjustCardHeights ();
+		StartCoroutine(DrawAdjustCardHeights ());
 	}
 
 	public void Delete () {
 		StopAllCoroutines ();
 		foreach (var card in cards) {
 			Destroy (card.gameObject);
-		}
-	}
-	void AdjustCardHeights () {
-		// デッキのそれぞれのカードの高さを厚みによって調節
-		foreach (var index in Enumerable.Range (0, cards.Count)) {
-			var heightAjustedPosition = cards[index].transform.position + index * Card.thickness * Vector3.back;
-			var card = cards[index];
-			card.transform.Rotate(heightAjustedPosition);
 		}
 	}
 
@@ -41,9 +33,6 @@ public class Deck : MonoBehaviour {
 			return top;
 	}
 
-	/*********************************************
-	/*	シャッフル系
-	/*********************************************/
 	public void Shuffle () {
 		// Guidは一意でランダムな値を表す構造体
 		cards = cards.OrderBy (_ => Guid.NewGuid ()).ToList ();
@@ -59,7 +48,17 @@ public class Deck : MonoBehaviour {
 			yield return new WaitForSeconds (startDelaySecond);
 		}
 
-		// 最後のコルーチンだけ返すことで、順序処理が行える
+		// 最後のコルーチンだけ返すことで、順序処理が行える?
 		yield return lastCoroutine;
+	}
+
+	IEnumerator DrawAdjustCardHeights () {
+		// デッキのそれぞれのカードの高さを厚みによって調節
+		foreach (var index in Enumerable.Range (0, cards.Count)) {
+			var heightAjustedPosition = cards[index].transform.position + index * Card.thickness * Vector3.back;
+			var card = cards[index];
+			card.transform.Rotate(heightAjustedPosition);
+		}
+		yield return null;
 	}
 }

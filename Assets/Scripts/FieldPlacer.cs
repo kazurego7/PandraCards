@@ -53,28 +53,6 @@ public class FieldPlacer : MonoBehaviour {
 			if (drawCard != null) playAreas[i].PlayCards (new List<Card> () { drawCard });
 		}
 	}
-	public IEnumerator DrawFirstCardPlacing () {
-		// デッキシャッフル
-		var shuffleDecks = decks.Select (deck => StartCoroutine (deck.DrawShuffle ()));
-		yield return shuffleDecks.LastOrDefault (coroutine => coroutine != null);
-
-		// 手札配置
-		var placeHands = cardPlacers.Select (cardPlacer => StartCoroutine (cardPlacer.DrawReplenishCards (7)));
-		yield return placeHands.LastOrDefault (coroutine => coroutine != null);
-
-		// プレイエリア配置
-		var placePlayAreas = playAreas.Select (playArea => StartCoroutine (playArea.DrawCardPlacing ()));
-		yield return placePlayAreas.LastOrDefault (coroutine => coroutine != null);
-	}
-
-	IEnumerator DrawNextPlacing () {
-		yield return new WaitForSeconds (2);
-		yield return StartCoroutine (discardsBox.DrawRemovePlayAreaCards ());
-		foreach (var playArea in playAreas) {
-			StartCoroutine (playArea.DrawCardPlacing ());
-		}
-		yield return null;
-	}
 
 	void JudgeCanNextPlay () {
 		void RemovePlayAreaCards () {
@@ -113,4 +91,26 @@ public class FieldPlacer : MonoBehaviour {
 		}
 	}
 
+	public IEnumerator DrawFirstCardPlacing () {
+		// デッキシャッフル
+		var shuffleDecks = decks.Select (deck => StartCoroutine (deck.DrawShuffle ()));
+		yield return shuffleDecks.LastOrDefault (coroutine => coroutine != null);
+
+		// 手札配置
+		var placeHands = cardPlacers.Select (cardPlacer => StartCoroutine (cardPlacer.DrawReplenishCards (7)));
+		yield return placeHands.LastOrDefault (coroutine => coroutine != null);
+
+		// プレイエリア配置
+		var placePlayAreas = playAreas.Select (playArea => StartCoroutine (playArea.DrawCardPlacing ()));
+		yield return placePlayAreas.LastOrDefault (coroutine => coroutine != null);
+	}
+
+	IEnumerator DrawNextPlacing () {
+		yield return new WaitForSeconds (2);
+		yield return StartCoroutine (discardsBox.DrawRemovePlayAreaCards ());
+		foreach (var playArea in playAreas) {
+			StartCoroutine (playArea.DrawCardPlacing ());
+		}
+		yield return null;
+	}
 }
