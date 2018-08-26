@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-public class CardPlacer : MonoBehaviour {
+public class Hand : MonoBehaviour {
 	Deck deck;
 	IList<HandPlace> handPlaces;
 
@@ -27,11 +27,11 @@ public class CardPlacer : MonoBehaviour {
 		}
 	}
 
-	public IList<Card> GetHandsAll(){
+	public IList<Card> GetCardsAll(){
 		return handPlaces.Select(handPlace => handPlace.PlacedCard)?.Where(card => card != null).ToList();
 	}
 
-	public IList<Card> GetSelectedHands() {
+	public IList<Card> GetSelectedCards() {
 		return handPlaces.Where(handPlace => handPlace.IsSelcted).Select(selected => selected.PlacedCard).ToList();
 	}
 

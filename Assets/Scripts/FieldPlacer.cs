@@ -4,13 +4,13 @@ using System.Linq;
 using UnityEngine;
 
 public class FieldPlacer : MonoBehaviour {
-	IList<CardPlacer> cardPlacers;
+	IList<Hand> hands;
 	IList<Deck> decks;
 	IList<PlayArea> playAreas;
 	DiscardsBox discardsBox;
 
 	void Awake () {
-		cardPlacers = GetComponentsInChildren<CardPlacer> ().ToList ();
+		hands = GetComponentsInChildren<Hand> ().ToList ();
 		decks = GetComponentsInChildren<Deck> ().ToList ();
 		playAreas = GetComponentsInChildren<PlayArea> ().ToList ();
 		discardsBox = GetComponentInChildren<DiscardsBox> ();
@@ -23,7 +23,7 @@ public class FieldPlacer : MonoBehaviour {
 			}
 		}
 		void ReplenishHands () {
-			foreach (var placer in cardPlacers) {
+			foreach (var placer in hands) {
 				placer.ReplenishHands ();
 			}
 		}
@@ -37,58 +37,52 @@ public class FieldPlacer : MonoBehaviour {
 		foreach (var deck in decks) {
 			deck.Delete ();
 		}
-		foreach (var cardPlacer in cardPlacers) {
-			cardPlacer.Delete ();
+		foreach (var hand in hands) {
+			hand.Delete ();
 		}
 		foreach (var playArea in playAreas) {
-			playArea.Delete();
+			playArea.Delete ();
 		}
 
-		discardsBox.Delete();
+		discardsBox.Delete ();
 	}
 
 	void ReplenishPlayCards () {
-		foreach (var i in Enumerable.Range (0, cardPlacers.Count)) {
+		foreach (var i in Enumerable.Range (0, hands.Count)) {
 			var drawCard = decks[i].TopDraw ();
 			if (drawCard != null) playAreas[i].PlayCards (new List<Card> () { drawCard });
 		}
 	}
 
-	void JudgeCanNextPlay () {
+	public void PlayCardsForHands (Hand playHand, PlayArea targetArea) {
+		// カードプレイ&ハンド補充
+		if (!targetArea.CanPlayCards (playHand.GetSelectedCards ())) return;
+		targetArea.PlayCards (playHand.RemoveSelectedHands ());
+		playHand.ReplenishHands ();
+
+		StartCoroutine (targetArea.DrawCardPlayMoves ());
+		StartCoroutine (playHand.DrawReplenishCards (7));
+
+		// 次のカードがプレイできないときの処理
 		void RemovePlayAreaCards () {
-			foreach (var playArea in playAreas)
-			{
-				discardsBox.Add(playArea.RemovePlacedCards());
+			foreach (var playArea in playAreas) {
+				discardsBox.Add (playArea.RemovePlacedCards ());
 			}
 		}
 		bool CanNextPlay () {
 			var existPlayableCards = playAreas.SelectMany (playArea =>
-				cardPlacers.Select (cardPlacer =>
-					playArea.ExistPlayableCards (cardPlacer)
+				hands.Select (hand =>
+					playArea.ExistPlayableCards (hand)
 				)).Any (judgement => judgement);
 			return existPlayableCards;
 		}
-		if (!CanNextPlay ()) {
-			Debug.Log ("CannotPlay!");
-			RemovePlayAreaCards();
-			ReplenishPlayCards ();
 
-			StartCoroutine (DrawNextPlacing ());
-		}
-	}
+		if (CanNextPlay ()) return;
+		Debug.Log ("CannotPlay!");
+		RemovePlayAreaCards ();
+		ReplenishPlayCards ();
 
-	public void PlayCardsForHands (CardPlacer cardPlacer, PlayArea playArea) {
-		var selectedCards = cardPlacer.GetSelectedHands ();
-		if (playArea.CanPlayCards (selectedCards)) {
-			var removedCards = cardPlacer.RemoveSelectedHands ();
-			playArea.PlayCards (removedCards);
-			cardPlacer.ReplenishHands ();
-
-			StartCoroutine (playArea.DrawCardPlayMoves ());
-			StartCoroutine (cardPlacer.DrawReplenishCards (7));
-
-			JudgeCanNextPlay ();
-		}
+		StartCoroutine (DrawNextPlacing ());
 	}
 
 	public IEnumerator DrawFirstCardPlacing () {
@@ -97,7 +91,7 @@ public class FieldPlacer : MonoBehaviour {
 		yield return shuffleDecks.LastOrDefault (coroutine => coroutine != null);
 
 		// 手札配置
-		var placeHands = cardPlacers.Select (cardPlacer => StartCoroutine (cardPlacer.DrawReplenishCards (7)));
+		var placeHands = hands.Select (hand => StartCoroutine (hand.DrawReplenishCards (7)));
 		yield return placeHands.LastOrDefault (coroutine => coroutine != null);
 
 		// プレイエリア配置

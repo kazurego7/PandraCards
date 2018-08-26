@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class UIHandSelector : MonoBehaviour {
     IList<UIHandPlace> UIHandPlaces;
-    [SerializeField] CardPlacer cardPlacer;
+    [SerializeField] Hand hand;
 
     void Awake () {
         UIHandPlaces = GetComponentsInChildren<UIHandPlace> ().ToList ();
@@ -48,7 +48,7 @@ public class UIHandSelector : MonoBehaviour {
         }
     }
 
-    public CardPlacer GetCardPlacer() {
-        return cardPlacer;
+    public Hand GetHand() {
+        return hand;
     }
 }

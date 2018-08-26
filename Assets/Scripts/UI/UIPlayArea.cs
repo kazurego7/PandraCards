@@ -7,7 +7,7 @@ public class UIPlayArea : MonoBehaviour {
     [SerializeField] FieldPlacer fieldPlacer;
     [SerializeField] UIHandSelector UIHandSelector;
     public void PlayCardForHands(){
-        fieldPlacer.PlayCardsForHands(UIHandSelector.GetCardPlacer(), playArea);
+        fieldPlacer.PlayCardsForHands(UIHandSelector.GetHand(), playArea);
         UIHandSelector.DeselectFrames();
     }
 }

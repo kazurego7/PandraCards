@@ -61,8 +61,8 @@ public class PlayArea : MonoBehaviour {
 		return discards;
 	}
 
-	public bool ExistPlayableCards (CardPlacer cardPlacer) {
-		var handCards = cardPlacer.GetHandsAll ();
+	public bool ExistPlayableCards (Hand hand) {
+		var handCards = hand.GetCardsAll ();
 		var playAreaCards = playedCards.LastOrDefault ();
 		var playAreaCardsColor = playAreaCards?.FirstOrDefault ()?.MyColor ?? Card.Color.NoColor;
 		var stronger2ndColors = new List < (Card.Color, Card.Color) > () {
@@ -74,10 +74,10 @@ public class PlayArea : MonoBehaviour {
 		var existHands = handCards.Count > 0;
 
 		var strongerColor = stronger2ndColors.FirstOrDefault (stronger2ndColor => stronger2ndColor.Item2 == playAreaCardsColor).Item1;
-		var canPlayStronger = (handCards?.Where (hand => hand.MyColor == strongerColor)?.Count () ?? 0) >= (playAreaCards?.Count () ?? 0);
+		var canPlayStronger = (handCards?.Where (handCard => handCard.MyColor == strongerColor)?.Count () ?? 0) >= (playAreaCards?.Count () ?? 0);
 
 		var weakerColor = stronger2ndColors.FirstOrDefault (stronger2ndColor => stronger2ndColor.Item1 == playAreaCardsColor).Item2;
-		var canPlayWeaker = (handCards?.Where (hand => hand.MyColor == weakerColor)?.Count () ?? 0) >= (playAreaCards?.Count () ?? 0) + 1;
+		var canPlayWeaker = (handCards?.Where (handCard => handCard.MyColor == weakerColor)?.Count () ?? 0) >= (playAreaCards?.Count () ?? 0) + 1;
 
 		var playAreaIsNoColor = playAreaCardsColor == Card.Color.NoColor;
 
