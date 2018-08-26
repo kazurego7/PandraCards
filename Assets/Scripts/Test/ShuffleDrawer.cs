@@ -10,23 +10,21 @@ public class ShuffleDrawer : MonoBehaviour {
     IObservable<Vector3> shuffleMoveing;
 
     void Awake () {
-        IObservable<Vector3> CreateShuffleMoveing (Vector3 moveVec, int moveingFrame) {
-            var start = transform.position;
-            var middle = start + moveVec;
+        IObservable<Vector3> CreateShuffleMoveing (Vector3 start, Vector3 target, int moveingFrame) {
             var goShuffle = Observable
                 .IntervalFrame (1)
                 .Take (moveingFrame)
-                .Select (frame => Vector3.Lerp (start, middle, (float) frame / moveingFrame));
+                .Select (frame => Vector3.Lerp (start, target, (float) frame / moveingFrame));
 
             var comebackShuffle = Observable
                 .IntervalFrame (1)
                 .Take (moveingFrame)
-                .Select (frame => Vector3.Lerp (middle, start, (float) frame / moveingFrame));
+                .Select (frame => Vector3.Lerp (target, start, (float) frame / moveingFrame));
 
             return goShuffle
                 .Concat (comebackShuffle);
         }
-        shuffleMoveing = CreateShuffleMoveing (transform.right * 3f, 100);
+        shuffleMoveing = CreateShuffleMoveing (transform.position, transform.position + transform.right * 3f, 100);
     }
 
     public void DrawCardShuffle () {
