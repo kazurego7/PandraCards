@@ -5,11 +5,12 @@ using UniRx;
 using UnityEngine;
 
 public class PlayArea : MonoBehaviour {
-	ReactiveCollection<IList<Card>> playedCards;
+	public ReactiveCollection<IList<Card>> PlayedCards {
+		get;
+	} = new ReactiveCollection<IList<Card>> ();
 	FieldPlacer fieldPlacer;
 
 	public void Awake () {
-		playedCards = new ReactiveCollection<IList<Card>> ();
 		fieldPlacer = GetComponentInParent<FieldPlacer> ();
 	}
 
@@ -24,7 +25,7 @@ public class PlayArea : MonoBehaviour {
 	public bool CanPlayCards (IList<Card> playCards) {
 		var playColor = playCards.FirstOrDefault ()?.MyColor ?? Card.Color.NoColor;
 
-		var topPlacedCards = playedCards.LastOrDefault (); // 一番下が最初(first)
+		var topPlacedCards = PlayedCards.LastOrDefault (); // 一番下が最初(first)
 		var topPlacedColor = topPlacedCards?.FirstOrDefault ()?.MyColor ?? Card.Color.NoColor;
 
 		var stronger2ndColors = new List < (Card.Color, Card.Color) > () {
@@ -49,20 +50,21 @@ public class PlayArea : MonoBehaviour {
 
 		return playCardsCanPlayForStrongers || playCardsCanPlayForWeakers || topPlacedCardsAreNoColor; // topが色無しなら無条件で置ける
 	}
-	public void PlayCards (IList<Card> cards) {
-		if (cards == null) return;
-		playedCards.Add (cards);
+	public bool PlayCards (IList<Card> cards) {
+		if (cards == null) return false;
+		PlayedCards.Add (cards);
+		return true;
 	}
 
 	public IList<IList<Card>> RemovePlacedCards () {
-		var discards = new List<IList<Card>> (playedCards);
-		playedCards.Clear ();
+		var discards = new List<IList<Card>> (PlayedCards);
+		PlayedCards.Clear ();
 		return discards;
 	}
 
 	public bool ExistPlayableCards (Hand hand) {
 		var handCards = hand.GetCardsAll ();
-		var playAreaCards = playedCards.LastOrDefault ();
+		var playAreaCards = PlayedCards.LastOrDefault ();
 		var playAreaCardsColor = playAreaCards?.FirstOrDefault ()?.MyColor ?? Card.Color.NoColor;
 		var stronger2ndColors = new List < (Card.Color, Card.Color) > () {
 			(Card.Color.Blue, Card.Color.Red),
@@ -86,11 +88,11 @@ public class PlayArea : MonoBehaviour {
 	}
 
 	public IEnumerator DrawCardPlayMoves () {
-		var prevPlacedCardIndex = (playedCards.Count - 1) - 1; // prevPlacedCardIndex = placedCardIndex - 1
+		var prevPlacedCardIndex = (PlayedCards.Count - 1) - 1; // prevPlacedCardIndex = placedCardIndex - 1
 		var prevPlacedCardZ = prevPlacedCardIndex >= 0 ?
-			playedCards[prevPlacedCardIndex].Last ().transform.position.z : // 注意!! 既にCardはPlayされ、placedCardsに格納されている
+			PlayedCards[prevPlacedCardIndex].Last ().transform.position.z : // 注意!! 既にCardはPlayされ、placedCardsに格納されている
 			0;
-		var selectedCards = playedCards.Last ();
+		var selectedCards = PlayedCards.Last ();
 		foreach (var index in Enumerable.Range (0, selectedCards.Count)) {
 			var leftmostDistance = 0.2f * (-(selectedCards.Count - 1) + 2 * index);
 			var heightVector = (prevPlacedCardZ + -Card.thickness * (index + 1)) * Vector3.forward; // 注意!! 左手座標系(手前の方がマイナス)
@@ -102,7 +104,7 @@ public class PlayArea : MonoBehaviour {
 	}
 
 	public IEnumerator DrawCardPlacing () {
-		var topPlacedCards = playedCards.FirstOrDefault ();
+		var topPlacedCards = PlayedCards.FirstOrDefault ();
 		var placeToPlayArea = topPlacedCards?.Select ((card) => {
 			return StartCoroutine (card?.DrawMove (transform.position, moveingFrame : 10));
 		});

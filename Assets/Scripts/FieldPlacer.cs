@@ -50,7 +50,7 @@ public class FieldPlacer : MonoBehaviour {
 	void ReplenishPlayCards () {
 		foreach (var i in Enumerable.Range (0, hands.Count)) {
 			var drawCard = decks[i].TopDraw ();
-			if (drawCard != null) playAreas[i].PlayCards (new List<Card> () { drawCard });
+			playAreas[i].PlayCards (new List<Card> () { drawCard });
 		}
 	}
 

@@ -19,7 +19,6 @@ public class HandPlace : MonoBehaviour {
 
 	public ReactiveProperty<Card> CardPutNotice {
 		get;
-		private set;
 	} = new ReactiveProperty<Card>();
 
 	public Card RemoveCard () {
