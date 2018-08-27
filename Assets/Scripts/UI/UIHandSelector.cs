@@ -14,9 +14,9 @@ public class UIHandSelector : MonoBehaviour {
         //Debug.Log ($"SelectFrame{sentPlaceNum}");
 
         
-        var selectedColor = selectedPlace.HandPlace.PlacedCard?.MyColor ?? Card.Color.NoColor;
+        var selectedColor = selectedPlace.HandPlace.PutCard?.MyColor ?? Card.Color.NoColor;
         bool IsSameColorToSelected(UIHandPlace place) {
-            var placedColor = place.HandPlace.PlacedCard?.MyColor ?? Card.Color.NoColor;
+            var placedColor = place.HandPlace.PutCard?.MyColor ?? Card.Color.NoColor;
             return placedColor != Card.Color.NoColor && selectedColor != Card.Color.NoColor && placedColor == selectedColor;
         }
 

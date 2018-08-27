@@ -1,20 +1,37 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
-using System;
 using System.Linq;
+using UniRx;
+using UnityEngine;
 
 public class HandPlace : MonoBehaviour {
 
-	public Card PlacedCard{
-		get;
-		set;
+
+	public Card PutCard {
+		get {
+			return CardPutNotice.Value;
+		}
+		set {
+			CardPutNotice.Value = value;
+		}
 	}
 
-	public Card RemoveCard() {
-		var removed = PlacedCard;
-		PlacedCard = null;
+	public ReactiveProperty<Card> CardPutNotice {
+		get;
+		private set;
+	} = new ReactiveProperty<Card>();
+
+	public Card RemoveCard () {
+		var removed = PutCard;
+		PutCard = null;
 		return removed;
+	}
+
+	public IEnumerator DrawReplaceCards (int moveingFrame) {
+		if (PutCard == null) yield break;
+		var movePosition = transform.position + Card.thickness * Vector3.back;
+		yield return StartCoroutine (PutCard.DrawMove (movePosition, moveingFrame));
 	}
 
 	public bool IsSelcted {

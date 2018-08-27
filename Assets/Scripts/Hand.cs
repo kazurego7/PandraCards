@@ -23,16 +23,16 @@ public class Hand : MonoBehaviour {
 
 	public void ReplenishHands (){
 		foreach (var place in handPlaces){
-			if (place.PlacedCard == null) place.PlacedCard = deck.TopDraw();
+			if (place.PutCard == null) place.PutCard = deck.TopDraw();
 		}
 	}
 
 	public IList<Card> GetCardsAll(){
-		return handPlaces.Select(handPlace => handPlace.PlacedCard)?.Where(card => card != null).ToList();
+		return handPlaces.Select(handPlace => handPlace.PutCard)?.Where(card => card != null).ToList();
 	}
 
 	public IList<Card> GetSelectedCards() {
-		return handPlaces.Where(handPlace => handPlace.IsSelcted).Select(selected => selected.PlacedCard).ToList();
+		return handPlaces.Where(handPlace => handPlace.IsSelcted).Select(selected => selected.PutCard).ToList();
 	}
 
 	public IList<Card> RemoveSelectedHands(){
@@ -40,10 +40,7 @@ public class Hand : MonoBehaviour {
 	}
 	public IEnumerator DrawReplenishCards (int moveingFrame) {
 		foreach (var place in handPlaces) {
-			var card = place.PlacedCard;
-			var movePosition = place.transform.position + Card.thickness * Vector3.back;
-			
-			if(card != null) yield return StartCoroutine(card.DrawMove (movePosition, moveingFrame: moveingFrame));
+			yield return StartCoroutine(place.DrawReplaceCards(moveingFrame));
 		}
 	}
 

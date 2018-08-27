@@ -1,14 +1,15 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using UniRx;
 using UnityEngine;
 
 public class PlayArea : MonoBehaviour {
-	IList<IList<Card>> playedCards;
+	ReactiveCollection<IList<Card>> playedCards;
 	FieldPlacer fieldPlacer;
 
 	public void Awake () {
-		playedCards = new List<IList<Card>> ();
+		playedCards = new ReactiveCollection<IList<Card>> ();
 		fieldPlacer = GetComponentInParent<FieldPlacer> ();
 	}
 
@@ -49,15 +50,13 @@ public class PlayArea : MonoBehaviour {
 		return playCardsCanPlayForStrongers || playCardsCanPlayForWeakers || topPlacedCardsAreNoColor; // topが色無しなら無条件で置ける
 	}
 	public void PlayCards (IList<Card> cards) {
-		foreach (var card in cards) {
-			card.transform.SetParent (transform);
-		}
-		if (cards != null) playedCards.Add (cards);
+		if (cards == null) return;
+		playedCards.Add (cards);
 	}
 
 	public IList<IList<Card>> RemovePlacedCards () {
-		var discards = playedCards;
-		playedCards = new List<IList<Card>> ();
+		var discards = new List<IList<Card>> (playedCards);
+		playedCards.Clear ();
 		return discards;
 	}
 
