@@ -66,7 +66,7 @@ public class FieldPlacer : MonoBehaviour {
 		// 次のカードがプレイできないときの処理
 		void RemovePlayAreaCards () {
 			foreach (var playArea in playAreas) {
-				discardsBox.Add (playArea.RemovePlacedCards ());
+				discardsBox.Add (playArea.RemoveAllPutCards ());
 			}
 		}
 		bool CanNextPlay () {

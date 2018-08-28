@@ -16,7 +16,7 @@ public class PlayArea : MonoBehaviour {
 
 	public void Delete () {
 		StopAllCoroutines ();
-		var linerRemoved = RemovePlacedCards ().SelectMany (x => x);
+		var linerRemoved = RemoveAllPutCards ().SelectMany (x => x);
 		foreach (var removed in linerRemoved) {
 			Destroy (removed.gameObject);
 		}
@@ -56,7 +56,7 @@ public class PlayArea : MonoBehaviour {
 		return true;
 	}
 
-	public IList<IList<Card>> RemovePlacedCards () {
+	public IList<IList<Card>> RemoveAllPutCards () {
 		var discards = new List<IList<Card>> (PlayedCards);
 		PlayedCards.Clear ();
 		return discards;

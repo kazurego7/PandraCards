@@ -3,9 +3,13 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UniRx;
 
 public class Deck : MonoBehaviour {
-	IList<Card> cards;
+	public ReactiveCollection<Card> Cards {
+		get;
+		private set;
+	}
 
 	DeckReciper deckReciper;
 
@@ -14,7 +18,7 @@ public class Deck : MonoBehaviour {
 	}
 
 	public void SetUp () {
-		this.cards = deckReciper.CreateDeck();
+		Cards = new ReactiveCollection<Card>(deckReciper.CreateDeck());
 
 		Shuffle ();
 		StartCoroutine(DrawAdjustCardHeights ());
@@ -22,20 +26,20 @@ public class Deck : MonoBehaviour {
 
 	public void Delete () {
 		StopAllCoroutines ();
-		foreach (var card in cards) {
+		foreach (var card in Cards) {
 			Destroy (card.gameObject);
 		}
 	}
 
 	public Card TopDraw () {
-			var top = cards.LastOrDefault ();
-			if (cards.Count > 0) cards.RemoveAt (cards.Count - 1);
+			var top = Cards.LastOrDefault ();
+			if (Cards.Count > 0) Cards.RemoveAt (Cards.Count - 1);
 			return top;
 	}
 
 	public void Shuffle () {
 		// Guidは一意でランダムな値を表す構造体
-		cards = cards.OrderBy (_ => Guid.NewGuid ()).ToList ();
+		Cards = Cards.OrderBy (_ => Guid.NewGuid ()).ToReactiveCollection();
 		return;
 	}
 
@@ -43,7 +47,7 @@ public class Deck : MonoBehaviour {
 		// 各カードが動き始めるのを何秒遅延するか
 		var startDelaySecond = 0.01f;
 		Coroutine lastCoroutine = null;
-		foreach (var card in cards) {
+		foreach (var card in Cards) {
 			lastCoroutine = StartCoroutine (card.DrawShuffle ());
 			yield return new WaitForSeconds (startDelaySecond);
 		}
@@ -54,9 +58,9 @@ public class Deck : MonoBehaviour {
 
 	IEnumerator DrawAdjustCardHeights () {
 		// デッキのそれぞれのカードの高さを厚みによって調節
-		foreach (var index in Enumerable.Range (0, cards.Count)) {
-			var heightAjustedPosition = cards[index].transform.position + index * Card.thickness * Vector3.back;
-			var card = cards[index];
+		foreach (var index in Enumerable.Range (0, Cards.Count)) {
+			var heightAjustedPosition = Cards[index].transform.position + index * Card.thickness * Vector3.back;
+			var card = Cards[index];
 			card.transform.Rotate(heightAjustedPosition);
 		}
 		yield return null;
