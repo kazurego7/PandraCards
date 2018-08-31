@@ -4,10 +4,10 @@ using UnityEngine;
 
 public class UIPlayArea : MonoBehaviour {
     [SerializeField] PlayArea playArea;
-    [SerializeField] FieldPlacer fieldPlacer;
+    [SerializeField] Field field;
     [SerializeField] UIHandSelector UIHandSelector;
-    public void PlayCardForHands(){
-        fieldPlacer.PlayCardsForHands(UIHandSelector.GetHand(), playArea);
+    public void PlayCardForHand(){
+        field.PlayCardsForHand(UIHandSelector.GetHand(), playArea);
         UIHandSelector.DeselectFrames();
     }
 }

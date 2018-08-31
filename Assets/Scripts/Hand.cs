@@ -3,44 +3,49 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UniRx;
 
 public class Hand : MonoBehaviour {
 	Deck deck;
-	IList<HandPlace> handPlaces;
+	IList<OneHand> oneHands;
 
 	void Awake () {
 		deck = transform.parent.GetComponentInChildren<Deck> ();
-		handPlaces = GetComponentsInChildren<HandPlace> ().ToList ();
+		oneHands = GetComponentsInChildren<OneHand> ().ToList ();
 	}
 
-    public void Delete() {
+	public void Delete () {
 		StopAllCoroutines ();
-		foreach (var hand in handPlaces)
-		{
-			Destroy(hand.RemoveCard()?.gameObject);
+		foreach (var hand in oneHands) {
+			Destroy (hand.RemoveCard ()?.gameObject);
 		}
 	}
 
-	public void ReplenishHands (){
-		foreach (var place in handPlaces){
-			if (place.PutCard == null) place.PutCard = deck.TopDraw();
+	public void Replenish () {
+		foreach (var oneHand in oneHands) {
+			if (oneHand.PutCard == null) {
+				var drawCard = deck.TopDraw();
+				// Debug.Log(drawCard);
+				oneHand.Replenish (drawCard);
+			};
 		}
 	}
 
-	public IList<Card> GetCardsAll(){
-		return handPlaces.Select(handPlace => handPlace.PutCard)?.Where(card => card != null).ToList();
+	public IList<Card> GetAllCards () {
+		return oneHands.Select (handPlace => handPlace.PutCard)?.Where (card => card != null).ToList ();
 	}
 
-	public IList<Card> GetSelectedCards() {
-		return handPlaces.Where(handPlace => handPlace.IsSelcted).Select(selected => selected.PutCard).ToList();
+	public IList<Card> GetSelectedCards () {
+		return oneHands.Where (handPlace => handPlace.IsSelcted.Value).Select (selected => selected.PutCard).ToList ();
 	}
 
-	public IList<Card> RemoveSelectedHands(){
-		return handPlaces.Where(handPlace => handPlace.IsSelcted).Select(selected => selected.RemoveCard()).ToList();
+	public IList<Card> RemoveSelectedCards () {
+		return oneHands.Where (handPlace => handPlace.IsSelcted.Value).Select (selected => selected.RemoveCard ()).ToList ();
 	}
+
 	public IEnumerator DrawReplenishCards (int moveingFrame) {
-		foreach (var place in handPlaces) {
-			yield return StartCoroutine(place.DrawReplaceCards(moveingFrame));
+		foreach (var place in oneHands) {
+			yield return StartCoroutine (place.DrawPutCards (moveingFrame));
 		}
 	}
 

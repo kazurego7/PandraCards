@@ -5,24 +5,30 @@ using UniRx;
 using UnityEngine;
 
 public class PlayArea : MonoBehaviour {
-	public ReactiveCollection<IList<Card>> PlayedCards {
+	IList<IList<Card>> PlayedCards {
+		set;
 		get;
-	} = new ReactiveCollection<IList<Card>> ();
-	FieldPlacer fieldPlacer;
+	} = new List<IList<Card>> ();
 
-	public void Awake () {
-		fieldPlacer = GetComponentInParent<FieldPlacer> ();
-	}
+	public IReactiveProperty<IList<Card>> PlayedNotice {
+		private set;
+		get;
+	} = new ReactiveProperty<IList<Card>>();
+
+	public IReactiveProperty<Card> FirstPutNotice {
+		private set;
+		get;
+	} = new ReactiveProperty<Card>();
 
 	public void Delete () {
 		StopAllCoroutines ();
-		var linerRemoved = RemoveAllPutCards ().SelectMany (x => x);
+		var linerRemoved = RemoveAll ().SelectMany (x => x);
 		foreach (var removed in linerRemoved) {
 			Destroy (removed.gameObject);
 		}
 	}
 
-	public bool CanPlayCards (IList<Card> playCards) {
+	public bool CanPlay (IList<Card> playCards) {
 		var playColor = playCards.FirstOrDefault ()?.MyColor ?? Card.Color.NoColor;
 
 		var topPlacedCards = PlayedCards.LastOrDefault (); // 一番下が最初(first)
@@ -50,20 +56,28 @@ public class PlayArea : MonoBehaviour {
 
 		return playCardsCanPlayForStrongers || playCardsCanPlayForWeakers || topPlacedCardsAreNoColor; // topが色無しなら無条件で置ける
 	}
-	public bool PlayCards (IList<Card> cards) {
+	public bool Play (IList<Card> cards) {
 		if (cards == null) return false;
 		PlayedCards.Add (cards);
+		PlayedNotice.Value = cards;
 		return true;
 	}
 
-	public IList<IList<Card>> RemoveAllPutCards () {
+	public bool FirstPut(Card card) {
+		if (card == null) return false;
+		PlayedCards.Add (new List<Card>(){card});
+		FirstPutNotice.Value = card;
+		return true;
+	}
+
+	public IList<IList<Card>> RemoveAll () {
 		var discards = new List<IList<Card>> (PlayedCards);
 		PlayedCards.Clear ();
 		return discards;
 	}
 
 	public bool ExistPlayableCards (Hand hand) {
-		var handCards = hand.GetCardsAll ();
+		var handCards = hand.GetAllCards ();
 		var playAreaCards = PlayedCards.LastOrDefault ();
 		var playAreaCardsColor = playAreaCards?.FirstOrDefault ()?.MyColor ?? Card.Color.NoColor;
 		var stronger2ndColors = new List < (Card.Color, Card.Color) > () {
@@ -87,7 +101,7 @@ public class PlayArea : MonoBehaviour {
 		return existHands && (canPlayStronger || canPlayWeaker || playAreaIsNoColor);
 	}
 
-	public IEnumerator DrawCardPlayMoves () {
+	public IEnumerator DrawPlayMoves () {
 		var prevPlacedCardIndex = (PlayedCards.Count - 1) - 1; // prevPlacedCardIndex = placedCardIndex - 1
 		var prevPlacedCardZ = prevPlacedCardIndex >= 0 ?
 			PlayedCards[prevPlacedCardIndex].Last ().transform.position.z : // 注意!! 既にCardはPlayされ、placedCardsに格納されている

@@ -5,21 +5,24 @@ using System.Linq;
 using UniRx;
 using UnityEngine;
 
-public class HandPlace : MonoBehaviour {
+public class OneHand : MonoBehaviour {
 
 
 	public Card PutCard {
-		get {
-			return CardPutNotice.Value;
-		}
-		set {
-			CardPutNotice.Value = value;
-		}
+		get;
+		private set;
 	}
 
-	public ReactiveProperty<Card> CardPutNotice {
+	public IReactiveProperty<Card> ReplenishedNotice {
 		get;
 	} = new ReactiveProperty<Card>();
+
+	public bool Replenish(Card card){
+		if (card == null) return false;
+		PutCard = card;
+		ReplenishedNotice.Value = card;
+		return true;
+	}
 
 	public Card RemoveCard () {
 		var removed = PutCard;
@@ -27,14 +30,13 @@ public class HandPlace : MonoBehaviour {
 		return removed;
 	}
 
-	public IEnumerator DrawReplaceCards (int moveingFrame) {
+	public IEnumerator DrawPutCards (int moveingFrame) {
 		if (PutCard == null) yield break;
 		var movePosition = transform.position + Card.thickness * Vector3.back;
 		yield return StartCoroutine (PutCard.DrawMove (movePosition, moveingFrame));
 	}
 
-	public bool IsSelcted {
+	public ReactiveProperty<bool> IsSelcted {
 		get;
-		set;
-	}
+	} = new ReactiveProperty<bool> (false);
 }

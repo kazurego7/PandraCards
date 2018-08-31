@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-public class FieldPlacer : MonoBehaviour {
+public class Field : MonoBehaviour {
 	IList<Hand> hands;
 	IList<Deck> decks;
 	IList<PlayArea> playAreas;
@@ -23,8 +23,8 @@ public class FieldPlacer : MonoBehaviour {
 			}
 		}
 		void ReplenishHands () {
-			foreach (var placer in hands) {
-				placer.ReplenishHands ();
+			foreach (var hand in hands) {
+				hand.Replenish ();
 			}
 		}
 		SetUpDecks ();
@@ -49,24 +49,23 @@ public class FieldPlacer : MonoBehaviour {
 
 	void ReplenishPlayCards () {
 		foreach (var i in Enumerable.Range (0, hands.Count)) {
-			var drawCard = decks[i].TopDraw ();
-			playAreas[i].PlayCards (new List<Card> () { drawCard });
+			playAreas[i].FirstPut(decks[i].TopDraw ());
 		}
 	}
 
-	public void PlayCardsForHands (Hand playHand, PlayArea targetArea) {
+	public void PlayCardsForHand (Hand playHand, PlayArea targetArea) {
 		// カードプレイ&ハンド補充
-		if (!targetArea.CanPlayCards (playHand.GetSelectedCards ())) return;
-		targetArea.PlayCards (playHand.RemoveSelectedHands ());
-		playHand.ReplenishHands ();
+		if (!targetArea.CanPlay (playHand.GetSelectedCards ())) return;
+		targetArea.Play (playHand.RemoveSelectedCards ());
+		playHand.Replenish ();
 
-		StartCoroutine (targetArea.DrawCardPlayMoves ());
+		StartCoroutine (targetArea.DrawPlayMoves ());
 		StartCoroutine (playHand.DrawReplenishCards (7));
 
 		// 次のカードがプレイできないときの処理
 		void RemovePlayAreaCards () {
 			foreach (var playArea in playAreas) {
-				discardsBox.Add (playArea.RemoveAllPutCards ());
+				discardsBox.Add (playArea.RemoveAll ());
 			}
 		}
 		bool CanNextPlay () {

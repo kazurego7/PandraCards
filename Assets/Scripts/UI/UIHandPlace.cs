@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class UIHandPlace : MonoBehaviour {
 
-	[SerializeField] HandPlace handPlace;
+	[SerializeField] OneHand oneHand;
 	
 	UIHandSelector UIHandSelector;
 	GameObject frame;
@@ -19,12 +19,12 @@ public class UIHandPlace : MonoBehaviour {
 		UIHandSelector = transform.GetComponentInParent<UIHandSelector>();
 	}
 
-	public HandPlace HandPlace {
-		get { return handPlace; }
+	public OneHand OneHnad {
+		get { return oneHand; }
 	}
 
 	public void SetFrameActive (bool flag) {
-		handPlace.IsSelcted = flag;
+		oneHand.IsSelcted.Value = flag;
 		FrameActivity = flag;
 	}
 	public void DrawFrame () {

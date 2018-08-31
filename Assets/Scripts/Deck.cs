@@ -6,7 +6,7 @@ using UnityEngine;
 using UniRx;
 
 public class Deck : MonoBehaviour {
-	public ReactiveCollection<Card> Cards {
+	public IList<Card> Cards {
 		get;
 		private set;
 	}
@@ -18,7 +18,7 @@ public class Deck : MonoBehaviour {
 	}
 
 	public void SetUp () {
-		Cards = new ReactiveCollection<Card>(deckReciper.CreateDeck());
+        Cards = deckReciper.CreateDeck();
 
 		Shuffle ();
 		StartCoroutine(DrawAdjustCardHeights ());

@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class GameManager : MonoBehaviour {
-	[SerializeField] FieldPlacer fieldPlacer;
+	[SerializeField] Field field;
 	void Start () {
-		fieldPlacer.SetUp();
-		StartCoroutine(fieldPlacer.DrawFirstCardPlacing ());
+		field.SetUp();
+		StartCoroutine(field.DrawFirstCardPlacing ());
 	}
 }

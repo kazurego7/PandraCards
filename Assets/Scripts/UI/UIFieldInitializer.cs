@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class UIFieldInitializer : MonoBehaviour {
-    [SerializeField] FieldPlacer fieldPlacer;
+    [SerializeField] Field field;
 
     public void DrawFirstCardPlacing (){
-        StartCoroutine(fieldPlacer.DrawFirstCardPlacing());
+        StartCoroutine(field.DrawFirstCardPlacing());
     }
 }
