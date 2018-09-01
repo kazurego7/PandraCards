@@ -44,8 +44,8 @@ public class Hand : MonoBehaviour {
 	}
 
 	public IEnumerator DrawReplenishCards (int moveingFrame) {
-		foreach (var place in oneHands) {
-			yield return StartCoroutine (place.DrawPutCards (moveingFrame));
+		foreach (var oneHand in oneHands) {
+			yield return StartCoroutine (oneHand.DrawPutCards (moveingFrame));
 		}
 	}
 
