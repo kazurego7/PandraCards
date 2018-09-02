@@ -7,22 +7,43 @@ using UnityEngine;
 
 public class CardPresenter : MonoBehaviour {
 	class CardInfo {
-		public Transform transform;
+		public Transform TransformView {
+			get;
+			private set;
+		}
 	}
 
 	class OneHandInfo {
-		public OneHand oneHand;
-		public Transform transform;
+		public OneHand OneHandModel {
+			get;
+			private set;
+		}
+		public Transform TransformView {
+			get;
+			private set;
+		}
 	}
 
 	class DeckInfo {
-		public Deck deck;
-		public Transform transform;
+		public Deck DeckModel {
+			get;
+			private set;
+		}
+		public Transform TransformView {
+			get;
+			private set;
+		}
 	}
 
 	class PlayAreaInfo {
-		public PlayArea playArea;
-		public Transform transform;
+		public PlayArea PlayAreaModel {
+			get;
+			private set;
+		}
+		public Transform TransformView {
+			get;
+			private set;
+		}
 	}
 	Dictionary<Card, CardInfo> CardInfos {
 		get;
@@ -45,31 +66,47 @@ public class CardPresenter : MonoBehaviour {
 	} = new List<PlayAreaInfo> ();
 
 	void Start () {
-
-		void DrawReplinishe () {
-			var replinishedFromToStream = Observable.Merge (
-				OneHandInfos.Select (
-					oneHandInfo => oneHandInfo.oneHand.ReplenishedNotice.Select (
-						card => (from: CardInfos[card].transform, to: oneHandInfo.transform))));
-			var changeTransformInfoStream = replinishedFromToStream.Select (
-				fromTo => {
-					var moveingFrame = 7;
-					var changeVecs = Observable
-						.IntervalFrame (moveingFrame)
-						.Select (t => Vector3.Lerp (fromTo.from.position, fromTo.to.position + Card.thickness * Vector3.back, (float) t / moveingFrame));
-					return (to: changeVecs, from: fromTo.from);
-				});
-			changeTransformInfoStream
-				.Subscribe (info => info.to.Subscribe (changeVec => info.from.Translate (changeVec)));
+		IObservable<Vector3> CreateLinerMoves (Vector3 from, Vector3 to, int moveingFrame = 1) {
+			return Observable
+				.IntervalFrame (moveingFrame)
+				.Select (t => Vector3.Lerp (from, to + Card.thickness * Vector3.back, (float) t / moveingFrame));
 		}
-		var playedFromTo = Observable.Merge (
+
+		IObservable < (Transform, IObservable<Vector3>) > GetDrawReplinisheObservable () {
+			// Noticeを集めて、動くCardのTransform (from)と、動いた先のHandのTransform (to)に変換する
+			var moveFromToObservables = OneHandInfos
+				.Select (oneHandInfo => oneHandInfo.OneHandModel.ReplenishedNotice
+					.Select (card => (source: CardInfos[card].TransformView, target: oneHandInfo.TransformView)));
+
+			// (from, to)から、どのように動くか
+			return Observable
+				.Merge (moveFromToObservables)
+				.Select (t => {
+					var (source, target) = t; // 関数の仮引数では、タプルが分解できん（怒）
+					return (source, CreateLinerMoves(source.position, target.position, moveingFrame: 7));
+				});
+		}
+		IObservable < (IEnumerable<Transform>, IObservable<Vector3>) > GetDrawPlayObservable () {
+			var moveFromToObservables = PlayAreaInfos
+			.Select(playAreaInfo => playAreaInfo.PlayAreaModel.PlayedNotice
+			.Select(cards => (sources: cards.Select(card => CardInfos[card].TransformView), target: playAreaInfo.TransformView)));
+
+			return Observable
+				.Merge(moveFromToObservables)
+				.Select(t => {
+					var (sources, target) = t;
+					return (sources, )		// ***************ここから
+				});
+		}
+
+		var playFromTo = Observable.Merge (
 			PlayAreaInfos.Select (
-				playAreaInfo => playAreaInfo.playArea.PlayedNotice.Select (
-					cards => (cards.Select (card => CardInfos[card].transform), playAreaInfo.transform))));
-		var firstPutFromTo = Observable.Merge (
-			PlayAreaInfos.Select (
-				playAreaInfo => playAreaInfo.playArea.FirstPutNotice.Select (
-					card => (CardInfos[card].transform, playAreaInfo.transform))));
+				playAreaInfo => playAreaInfo.PlayAreaModel.PlayedNotice.Select (
+					cards => (cards.Select (card => CardInfos[card].TransformView), playAreaInfo.TransformView))));
+		var firstPutFromTo = Observable.Merge(
+            PlayAreaInfos.Select(
+				playAreaInfo => playAreaInfo.PlayAreaModel.FirstPutNotice.Select(
+					card => ((TransformView: CardInfos[card].TransformView, transform:playAreaInfo.TransformView)))));
 	}
 	public IEnumerator DrawShuffle () {
 
@@ -89,21 +126,5 @@ public class CardPresenter : MonoBehaviour {
 			transform.position = Vector3.Lerp (middle, start, (float) currentFrame / moveingFrame);
 			yield return null;
 		}
-	}
-
-	public IEnumerator DrawPlayMoves () {
-		var prevPlacedCardIndex = (PlayedCards.Count - 1) - 1; // prevPlacedCardIndex = placedCardIndex - 1
-		var prevPlacedCardZ = prevPlacedCardIndex >= 0 ?
-			PlayedCards[prevPlacedCardIndex].Last ().transform.position.z : // 注意!! 既にCardはPlayされ、placedCardsに格納されている
-			0;
-		var selectedCards = PlayedCards.Last ();
-		foreach (var index in Enumerable.Range (0, selectedCards.Count)) {
-			var leftmostDistance = 0.2f * (-(selectedCards.Count - 1) + 2 * index);
-			var heightVector = (prevPlacedCardZ + -Card.thickness * (index + 1)) * Vector3.forward; // 注意!! 左手座標系(手前の方がマイナス)
-			var movePosition = transform.position + leftmostDistance * Vector3.left + heightVector;
-			StartCoroutine (selectedCards[index].DrawMove (selectedCards[index].transform.position + heightVector));
-			StartCoroutine (selectedCards[index].DrawMove (movePosition, moveingFrame : 10));
-		}
-		yield return null;
 	}
 }
