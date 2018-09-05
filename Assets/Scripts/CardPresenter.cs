@@ -74,39 +74,39 @@ public class CardPresenter : MonoBehaviour {
 
 		IObservable < (Transform, IObservable<Vector3>) > GetDrawReplinisheObservable () {
 			// Noticeを集めて、動くCardのTransform (from)と、動いた先のHandのTransform (to)に変換する
-			var moveFromToObservables = OneHandInfos
+			var moveTransformObservables = OneHandInfos
 				.Select (oneHandInfo => oneHandInfo.OneHandModel.ReplenishedNotice
 					.Select (card => (source: CardInfos[card].TransformView, target: oneHandInfo.TransformView)));
 
 			// (from, to)から、どのように動くか
 			return Observable
-				.Merge (moveFromToObservables)
+				.Merge (moveTransformObservables)
 				.Select (t => {
 					var (card, oneHand) = t; // 関数の仮引数では、タプルが分解できん（怒）
 					return (card, CreateLinerMoves (card.position, oneHand.position, moveingFrame : 7));
 				});
 		}
 
-		IObservable < (IEnumerable<Transform>, IEnumerable<IObservable<Vector3>>) > GetDrawPlayObservable () {
-			var moveFromToObservables = PlayAreaInfos
+		IObservable <IEnumerable<(Transform, IObservable<Vector3>)> > GetDrawPlayObservable () {
+			var moveTransformObservables = PlayAreaInfos
 				.Select (playAreaInfo => playAreaInfo.PlayAreaModel.PlayedNotice
-					.Select (cards => (sources: cards.Select (card => CardInfos[card].TransformView), target: playAreaInfo)));
+					.Select (cards => (sources: cards.Select (card => CardInfos[card].TransformView).ToList(), target: playAreaInfo)));
 
 			return Observable
-				.Merge (moveFromToObservables)
+				.Merge (moveTransformObservables)
 				.Select (t => {
 					var (cards, playAreaInfo) = t;
 					var playCardBottomPosZ = playAreaInfo.PlayAreaModel.CountPlayCards () * Card.thickness * Vector3.back;
 					var moves = cards.Select ((card, i) => {
 						var distance = 0.2f;
-						var targetXY = distance * (-(cards.Count () - 1) + 2 * i) * Vector3.left;
+						var targetXY = distance * (-(cards.Count - 1) + 2 * i) * Vector3.left;
 						var targetZ = playCardBottomPosZ + Card.thickness * i * Vector3.back;
 						var currentPosition = playAreaInfo.TransformView.position;
 						var nextPosZ = currentPosition + targetZ;
 						var nextPos = nextPosZ + targetXY;
-						return CreateLinerMoves (currentPosition, nextPosZ).Concat (CreateLinerMoves (nextPosZ, nextPos));
+						return (cards[i] ,CreateLinerMoves (currentPosition, nextPosZ).Concat (CreateLinerMoves (nextPosZ, nextPos)));
 					});
-					return (cards, moves);
+					return moves;
 				});
 		}
 
