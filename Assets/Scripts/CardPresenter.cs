@@ -82,20 +82,31 @@ public class CardPresenter : MonoBehaviour {
 			return Observable
 				.Merge (moveFromToObservables)
 				.Select (t => {
-					var (source, target) = t; // 関数の仮引数では、タプルが分解できん（怒）
-					return (source, CreateLinerMoves(source.position, target.position, moveingFrame: 7));
+					var (card, oneHand) = t; // 関数の仮引数では、タプルが分解できん（怒）
+					return (card, CreateLinerMoves (card.position, oneHand.position, moveingFrame : 7));
 				});
 		}
-		IObservable < (IEnumerable<Transform>, IObservable<Vector3>) > GetDrawPlayObservable () {
+
+		IObservable < (IEnumerable<Transform>, IEnumerable<IObservable<Vector3>>) > GetDrawPlayObservable () {
 			var moveFromToObservables = PlayAreaInfos
-			.Select(playAreaInfo => playAreaInfo.PlayAreaModel.PlayedNotice
-			.Select(cards => (sources: cards.Select(card => CardInfos[card].TransformView), target: playAreaInfo.TransformView)));
+				.Select (playAreaInfo => playAreaInfo.PlayAreaModel.PlayedNotice
+					.Select (cards => (sources: cards.Select (card => CardInfos[card].TransformView), target: playAreaInfo)));
 
 			return Observable
-				.Merge(moveFromToObservables)
-				.Select(t => {
-					var (sources, target) = t;
-					return (sources, )		// ***************ここから
+				.Merge (moveFromToObservables)
+				.Select (t => {
+					var (cards, playAreaInfo) = t;
+					var playCardBottomPosZ = playAreaInfo.PlayAreaModel.CountPlayCards () * Card.thickness * Vector3.back;
+					var moves = cards.Select ((card, i) => {
+						var distance = 0.2f;
+						var targetXY = distance * (-(cards.Count () - 1) + 2 * i) * Vector3.left;
+						var targetZ = playCardBottomPosZ + Card.thickness * i * Vector3.back;
+						var currentPosition = playAreaInfo.TransformView.position;
+						var nextPosZ = currentPosition + targetZ;
+						var nextPos = nextPosZ + targetXY;
+						return CreateLinerMoves (currentPosition, nextPosZ).Concat (CreateLinerMoves (nextPosZ, nextPos));
+					});
+					return (cards, moves);
 				});
 		}
 
@@ -103,10 +114,10 @@ public class CardPresenter : MonoBehaviour {
 			PlayAreaInfos.Select (
 				playAreaInfo => playAreaInfo.PlayAreaModel.PlayedNotice.Select (
 					cards => (cards.Select (card => CardInfos[card].TransformView), playAreaInfo.TransformView))));
-		var firstPutFromTo = Observable.Merge(
-            PlayAreaInfos.Select(
-				playAreaInfo => playAreaInfo.PlayAreaModel.FirstPutNotice.Select(
-					card => ((TransformView: CardInfos[card].TransformView, transform:playAreaInfo.TransformView)))));
+		var firstPutFromTo = Observable.Merge (
+			PlayAreaInfos.Select (
+				playAreaInfo => playAreaInfo.PlayAreaModel.FirstPutNotice.Select (
+					card => ((TransformView: CardInfos[card].TransformView, transform: playAreaInfo.TransformView)))));
 	}
 	public IEnumerator DrawShuffle () {
 

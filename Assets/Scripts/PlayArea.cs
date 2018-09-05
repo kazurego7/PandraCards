@@ -76,6 +76,10 @@ public class PlayArea : MonoBehaviour {
 		return discards;
 	}
 
+	public int CountPlayCards () {
+		return PlayedCards.Aggregate(0, (accm, cards) => accm + cards.Count);
+	}
+
 	public bool ExistPlayableCards (Hand hand) {
 		var handCards = hand.GetAllCards ();
 		var playAreaCards = PlayedCards.LastOrDefault ();
