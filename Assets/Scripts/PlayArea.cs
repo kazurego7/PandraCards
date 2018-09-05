@@ -76,7 +76,7 @@ public class PlayArea : MonoBehaviour {
 		return discards;
 	}
 
-	public int CountPlayCards () {
+	public int CountPlayedCards () {
 		return PlayedCards.Aggregate(0, (accm, cards) => accm + cards.Count);
 	}
 

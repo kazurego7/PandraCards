@@ -66,6 +66,8 @@ public class CardPresenter : MonoBehaviour {
 	} = new List<PlayAreaInfo> ();
 
 	void Start () {
+		// Subscribeでしか、入力してはいけないよ！
+
 		IObservable<Vector3> CreateLinerMoves (Vector3 from, Vector3 to, int moveingFrame = 1) {
 			return Observable
 				.IntervalFrame (moveingFrame)
@@ -73,18 +75,18 @@ public class CardPresenter : MonoBehaviour {
 		}
 
 		IObservable < (Transform, IObservable<Vector3>) > GetDrawReplinisheObservable () {
-			// Noticeを集めて、動くCardのTransform (from)と、動いた先のHandのTransform (to)に変換する
+			// Noticeを集めて、動くCardのTransformと、動いた先のHandのTransformに変換する
 			var moveTransformObservables = OneHandInfos
 				.Select (oneHandInfo => oneHandInfo.OneHandModel.ReplenishedNotice
 					.Select (card => (source: CardInfos[card].TransformView, target: oneHandInfo.TransformView)));
 
-			// (from, to)から、どのように動くか
-			return Observable
+			var moveInfoObservables = Observable
 				.Merge (moveTransformObservables)
 				.Select (t => {
-					var (card, oneHand) = t; // 関数の仮引数では、タプルが分解できん（怒）
-					return (card, CreateLinerMoves (card.position, oneHand.position, moveingFrame : 7));
+					var (source, target) = t; // 関数の仮引数では、タプルが分解できん（怒）
+					return (source, movePositionObservable : CreateLinerMoves (source.position, target.position, moveingFrame : 7));
 				});
+			return moveInfoObservables;
 		}
 
 		IObservable <IEnumerable<(Transform, IObservable<Vector3>)> > GetDrawPlayObservable () {
@@ -96,11 +98,11 @@ public class CardPresenter : MonoBehaviour {
 				.Merge (moveTransformObservables)
 				.Select (t => {
 					var (cards, playAreaInfo) = t;
-					var playCardBottomPosZ = playAreaInfo.PlayAreaModel.CountPlayCards () * Card.thickness * Vector3.back;
+					var drawPlayCardBottomPosZ = (playAreaInfo.PlayAreaModel.CountPlayedCards () - cards.Count) * Card.thickness * Vector3.back;
 					var moves = cards.Select ((card, i) => {
 						var distance = 0.2f;
 						var targetXY = distance * (-(cards.Count - 1) + 2 * i) * Vector3.left;
-						var targetZ = playCardBottomPosZ + Card.thickness * i * Vector3.back;
+						var targetZ = drawPlayCardBottomPosZ + Card.thickness * i * Vector3.back;
 						var currentPosition = playAreaInfo.TransformView.position;
 						var nextPosZ = currentPosition + targetZ;
 						var nextPos = nextPosZ + targetXY;
