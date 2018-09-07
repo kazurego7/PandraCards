@@ -79,17 +79,14 @@ public class CardPresenter : MonoBehaviour {
 			var moveCardTransformObservable = target.OneHandModel.ReplenishedNotice
 				.Select (card => CardInfos[card].TransformView);
 
-			// moveInfo = (card transform, moveing positions for target as observable)
-			var moveInfoObservable = moveCardTransformObservable
-				.Select (cardTransform => {
-					return (cardTransform, movePositionObservable : CreateLinerMoves (cardTransform.position, target.TransformView.position, moveingFrame : 7));
-				});
-			return moveInfoObservable;
+			// return observable of tuple (card transform, moveing positions for target as observable)
+			return moveCardTransformObservable
+				.Select (cardTransform => (cardTransform, CreateLinerMoves (cardTransform.position, target.TransformView.position, moveingFrame : 7)));
 		}
 
 		IObservable < IEnumerable < (Transform, IObservable<Vector3>) >> CreateDrawPlayObservable (PlayAreaInfo playAreaInfo) {
 			var moveCardTransformsObservable = playAreaInfo.PlayAreaModel.PlayedNotice
-					.Select (cards => cards.Select (card => CardInfos[card].TransformView).ToList ());
+				.Select (cards => cards.Select (card => CardInfos[card].TransformView).ToList ());
 
 			return moveCardTransformsObservable
 				.Select (cards => {
@@ -105,6 +102,14 @@ public class CardPresenter : MonoBehaviour {
 					});
 					return moves;
 				});
+		}
+
+		IObservable < (Transform, IObservable<Vector3>) > CreateDrawFirstPut (PlayAreaInfo playAreaInfo) {
+			var moveCardTransformObservable = playAreaInfo.PlayAreaModel.FirstPutNotice
+				.Select (card => CardInfos[card].TransformView);
+
+			return moveCardTransformObservable
+				.Select (cardTransform => (cardTransform, CreateLinerMoves(cardTransform.position, playAreaInfo.TransformView.position, 10)));
 		}
 
 		var playFromTo = Observable.Merge (
