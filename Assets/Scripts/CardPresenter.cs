@@ -5,6 +5,7 @@ using System.Linq;
 using UniRx;
 using UnityEngine;
 
+
 public class CardPresenter : MonoBehaviour {
 	struct CardInfo {
 		public Transform TransformView {
@@ -71,10 +72,10 @@ public class CardPresenter : MonoBehaviour {
 		IObservable<Vector3> CreateLinerMoves (Vector3 source, Vector3 target, int moveingFrame = 1) {
 			return Observable
 				.IntervalFrame (moveingFrame)
-				.Select (t => Vector3.Lerp (source, target + Card.thickness * Vector3.back, (float) t / moveingFrame));
+				.Select (t => Vector3.Lerp (source, target, (float) t / moveingFrame));
 		}
 
-		IObservable < (Transform, IObservable<Vector3>) > CreateDrawReplinisheObservable (OneHandInfo target) {
+		IObservable < (Transform, IObservable<Vector3>) > CreateDrawReplenisheObservable (OneHandInfo target) {
 			// Noticeを集めて、動くCardのTransformに変換する
 			var moveCardTransformObservable = target.OneHandModel.ReplenishedNotice
 				.Select (card => CardInfos[card].TransformView);
@@ -104,22 +105,13 @@ public class CardPresenter : MonoBehaviour {
 				});
 		}
 
-		IObservable < (Transform, IObservable<Vector3>) > CreateDrawFirstPut (PlayAreaInfo playAreaInfo) {
+		IObservable < (Transform, IObservable<Vector3>) > CreateDrawFirstPutObservable (PlayAreaInfo playAreaInfo) {
 			var moveCardTransformObservable = playAreaInfo.PlayAreaModel.FirstPutNotice
 				.Select (card => CardInfos[card].TransformView);
 
 			return moveCardTransformObservable
-				.Select (cardTransform => (cardTransform, CreateLinerMoves(cardTransform.position, playAreaInfo.TransformView.position, 10)));
+				.Select (cardTransform => (cardTransform, CreateLinerMoves (cardTransform.position, playAreaInfo.TransformView.position, 10)));
 		}
-
-		var playFromTo = Observable.Merge (
-			PlayAreaInfos.Select (
-				playAreaInfo => playAreaInfo.PlayAreaModel.PlayedNotice.Select (
-					cards => (cards.Select (card => CardInfos[card].TransformView), playAreaInfo.TransformView))));
-		var firstPutFromTo = Observable.Merge (
-			PlayAreaInfos.Select (
-				playAreaInfo => playAreaInfo.PlayAreaModel.FirstPutNotice.Select (
-					card => ((TransformView: CardInfos[card].TransformView, transform: playAreaInfo.TransformView)))));
 	}
 	public IEnumerator DrawShuffle () {
 
