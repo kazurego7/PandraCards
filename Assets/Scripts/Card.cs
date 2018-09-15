@@ -13,13 +13,13 @@ public class Card : MonoBehaviour {
 		}
 	}
 
-	public	IEnumerator DrawMove (Vector3 target, int moveingFrame = 1) {
-			var start = transform.position;
-			foreach (var currentFrame in Enumerable.Range (1, moveingFrame)) {
-				transform.position = Vector3.Lerp (start, target, (float) currentFrame / moveingFrame);
-				yield return null;
-			}
+	public IEnumerator DrawMove (Vector3 target, int moveingFrame = 1) {
+		var start = transform.position;
+		foreach (var currentFrame in Enumerable.Range (1, moveingFrame)) {
+			transform.position = Vector3.Lerp (start, target, (float) currentFrame / moveingFrame);
+			yield return null;
 		}
+	}
 	public IEnumerator DrawShuffle () {
 
 		// 設定項目

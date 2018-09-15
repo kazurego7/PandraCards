@@ -5,7 +5,6 @@ using System.Linq;
 using UniRx;
 using UnityEngine;
 
-
 public class CardPresenter : MonoBehaviour {
 	struct CardInfo {
 		public Transform TransformView {
@@ -67,51 +66,98 @@ public class CardPresenter : MonoBehaviour {
 	} = new List<PlayAreaInfo> ();
 
 	void Start () {
+
 		// Subscribeでしか、入力してはいけないよ！
 
 		IObservable<Vector3> CreateLinerMoves (Vector3 source, Vector3 target, int moveingFrame = 1) {
 			return Observable
-				.IntervalFrame (moveingFrame)
+				.TimerFrame (0, 1)
+				.TakeWhile (t => t <= moveingFrame)
 				.Select (t => Vector3.Lerp (source, target, (float) t / moveingFrame));
 		}
+		IObservable < IObservable < (Transform, Vector3) >> CreateDrawShuffleObservable (DeckInfo deckInfo) {
+			return deckInfo.DeckModel.ShuffledNotice
+				.Select (_ => {
+					var deckCardCount = deckInfo.DeckModel.CountCard ();
 
-		IObservable < (Transform, IObservable<Vector3>) > CreateDrawReplenisheObservable (OneHandInfo target) {
-			// Noticeを集めて、動くCardのTransformに変換する
-			var moveCardTransformObservable = target.OneHandModel.ReplenishedNotice
-				.Select (card => CardInfos[card].TransformView);
+					// 各カードの動き初めをdelayTimeだけずらし、各々の動きのストリームを作って最後にマージしている。
+					var delayFrame = 1;
+					return Observable
+						.TimerFrame (0, delayFrame)
+						.TakeWhile (t => t <= deckCardCount)
+						.SelectMany (tCount => {
+							// 各カード1枚ごとの処理
+							var moveVec = transform.right * 3f;
+							var start = deckInfo.TransformView.position;
+							var middle = start + moveVec;
+							var card = deckInfo.DeckModel.GetNthCardFromTop ((int) tCount);
+							var cardTransform = CardInfos[card].TransformView;
 
-			// return observable of tuple (card transform, moveing positions for target as observable)
-			return moveCardTransformObservable
-				.Select (cardTransform => (cardTransform, CreateLinerMoves (cardTransform.position, target.TransformView.position, moveingFrame : 7)));
+							return CreateLinerMoves (start, middle, moveingFrame : 10)
+								.Concat (CreateLinerMoves (middle, start, moveingFrame : 10))
+								.Select (moveing => (cardTransform, moveing));
+						});
+				});
 		}
-
-		IObservable < IEnumerable < (Transform, IObservable<Vector3>) >> CreateDrawPlayObservable (PlayAreaInfo playAreaInfo) {
-			var moveCardTransformsObservable = playAreaInfo.PlayAreaModel.PlayedNotice
-				.Select (cards => cards.Select (card => CardInfos[card].TransformView).ToList ());
-
-			return moveCardTransformsObservable
+		IObservable < IObservable < (Transform, Vector3) >> CreateDrawReplenisheObservable (OneHandInfo oneHandInfo) {
+			// Noticeを集めて、動くCardのTransformに変換する
+			return oneHandInfo.OneHandModel.ReplenishedNotice
+				.Select (card => {
+					var cardTransform = CardInfos[card].TransformView;
+					return CreateLinerMoves (cardTransform.position, oneHandInfo.TransformView.position, moveingFrame : 7)
+						.Select (moveing => (cardTransform, moveing));
+				});
+		}
+		IObservable < IObservable < (Transform, Vector3) >> CreateDrawPlayObservable (PlayAreaInfo playAreaInfo) {
+			return playAreaInfo.PlayAreaModel.PlayedNotice
 				.Select (cards => {
-					var drawPlayCardBottomPosZ = (playAreaInfo.PlayAreaModel.CountPlayedCards () - cards.Count) * Card.thickness * Vector3.back;
-					var moves = cards.Select ((card, i) => {
+					var cardTransforms = cards.Select (card => CardInfos[card].TransformView).ToList ();
+					var drawPlayCardBottomPosZ = (playAreaInfo.PlayAreaModel.CountPlayedCards () - cardTransforms.Count) * Card.thickness * Vector3.back;
+					var playCardMoves = cardTransforms.Select ((card, i) => {
 						var distance = 0.2f;
-						var targetXY = distance * (-(cards.Count - 1) + 2 * i) * Vector3.left;
+						var targetXY = distance * (-(cardTransforms.Count - 1) + 2 * i) * Vector3.left;
 						var targetZ = drawPlayCardBottomPosZ + Card.thickness * i * Vector3.back;
 						var currentPosition = playAreaInfo.TransformView.position;
 						var nextPosZ = currentPosition + targetZ;
 						var nextPos = nextPosZ + targetXY;
-						return (cards[i], CreateLinerMoves (currentPosition, nextPosZ).Concat (CreateLinerMoves (nextPosZ, nextPos)));
+						var onePlayCardMove = CreateLinerMoves (currentPosition, nextPosZ)
+							.Concat (CreateLinerMoves (nextPosZ, nextPos))
+							.Select (moveing => (target: cardTransforms[i], moveing));
+						return onePlayCardMove;
 					});
-					return moves;
+					return Observable.Merge (playCardMoves);
+				});
+		}
+		IObservable < IObservable < (Transform, Vector3) >> CreateDrawFirstPutObservable (PlayAreaInfo playAreaInfo) {
+			return playAreaInfo.PlayAreaModel.FirstPutNotice
+				.Select (card => {
+					var cardTransform = CardInfos[card].TransformView;
+					return CreateLinerMoves (cardTransform.position, playAreaInfo.TransformView.position, 10)
+						.Select (moveing => (cardTransform, moveing));
 				});
 		}
 
-		IObservable < (Transform, IObservable<Vector3>) > CreateDrawFirstPutObservable (PlayAreaInfo playAreaInfo) {
-			var moveCardTransformObservable = playAreaInfo.PlayAreaModel.FirstPutNotice
-				.Select (card => CardInfos[card].TransformView);
+		var drawShuffleStream = DeckInfos
+			.Select (info => CreateDrawShuffleObservable (info))
+			.Merge ();
+		var drawReplenishStream = OneHandInfos
+			.Select (info => CreateDrawReplenisheObservable (info))
+			.Merge ();
+		var drawPlayStream = PlayAreaInfos
+			.Select (info => CreateDrawPlayObservable (info))
+			.Merge ();
+		var drawFirstPutStream = PlayAreaInfos
+			.Select (info => CreateDrawFirstPutObservable (info))
+			.Merge ();
 
-			return moveCardTransformObservable
-				.Select (cardTransform => (cardTransform, CreateLinerMoves (cardTransform.position, playAreaInfo.TransformView.position, 10)));
-		}
+		var cardMoveStream = Observable
+			.Merge (drawShuffleStream, drawReplenishStream, drawPlayStream, drawFirstPutStream)
+			.Concat ()
+			.Subscribe (cardMoveInfo => {
+				var (obj, target) = cardMoveInfo;
+				obj.Translate (target);
+			});
+
 	}
 	public IEnumerator DrawShuffle () {
 

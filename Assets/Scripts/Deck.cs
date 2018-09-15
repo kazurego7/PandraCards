@@ -2,8 +2,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using UnityEngine;
 using UniRx;
+using UnityEngine;
 
 public class Deck : MonoBehaviour {
 	public IList<Card> Cards {
@@ -13,15 +13,20 @@ public class Deck : MonoBehaviour {
 
 	DeckReciper deckReciper;
 
-	public void Awake() {
-		deckReciper = GetComponent<DeckReciper>();
+	public IReactiveProperty<Unit> ShuffledNotice {
+		get;
+		private set;
+	} = new ReactiveProperty<Unit> ();
+
+	public void Awake () {
+		deckReciper = GetComponent<DeckReciper> ();
 	}
 
 	public void SetUp () {
-        Cards = deckReciper.CreateDeck();
+		Cards = deckReciper.CreateDeck ();
 
 		Shuffle ();
-		StartCoroutine(DrawAdjustCardHeights ());
+		StartCoroutine (DrawAdjustCardHeights ());
 	}
 
 	public void Delete () {
@@ -31,15 +36,24 @@ public class Deck : MonoBehaviour {
 		}
 	}
 
+	public int CountCard () {
+		return Cards.Count;
+	}
+
 	public Card TopDraw () {
-			var top = Cards.LastOrDefault ();
-			if (Cards.Count > 0) Cards.RemoveAt (Cards.Count - 1);
-			return top;
+		if (Cards.Count < 1) return null;
+		Cards.RemoveAt (Cards.Count - 1);
+		return Cards.Last ();
+	}
+
+	public Card GetNthCardFromTop (int n) {
+		if (n > Cards.Count || n < 1) return null;
+		return Cards[n - 1];
 	}
 
 	public void Shuffle () {
 		// Guidは一意でランダムな値を表す構造体
-		Cards = Cards.OrderBy (_ => Guid.NewGuid ()).ToReactiveCollection();
+		Cards = Cards.OrderBy (_ => Guid.NewGuid ()).ToList ();
 		return;
 	}
 
@@ -61,7 +75,7 @@ public class Deck : MonoBehaviour {
 		foreach (var index in Enumerable.Range (0, Cards.Count)) {
 			var heightAjustedPosition = Cards[index].transform.position + index * Card.thickness * Vector3.back;
 			var card = Cards[index];
-			card.transform.Rotate(heightAjustedPosition);
+			card.transform.Rotate (heightAjustedPosition);
 		}
 		yield return null;
 	}

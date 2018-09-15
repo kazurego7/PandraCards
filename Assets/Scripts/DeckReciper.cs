@@ -34,7 +34,7 @@ public class DeckReciper : MonoBehaviour {
 
 	public IList<Card> CreateDeck () {
 		// 仮のデッキレシピを作成 *** いずれ消す
-		var tmpCardRecipes = new List<(String name, Int32 number)> () {
+		var tmpCardRecipes = new List < (String name, Int32 number) > () {
 			("RedCard", RedNum),
 			("BlueCard", BlueNum),
 			("GreenCard", GreenNum)
