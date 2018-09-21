@@ -49,7 +49,7 @@ public class Field : MonoBehaviour {
 
 	void ReplenishPlayCards () {
 		foreach (var i in Enumerable.Range (0, hands.Count)) {
-			playAreas[i].FirstPut(decks[i].TopDraw ());
+			playAreas[i].FirstPut (decks[i].TopDraw ());
 		}
 	}
 
@@ -65,7 +65,7 @@ public class Field : MonoBehaviour {
 		// 次のカードがプレイできないときの処理
 		void RemovePlayAreaCards () {
 			foreach (var playArea in playAreas) {
-				discardsBox.Add (playArea.RemoveAll ());
+				discardsBox.Store (playArea.RemoveAll ());
 			}
 		}
 		bool CanNextPlay () {

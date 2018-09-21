@@ -5,7 +5,7 @@ using System.Linq;
 using UniRx;
 using UnityEngine;
 
-public class CardPresenter : MonoBehaviour {
+public class Presenter : MonoBehaviour {
 	struct CardInfo {
 		public Transform TransformView {
 			get;
@@ -29,6 +29,18 @@ public class CardPresenter : MonoBehaviour {
 			get;
 			private set;
 		}
+		public Transform TransformView {
+			get;
+			private set;
+		}
+	}
+
+	struct DiscardsBoxInfo {
+		public DiscardsBox DiscardsBoxModel {
+			get;
+			private set;
+		}
+
 		public Transform TransformView {
 			get;
 			private set;
@@ -65,6 +77,11 @@ public class CardPresenter : MonoBehaviour {
 		set;
 	} = new List<PlayAreaInfo> ();
 
+	DiscardsBoxInfo DiscardInfo {
+		get;
+		set;
+	} = new DiscardsBoxInfo ();
+
 	void Start () {
 
 		// Subscribeでしか、入力してはいけないよ！
@@ -77,8 +94,8 @@ public class CardPresenter : MonoBehaviour {
 		}
 		IObservable < IObservable < (Transform, Vector3) >> CreateDrawShuffleObservable (DeckInfo deckInfo) {
 			return deckInfo.DeckModel.ShuffledNotice
-				.Select (_ => {
-					var deckCardCount = deckInfo.DeckModel.CountCard ();
+				.Select (cards => {
+					var deckCardCount = cards.Count;
 
 					// 各カードの動き初めをdelayTimeだけずらし、各々の動きのストリームを作って最後にマージしている。
 					var delayFrame = 1;
@@ -90,8 +107,7 @@ public class CardPresenter : MonoBehaviour {
 							var moveVec = transform.right * 3f;
 							var start = deckInfo.TransformView.position;
 							var middle = start + moveVec;
-							var card = deckInfo.DeckModel.GetNthCardFromTop ((int) tCount);
-							var cardTransform = CardInfos[card].TransformView;
+							var cardTransform = CardInfos[cards[(int) tCount]].TransformView;
 
 							return CreateLinerMoves (start, middle, moveingFrame : 10)
 								.Concat (CreateLinerMoves (middle, start, moveingFrame : 10))
@@ -136,7 +152,23 @@ public class CardPresenter : MonoBehaviour {
 						.Select (moveing => (cardTransform, moveing));
 				});
 		}
-
+		IObservable < IObservable < (Transform, Vector3) >> CreateDrawRemovePlayAreaCardObservable (DiscardsBoxInfo discardsBoxInfo) {
+			return discardsBoxInfo.DiscardsBoxModel.DiscardNotice
+				.SelectMany (x => x) // 内側の二重リストを一重につぶす
+				.Select (cards => {
+					var delayFrame = 2;
+					return Observable
+						.TimerFrame (0, delayFrame)
+						.TakeWhile (t => t <= cards.Count)
+						.Select (i => {
+							// i番目のカードの動き
+							var cardTransform = CardInfos[cards[(int) i]].TransformView;
+							return CreateLinerMoves (cardTransform.position, discardsBoxInfo.TransformView.position)
+								.Select (moveing => (cardTransform, moveing));
+						})
+						.Merge ();
+				});
+		}
 		var drawShuffleStream = DeckInfos
 			.Select (info => CreateDrawShuffleObservable (info))
 			.Merge ();
@@ -150,6 +182,8 @@ public class CardPresenter : MonoBehaviour {
 			.Select (info => CreateDrawFirstPutObservable (info))
 			.Merge ();
 
+		var drawRemovePlayAreaCardStream = CreateDrawRemovePlayAreaCardObservable (DiscardInfo);
+
 		var cardMoveStream = Observable
 			.Merge (drawShuffleStream, drawReplenishStream, drawPlayStream, drawFirstPutStream)
 			.Concat ()
@@ -158,24 +192,5 @@ public class CardPresenter : MonoBehaviour {
 				obj.Translate (target);
 			});
 
-	}
-	public IEnumerator DrawShuffle () {
-
-		// 設定項目
-		var moveingFrame = 10;
-		var moveVec = transform.right * 3f;
-
-		var start = transform.position;
-		var middle = start + moveVec;
-		// middleまでmoveingFrameで動かす
-		foreach (var currentFrame in Enumerable.Range (1, moveingFrame)) {
-			transform.position = Vector3.Lerp (start, middle, (float) currentFrame / moveingFrame);
-			yield return null;
-		}
-		// startまでmoveingFrameで動かす
-		foreach (var currentFrame in Enumerable.Range (1, moveingFrame)) {
-			transform.position = Vector3.Lerp (middle, start, (float) currentFrame / moveingFrame);
-			yield return null;
-		}
 	}
 }

@@ -13,12 +13,12 @@ public class PlayArea : MonoBehaviour {
 	public IReactiveProperty<IList<Card>> PlayedNotice {
 		private set;
 		get;
-	} = new ReactiveProperty<IList<Card>>();
+	} = new ReactiveProperty<IList<Card>> ();
 
 	public IReactiveProperty<Card> FirstPutNotice {
 		private set;
 		get;
-	} = new ReactiveProperty<Card>();
+	} = new ReactiveProperty<Card> ();
 
 	public void Delete () {
 		StopAllCoroutines ();
@@ -63,9 +63,9 @@ public class PlayArea : MonoBehaviour {
 		return true;
 	}
 
-	public bool FirstPut(Card card) {
+	public bool FirstPut (Card card) {
 		if (card == null) return false;
-		PlayedCards.Add (new List<Card>(){card});
+		PlayedCards.Add (new List<Card> () { card });
 		FirstPutNotice.Value = card;
 		return true;
 	}
@@ -77,7 +77,7 @@ public class PlayArea : MonoBehaviour {
 	}
 
 	public int CountPlayedCards () {
-		return PlayedCards.Aggregate(0, (accm, cards) => accm + cards.Count);
+		return PlayedCards.Aggregate (0, (accm, cards) => accm + cards.Count);
 	}
 
 	public bool ExistPlayableCards (Hand hand) {

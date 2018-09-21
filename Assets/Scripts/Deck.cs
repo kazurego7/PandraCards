@@ -13,10 +13,10 @@ public class Deck : MonoBehaviour {
 
 	DeckReciper deckReciper;
 
-	public IReactiveProperty<Unit> ShuffledNotice {
+	public IReactiveProperty<IList<Card>> ShuffledNotice {
 		get;
 		private set;
-	} = new ReactiveProperty<Unit> ();
+	} = new ReactiveProperty<IList<Card>> ();
 
 	public void Awake () {
 		deckReciper = GetComponent<DeckReciper> ();
@@ -54,6 +54,7 @@ public class Deck : MonoBehaviour {
 	public void Shuffle () {
 		// Guidは一意でランダムな値を表す構造体
 		Cards = Cards.OrderBy (_ => Guid.NewGuid ()).ToList ();
+		ShuffledNotice.Value = new List<Card> (Cards);
 		return;
 	}
 
