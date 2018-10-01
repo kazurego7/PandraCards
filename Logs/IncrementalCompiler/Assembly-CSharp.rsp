@@ -307,6 +307,7 @@
 -i:D:/WorkSpace/Unity/PandraCards/PandraCardsDevelopment/Assets/Scripts/Presenter/CardPresenter.cs
 -i:D:/WorkSpace/Unity/PandraCards/PandraCardsDevelopment/Assets/Scripts/Presenter/DeckPresenter.cs
 -i:D:/WorkSpace/Unity/PandraCards/PandraCardsDevelopment/Assets/Scripts/Presenter/DiscardBoxPresenter.cs
+-i:D:/WorkSpace/Unity/PandraCards/PandraCardsDevelopment/Assets/Scripts/Presenter/Message.cs
 -i:D:/WorkSpace/Unity/PandraCards/PandraCardsDevelopment/Assets/Scripts/Presenter/OneHandPresenter.cs
 -i:D:/WorkSpace/Unity/PandraCards/PandraCardsDevelopment/Assets/Scripts/Presenter/PlayAreaPresenter.cs
 -i:D:/WorkSpace/Unity/PandraCards/PandraCardsDevelopment/Assets/Scripts/Presenter/Store.cs
