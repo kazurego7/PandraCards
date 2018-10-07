@@ -7,20 +7,19 @@ using UnityEngine;
 
 public class OneHand : MonoBehaviour {
 
-
 	public Card PutCard {
 		get;
 		private set;
 	}
 
-	public IReactiveProperty<Card> ReplenishedNotice {
+	public IReactiveProperty<ReplenisheMsg> ReplenishedNotice {
 		get;
-	} = new ReactiveProperty<Card>();
+	} = new ReactiveProperty<ReplenisheMsg> ();
 
-	public bool Replenish(Card card){
+	public bool Replenish (Card card) {
 		if (card == null) return false;
 		PutCard = card;
-		ReplenishedNotice.Value = card;
+		ReplenishedNotice.Value = new ReplenisheMsg (card);
 		return true;
 	}
 

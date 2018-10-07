@@ -1,41 +1,41 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
 using UniRx;
 using UnityEngine;
 
 public class Store {
-	public readonly OneHandStore[] yourHand;
-	public readonly DeckStore yourDeck;
-	public readonly OneHandStore[] opponentHand;
-	public readonly DeckStore opponentDeck;
-	public readonly (PlayAreaStore, PlayAreaStore) playAreas;
-	public readonly DiscardBoxStore discardBox;
-	public readonly CardStore[] cards;
-	public readonly IObservable<Message> messager;
+	public IReadOnlyDictionary<OneHand, OneHandView> MyHandPresenter { get; }
+	public (Deck model, DeckView view) MyDeckPresenter { get; }
+	public IReadOnlyDictionary<PlayArea, PlayAreaView> PlayAreaPresenter { get; }
+	public (DiscardsBox model, DiscardBoxView view) DiscardBoxPresenter { get; }
+	public IReadOnlyDictionary<Card, CardView> CardPresenter { get; }
+	public IObservable<IMessage> MessageBox { get; }
 
 	public Store () {
-		public readonly struct OneHandStore {
-			public readonly Transform transform;
-			public readonly OneHand onehand;
-		}
-		public readonly struct DeckStore {
-			public readonly Transform transform;
-			public readonly Deck deck;
-		}
-		public readonly struct PlayAreaStore {
-			public readonly PlayArea playArea;
-			public readonly Transform transform;
-		}
-
-		public readonly struct DiscardBoxStore {
-			public readonly DiscardsBox discardBox;
-			public readonly Transform transform;
-		}
-		public readonly struct CardStore {
-			public readonly Card card;
-			public readonly Transform transform;
-		}
+		IObservable<IMessage> replenishe = Observable.Merge (MyHandPresenter.Keys.Select (model => model.ReplenishedNotice));
+		IObservable<IMessage> shuffle = MyDeckPresenter.model.ShuffledNotice;
+		IObservable<IMessage> play = Observable.Merge (PlayAreaPresenter.Keys.Select (model => model.PlayNotice));
+		IObservable<IMessage> firstPut = Observable.Merge (PlayAreaPresenter.Keys.Select (model => model.FirstPutNotice));
+		IObservable<IMessage> discard = DiscardBoxPresenter.model.DiscardNotice;
+		MessageBox = Observable.Merge (replenishe, shuffle, play, firstPut, discard);
 	}
+
+	public struct OneHandView {
+		public Transform Transform { get; }
+	}
+	public struct DeckView {
+		public Transform Transform { get; }
+	}
+	public struct PlayAreaView {
+		public Transform Transform { get; }
+	}
+
+	public struct DiscardBoxView {
+		public Transform Transform { get; }
+	}
+	public struct CardView {
+		public Transform Transform { get; }
+	}
+}
