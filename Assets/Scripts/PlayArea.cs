@@ -10,15 +10,15 @@ public class PlayArea : MonoBehaviour {
 		get;
 	} = new List<IList<Card>> ();
 
-	public IReactiveProperty<PlayMsg> PlayNotice {
+	public IReactiveProperty < (IList<Card> playCards, PlayArea putArea) > PlayNotice {
 		private set;
 		get;
-	} = new ReactiveProperty<PlayMsg> ();
+	} = new ReactiveProperty < (IList<Card>, PlayArea) > ();
 
-	public IReactiveProperty<FirstPutMsg> FirstPutNotice {
+	public IReactiveProperty < (Card firstCard, PlayArea putArea) > FirstPutNotice {
 		private set;
 		get;
-	} = new ReactiveProperty<FirstPutMsg> ();
+	} = new ReactiveProperty < (Card, PlayArea) > ();
 
 	public void Delete () {
 		StopAllCoroutines ();
@@ -59,14 +59,14 @@ public class PlayArea : MonoBehaviour {
 	public bool Play (IList<Card> cards) {
 		if (cards == null) return false;
 		PlayedCards.Add (cards);
-		PlayNotice.Value = new PlayMsg (cards);
+		PlayNotice.Value = (cards, this);
 		return true;
 	}
 
 	public bool FirstPut (Card card) {
 		if (card == null) return false;
 		PlayedCards.Add (new List<Card> () { card });
-		FirstPutNotice.Value = new FirstPutMsg (card);
+		FirstPutNotice.Value = (card, this);
 		return true;
 	}
 

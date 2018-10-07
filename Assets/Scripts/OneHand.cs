@@ -12,14 +12,14 @@ public class OneHand : MonoBehaviour {
 		private set;
 	}
 
-	public IReactiveProperty<ReplenisheMsg> ReplenishedNotice {
+	public IReactiveProperty < (Card mover, OneHand target) > ReplenishedNotice {
 		get;
-	} = new ReactiveProperty<ReplenisheMsg> ();
+	} = new ReactiveProperty < (Card, OneHand) > ();
 
 	public bool Replenish (Card card) {
 		if (card == null) return false;
 		PutCard = card;
-		ReplenishedNotice.Value = new ReplenisheMsg (card);
+		ReplenishedNotice.Value = (card, this);
 		return true;
 	}
 

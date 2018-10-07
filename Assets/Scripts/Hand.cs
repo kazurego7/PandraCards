@@ -8,12 +8,10 @@ using UnityEngine;
 public class Hand : MonoBehaviour {
 	Deck deck;
 	IList<OneHand> oneHands;
-	public IObservable<IMessage> Messenger;
 
 	void Awake () {
 		deck = transform.parent.GetComponentInChildren<Deck> ();
 		oneHands = GetComponentsInChildren<OneHand> ().ToList ();
-		Messenger = Observable.Merge (oneHands.Select (oneHand => oneHand.ReplenishedNotice));
 	}
 
 	public void Delete () {

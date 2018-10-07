@@ -10,14 +10,14 @@ public class DiscardsBox : MonoBehaviour {
 		private set;
 	} = new List<IList<Card>> ();
 
-	public ReactiveProperty<DiscardMsg> DiscardNotice {
+	public ReactiveProperty < (IList<IList<Card>> discards, DiscardsBox dustBin) > DiscardNotice {
 		get;
 		private set;
 	}
 
 	public void Store (IList<IList<Card>> discard) {
 		Discard = discard;
-		DiscardNotice.Value = new DiscardMsg (discard);
+		DiscardNotice.Value = (discard, this);
 	}
 
 	public void Delete () {
