@@ -8,16 +8,12 @@ tutorial end
 random match button
 deck button
 --
-touch random match
+touch random match, or deck
 =={server connect Fail}=> server connection error dialog
-touch deck
-=={server connect Fail}=> server connection error dialog
-touch random macth
-=={server connect OK}=> match load
 touch deck button
 =={server connect OK}=> deck make
-
-
+touch random macth
+=={server connect OK}=> match load
 [server connection error dialog]
 error number and error log
 --
@@ -37,3 +33,7 @@ game end
 ==> main
 
 [deck make]
+deck make
+--
+deck make end
+==> main
