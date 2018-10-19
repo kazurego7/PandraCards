@@ -5,13 +5,6 @@
 -out:D:/WorkSpace/Unity/PandraCards/PandraCardsDevelopment/Temp/Assembly-CSharp.dll
 -nostdlib
 -unsafe
--r:D:/WorkSpace/Unity/PandraCards/PandraCardsDevelopment/Library/ScriptAssemblies/UniRx.dll
--r:D:/WorkSpace/Unity/PandraCards/PandraCardsDevelopment/Library/ScriptAssemblies/UnityEditor.StandardEvents.dll
--r:D:/WorkSpace/Unity/PandraCards/PandraCardsDevelopment/Library/ScriptAssemblies/Unity.TextMeshPro.Editor.dll
--r:D:/WorkSpace/Unity/PandraCards/PandraCardsDevelopment/Library/ScriptAssemblies/Unity.PackageManagerUI.Editor.dll
--r:D:/WorkSpace/Unity/PandraCards/PandraCardsDevelopment/Library/ScriptAssemblies/UniRx.Async.dll
--r:D:/WorkSpace/Unity/PandraCards/PandraCardsDevelopment/Library/ScriptAssemblies/UniRx.Async.Editor.dll
--r:D:/WorkSpace/Unity/PandraCards/PandraCardsDevelopment/Library/ScriptAssemblies/Unity.TextMeshPro.dll
 -r:"D:\Program Files\Unity Hub\2018.2.11f1\Editor\Data\Managed/UnityEngine/UnityEngine.dll"
 -r:"D:\Program Files\Unity Hub\2018.2.11f1\Editor\Data\Managed/UnityEngine/UnityEngine.AIModule.dll"
 -r:"D:\Program Files\Unity Hub\2018.2.11f1\Editor\Data\Managed/UnityEngine/UnityEngine.ARModule.dll"
@@ -74,6 +67,13 @@
 -r:"D:\Program Files\Unity Hub\2018.2.11f1\Editor\Data\Managed/UnityEngine/UnityEngine.XRModule.dll"
 -r:"D:\Program Files\Unity Hub\2018.2.11f1\Editor\Data\Managed/UnityEditor.dll"
 -r:"D:\Program Files\Unity Hub\2018.2.11f1\Editor\Data\Managed/Unity.Locator.dll"
+-r:D:/WorkSpace/Unity/PandraCards/PandraCardsDevelopment/Library/ScriptAssemblies/UniRx.dll
+-r:D:/WorkSpace/Unity/PandraCards/PandraCardsDevelopment/Library/ScriptAssemblies/UnityEditor.StandardEvents.dll
+-r:D:/WorkSpace/Unity/PandraCards/PandraCardsDevelopment/Library/ScriptAssemblies/Unity.TextMeshPro.Editor.dll
+-r:D:/WorkSpace/Unity/PandraCards/PandraCardsDevelopment/Library/ScriptAssemblies/Unity.PackageManagerUI.Editor.dll
+-r:D:/WorkSpace/Unity/PandraCards/PandraCardsDevelopment/Library/ScriptAssemblies/UniRx.Async.dll
+-r:D:/WorkSpace/Unity/PandraCards/PandraCardsDevelopment/Library/ScriptAssemblies/UniRx.Async.Editor.dll
+-r:D:/WorkSpace/Unity/PandraCards/PandraCardsDevelopment/Library/ScriptAssemblies/Unity.TextMeshPro.dll
 -r:"D:/Program Files/Unity Hub/2018.2.11f1/Editor/Data/UnityExtensions/Unity/GUISystem/UnityEngine.UI.dll"
 -r:"D:/Program Files/Unity Hub/2018.2.11f1/Editor/Data/UnityExtensions/Unity/Timeline/RuntimeEditor/UnityEngine.Timeline.dll"
 -r:"D:/Program Files/Unity Hub/2018.2.11f1/Editor/Data/UnityExtensions/Unity/Networking/UnityEngine.Networking.dll"
@@ -305,6 +305,7 @@
 -i:D:/WorkSpace/Unity/PandraCards/PandraCardsDevelopment/Assets/Scripts/PlayArea.cs
 -i:D:/WorkSpace/Unity/PandraCards/PandraCardsDevelopment/Assets/Scripts/Presenter.cs
 -i:D:/WorkSpace/Unity/PandraCards/PandraCardsDevelopment/Assets/Scripts/Presenter/Store.cs
+-i:D:/WorkSpace/Unity/PandraCards/PandraCardsDevelopment/Assets/Scripts/Test.cs
 -i:D:/WorkSpace/Unity/PandraCards/PandraCardsDevelopment/Assets/Scripts/Test/Interface/IDeck.cs
 -i:D:/WorkSpace/Unity/PandraCards/PandraCardsDevelopment/Assets/Scripts/Test/QuitButton.cs
 -i:D:/WorkSpace/Unity/PandraCards/PandraCardsDevelopment/Assets/Scripts/Test/ShuffleDeckButton.cs
