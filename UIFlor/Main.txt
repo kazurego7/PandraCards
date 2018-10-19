@@ -1,0 +1,45 @@
+[start]
+game world illustration
+text "plese touch for start"
+--
+touch screen
+=={server connect Fail}=> server connection error dialog
+firsttouch screen
+=={server connect OK}=> tutorial
+second touch screen
+=={server connect OK}=> main
+
+[server connection error dialog]
+error number and error log
+--
+touch screen
+==> start
+
+[tutorial]
+
+
+[main]
+single match button
+random match button
+deck button
+--
+touch single match
+==> match load
+touch random match
+==> match load
+touch make deck
+==> deck make
+
+[match load]
+loading
+--
+matching
+==> game
+
+[game]
+game
+--
+game end
+==> main
+
+[deck make]
