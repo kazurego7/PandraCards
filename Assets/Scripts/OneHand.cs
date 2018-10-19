@@ -35,7 +35,7 @@ public class OneHand : MonoBehaviour {
 		yield return StartCoroutine (PutCard.DrawMove (movePosition, moveingFrame));
 	}
 
-	public ReactiveProperty<bool> IsSelcted {
+	public IReactiveProperty<bool> IsSelcted {
 		get;
 	} = new ReactiveProperty<bool> (false);
 }
