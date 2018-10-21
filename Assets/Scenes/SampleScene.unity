@@ -205,7 +205,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playArea: {fileID: 1495139840}
-  field: {fileID: 0}
+  field: {fileID: 1321737475}
   UIHandSelector: {fileID: 121995116}
 --- !u!114 &59243704
 MonoBehaviour:
@@ -224,7 +224,7 @@ MonoBehaviour:
       m_PersistentCalls:
         m_Calls:
         - m_Target: {fileID: 59243703}
-          m_MethodName: PlayCardForHands
+          m_MethodName: PlayCardForHand
           m_Mode: 1
           m_Arguments:
             m_ObjectArgument: {fileID: 0}
@@ -2493,7 +2493,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playArea: {fileID: 500230787}
-  field: {fileID: 0}
+  field: {fileID: 1321737475}
   UIHandSelector: {fileID: 121995116}
 --- !u!114 &1893348031
 MonoBehaviour:
@@ -2512,7 +2512,7 @@ MonoBehaviour:
       m_PersistentCalls:
         m_Calls:
         - m_Target: {fileID: 1893348030}
-          m_MethodName: PlayCardForHands
+          m_MethodName: PlayCardForHand
           m_Mode: 1
           m_Arguments:
             m_ObjectArgument: {fileID: 0}
@@ -2960,7 +2960,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e304c5b36304cdc4b9e637acf059be62, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  field: {fileID: 0}
+  field: {fileID: 1321737475}
 --- !u!1 &2079972853
 GameObject:
   m_ObjectHideFlags: 0

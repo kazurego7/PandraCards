@@ -16,8 +16,8 @@ public class DiscardsBox : MonoBehaviour {
 	}
 
 	public void Store (IList<IList<Card>> discard) {
-		Discard = discard;
-		DiscardNotice.Value = (discard, this);
+		Discard = Discard.Concat (discard).ToList ();
+		//DiscardNotice.Value = (discard, this);
 	}
 
 	public void Delete () {

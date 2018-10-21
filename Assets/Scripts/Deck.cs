@@ -42,8 +42,9 @@ public class Deck : MonoBehaviour {
 
 	public Card TopDraw () {
 		if (Cards.Count < 1) return null;
-		Cards.RemoveAt (Cards.Count - 1);
-		return Cards.Last ();
+		var top = Cards.Last ();
+		Cards.RemoveAt (Cards.Count - 1); // remove Last
+		return top;
 	}
 
 	public Card GetNthCardFromTop (int n) {

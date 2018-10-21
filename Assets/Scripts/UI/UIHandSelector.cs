@@ -11,11 +11,10 @@ public class UIHandSelector : MonoBehaviour {
         UIHandPlaces = GetComponentsInChildren<UIHandPlace> ().ToList ();
     }
     public void SelectFrame (UIHandPlace selectedPlace) {
-        //Debug.Log ($"SelectFrame{sentPlaceNum}");
+        //Debug.Log ($"SelectFrame{selectedPlace.name}");
 
-        
         var selectedColor = selectedPlace.OneHnad.PutCard?.MyColor ?? Card.Color.NoColor;
-        bool IsSameColorToSelected(UIHandPlace place) {
+        bool IsSameColorToSelected (UIHandPlace place) {
             var placedColor = place.OneHnad.PutCard?.MyColor ?? Card.Color.NoColor;
             return placedColor != Card.Color.NoColor && selectedColor != Card.Color.NoColor && placedColor == selectedColor;
         }
@@ -48,7 +47,7 @@ public class UIHandSelector : MonoBehaviour {
         }
     }
 
-    public Hand GetHand() {
+    public Hand GetHand () {
         return hand;
     }
 }

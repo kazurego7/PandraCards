@@ -63,11 +63,10 @@ public class PlayArea : MonoBehaviour {
 		return true;
 	}
 
-	public bool FirstPut (Card card) {
-		if (card == null) return false;
+	public void FirstPut (Card card) {
+		if (card == null) return;
 		PlayedCards.Add (new List<Card> () { card });
 		FirstPutNotice.Value = (card, this);
-		return true;
 	}
 
 	public IList<IList<Card>> RemoveAll () {
