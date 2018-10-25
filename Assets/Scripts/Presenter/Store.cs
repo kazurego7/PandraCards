@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UniRx;
 using UnityEngine;
+using static UniRx.Observable;
 
 public class Store {
 
@@ -44,6 +45,13 @@ public class Store {
 			return DiscardBoxView.Discard (cardViews, discardBoxView);
 		});
 
+		Merge (
+			replenishDraw,
+			shuffleDraw,
+			playDraw,
+			firstPutDraw,
+			discardDraw
+		).Concat ().Subscribe ();
 	}
 
 	public struct OneHandView {
@@ -59,18 +67,21 @@ public class Store {
 	public struct DeckView {
 		public static IObservable<Unit> Shuffle (IList<CardView> cards) {
 			var delayFrame = 1;
-			return Observable
-				.TimerFrame (0, delayFrame)
-				.TakeWhile (t => t <= cards.Count)
-				.SelectMany (countByTop => ShuffleOne (cards[(int) countByTop]));
+			return Range (0, cards.Count).Select (count =>
+				Concat (
+					TimerFrame (delayFrame).AsUnitObservable (),
+					ShuffleOne (cards[(int) count])
+				)).Merge ().Concat ();
 			IObservable<Unit> ShuffleOne (CardView cardView) {
 				// 各カード1枚ごとの処理
 				var moveVec = cardView.Transform.right * 3f;
 				var start = cardView.Transform.position;
 				var middle = start + moveVec;
 
-				var movePos = CardView.LinerMoves (start, middle, moveingFrame : 10)
-					.Concat (CardView.LinerMoves (middle, start, moveingFrame : 10));
+				var movePos = Concat (
+					CardView.LinerMoves (start, middle, moveingFrame : 10),
+					CardView.LinerMoves (middle, start, moveingFrame : 10)
+				);
 
 				return movePos.Select (nextPos => {
 					cardView.Transform.Rotate (nextPos);
@@ -83,20 +94,21 @@ public class Store {
 	public struct PlayAreaView {
 		public static IObservable<Unit> Play (IList<CardView> cardViews, (PlayArea model, PlayAreaView view) playAreaInfo) {
 			var playCardBottomPosZ = (playAreaInfo.model.CountPlayedCards () - cardViews.Count) * Card.thickness * Vector3.back;
-			return cardViews
-				.Select ((cardView, i) => {
-					var distance = 0.2f;
-					var moveXY = distance * (-(cardViews.Count - 1) + 2 * i) * Vector3.left;
-					var moveZ = playCardBottomPosZ + Card.thickness * i * Vector3.back;
-					var source = cardView.Transform.position;
-					var cardMove = CardView.LinerMoves (source, source + moveZ)
-						.Concat (CardView.LinerMoves (source + moveZ, source + moveZ + moveXY));
-					return cardMove.Select (nextPos => {
+			return cardViews.Select ((cardView, i) => {
+				var distance = 0.2f;
+				var moveXY = distance * (-(cardViews.Count - 1) + 2 * i) * Vector3.left;
+				var moveZ = playCardBottomPosZ + Card.thickness * i * Vector3.back;
+				var source = cardView.Transform.position;
+				var cardMove = Concat (
+					CardView.LinerMoves (source, source + moveZ),
+					CardView.LinerMoves (source + moveZ, source + moveZ + moveXY)
+				);
+				return Observable
+					.Select (cardMove, nextPos => {
 						cardView.Transform.Rotate (nextPos);
 						return Unit.Default;
 					});
-				})
-				.Merge ();
+			}).Merge ();
 		}
 		public static IObservable<Unit> FirstPut (CardView cardView, PlayAreaView playAreaView) {
 			return Observable.ReturnUnit ();

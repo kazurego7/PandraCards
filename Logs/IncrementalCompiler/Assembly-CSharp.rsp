@@ -298,12 +298,13 @@
 -i:D:/WorkSpace/Unity/Development/PandraCards/PandraCardsDevelopment/Assets/Scripts/Deck.cs
 -i:D:/WorkSpace/Unity/Development/PandraCards/PandraCardsDevelopment/Assets/Scripts/DeckReciper.cs
 -i:D:/WorkSpace/Unity/Development/PandraCards/PandraCardsDevelopment/Assets/Scripts/DiscardsBox.cs
+-i:D:/WorkSpace/Unity/Development/PandraCards/PandraCardsDevelopment/Assets/Scripts/Drawable.cs
+-i:D:/WorkSpace/Unity/Development/PandraCards/PandraCardsDevelopment/Assets/Scripts/Drawer.cs
 -i:D:/WorkSpace/Unity/Development/PandraCards/PandraCardsDevelopment/Assets/Scripts/Field.cs
 -i:D:/WorkSpace/Unity/Development/PandraCards/PandraCardsDevelopment/Assets/Scripts/GameManager.cs
 -i:D:/WorkSpace/Unity/Development/PandraCards/PandraCardsDevelopment/Assets/Scripts/Hand.cs
 -i:D:/WorkSpace/Unity/Development/PandraCards/PandraCardsDevelopment/Assets/Scripts/OneHand.cs
 -i:D:/WorkSpace/Unity/Development/PandraCards/PandraCardsDevelopment/Assets/Scripts/PlayArea.cs
--i:D:/WorkSpace/Unity/Development/PandraCards/PandraCardsDevelopment/Assets/Scripts/Presenter.cs
 -i:D:/WorkSpace/Unity/Development/PandraCards/PandraCardsDevelopment/Assets/Scripts/Presenter/Store.cs
 -i:D:/WorkSpace/Unity/Development/PandraCards/PandraCardsDevelopment/Assets/Scripts/Test.cs
 -i:D:/WorkSpace/Unity/Development/PandraCards/PandraCardsDevelopment/Assets/Scripts/Test/Interface/IDeck.cs
