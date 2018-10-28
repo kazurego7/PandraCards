@@ -1,14 +1,23 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UniRx;
 using UnityEngine;
 
 public class GameManager : MonoBehaviour {
 	[SerializeField] Field field;
 
-	public IReactiveCommand<Drawer.IMsg> DrawCommand;
+	public IReactiveCommand<IObservable<Unit>> SyncDrawCommand {
+		get;
+		private set;
+	}
+	public IReactiveCommand<IObservable<Unit>> AsyncDrawCommand {
+		get;
+		private set;
+	}
 	void Start () {
-		DrawCommand = new Drawable ().GetDrawCommand ();
+		(SyncDrawCommand, AsyncDrawCommand) = new Drawable ().GetDrawCommand ();
 		field.SetUp ();
 		StartCoroutine (field.DrawFirstCardPlacing ());
 	}

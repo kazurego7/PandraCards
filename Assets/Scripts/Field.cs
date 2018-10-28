@@ -6,13 +6,13 @@ using UnityEngine;
 public class Field : MonoBehaviour {
 	IList<Hand> hands;
 	IList<Deck> decks;
-	IList<PlayArea> playAreas;
+	IList<OnePlayArea> playAreas;
 	DiscardsBox discardsBox;
 
 	void Awake () {
 		hands = GetComponentsInChildren<Hand> ().ToList ();
 		decks = GetComponentsInChildren<Deck> ().ToList ();
-		playAreas = GetComponentsInChildren<PlayArea> ().ToList ();
+		playAreas = GetComponentsInChildren<OnePlayArea> ().ToList ();
 		discardsBox = GetComponentInChildren<DiscardsBox> ();
 	}
 
@@ -53,16 +53,15 @@ public class Field : MonoBehaviour {
 		}
 	}
 
-	public void PlayCardsForHand (Hand playHand, PlayArea targetArea) {
-		// カードプレイ&ハンド補充
+	public void PlayCardsForHand (Hand playHand, OnePlayArea targetArea) {
+		// カードプレイ&ハンド補充 <- OnePlayAreaのメソッドであるべき PlayForHand
 		if (!targetArea.CanPlay (playHand.GetSelectedCards ())) return;
 		targetArea.Play (playHand.RemoveSelectedCards ());
-		playHand.Replenish ();
-
 		StartCoroutine (targetArea.DrawPlayMoves ());
+		playHand.Replenish ();
 		StartCoroutine (playHand.DrawReplenishCards (7));
 
-		// 次のカードがプレイできないときの処理
+		// 次のカードがプレイできるように再配置する処理 <- 上と分割して、新たに命名 PrepareNextPlay
 		void RemovePlayAreaCards () {
 			foreach (var playArea in playAreas) {
 				discardsBox.Store (playArea.RemoveAll ());
@@ -71,7 +70,7 @@ public class Field : MonoBehaviour {
 		bool CanNextPlay () {
 			var existPlayableCards = playAreas.SelectMany (playArea =>
 				hands.Select (hand =>
-					playArea.ExistPlayableCards (hand)
+					playArea.CanNextPlay (hand)
 				)).Any (judgement => judgement);
 			return existPlayableCards;
 		}
@@ -86,7 +85,7 @@ public class Field : MonoBehaviour {
 
 	public IEnumerator DrawFirstCardPlacing () {
 		// デッキシャッフル
-		var shuffleDecks = decks.Select (deck => StartCoroutine (deck.DrawShuffle ()));
+		var shuffleDecks = decks.Select (deck => StartCoroutine (deck.ShuffleDraw ()));
 		yield return shuffleDecks.LastOrDefault (coroutine => coroutine != null);
 
 		// 手札配置

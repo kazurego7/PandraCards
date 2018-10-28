@@ -59,7 +59,7 @@ public class Deck : MonoBehaviour {
 		return;
 	}
 
-	public IEnumerator DrawShuffle () {
+	public IEnumerator ShuffleDraw () {
 		// 各カードが動き始めるのを何秒遅延するか
 		var startDelaySecond = 0.01f;
 		Coroutine lastCoroutine = null;

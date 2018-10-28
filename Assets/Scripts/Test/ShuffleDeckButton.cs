@@ -7,6 +7,6 @@ public class ShuffleDeckButton : MonoBehaviour {
 	[SerializeField] Deck deck;
 
 	public void OnClick () {
-		StartCoroutine (deck.DrawShuffle ());
+		StartCoroutine (deck.ShuffleDraw ());
 	}
 }

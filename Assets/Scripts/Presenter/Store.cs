@@ -10,7 +10,7 @@ public class Store {
 
 	public IReadOnlyDictionary<OneHand, OneHandView> MyHandPresenter { get; }
 	public (Deck model, DeckView view) MyDeckPresenter { get; }
-	public IReadOnlyDictionary<PlayArea, PlayAreaView> PlayAreaPresenter { get; }
+	public IReadOnlyDictionary<OnePlayArea, PlayAreaView> PlayAreaPresenter { get; }
 	public (DiscardsBox model, DiscardBoxView view) DiscardBoxPresenter { get; }
 	public IReadOnlyDictionary<Card, CardView> CardPresenter { get; }
 
@@ -92,7 +92,7 @@ public class Store {
 		public Transform Transform { get; }
 	}
 	public struct PlayAreaView {
-		public static IObservable<Unit> Play (IList<CardView> cardViews, (PlayArea model, PlayAreaView view) playAreaInfo) {
+		public static IObservable<Unit> Play (IList<CardView> cardViews, (OnePlayArea model, PlayAreaView view) playAreaInfo) {
 			var playCardBottomPosZ = (playAreaInfo.model.CountPlayedCards () - cardViews.Count) * Card.thickness * Vector3.back;
 			return cardViews.Select ((cardView, i) => {
 				var distance = 0.2f;
