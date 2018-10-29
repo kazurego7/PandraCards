@@ -1,6 +1,8 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using UniRx;
 using UnityEngine;
 
 public class Field : MonoBehaviour {
@@ -49,7 +51,7 @@ public class Field : MonoBehaviour {
 		targetArea.Play (playHand.RemoveSelectedCards ());
 		StartCoroutine (targetArea.DrawPlayMoves ());
 		playHand.Replenish ();
-		StartCoroutine (playHand.DrawReplenishCards (7));
+		StartCoroutine (playHand.DrawReplenishCards ());
 
 		// 次のカードがプレイできるように再配置する処理
 		var canNextPlay = hands.Any (hand =>
@@ -68,18 +70,16 @@ public class Field : MonoBehaviour {
 		StartCoroutine (DrawNextPlacing ());
 	}
 
-	public IEnumerator DrawFirstCardPlacing () {
+	public IObservable<Unit> DrawFirstCardPlacing () {
 		// デッキシャッフル
-		var shuffleDecks = decks.Select (deck => StartCoroutine (deck.ShuffleDraw ()));
-		yield return shuffleDecks.LastOrDefault (coroutine => coroutine != null);
+		var shuffleDecks = decks.Select (deck => Observable.FromCoroutine (deck.ShuffleDraw)).Merge ();
 
 		// 手札配置
-		var replenishHands = hands.Select (hand => StartCoroutine (hand.DrawReplenishCards (7)));
-		yield return replenishHands.LastOrDefault (coroutine => coroutine != null);
+		var replenishHands = hands.Select (hand => Observable.FromCoroutine (hand.DrawReplenishCards)).Merge ();
 
 		// プレイエリア配置
-		var placePlayAreas = playAreas.Select (playArea => StartCoroutine (playArea.DrawCardPlacing ()));
-		yield return placePlayAreas.LastOrDefault (coroutine => coroutine != null);
+		var placePlayAreas = playAreas.Select (playArea => Observable.FromCoroutine (playArea.DrawCardPlacing)).Merge ();
+		return Observable.Concat (shuffleDecks, replenishHands, placePlayAreas);
 	}
 
 	IEnumerator DrawNextPlacing () {

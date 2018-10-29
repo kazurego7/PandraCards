@@ -4,8 +4,9 @@ using UnityEngine;
 
 public class UIFieldInitializer : MonoBehaviour {
     [SerializeField] Field field;
+    GameManager gameManager;
 
-    public void DrawFirstCardPlacing (){
-        StartCoroutine(field.DrawFirstCardPlacing());
+    public void DrawFirstCardPlacing () {
+        //gameManager.SyncDrawCommand.Execute (field.DrawFirstCardPlacing ());
     }
 }

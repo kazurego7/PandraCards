@@ -19,6 +19,6 @@ public class GameManager : MonoBehaviour {
 	void Start () {
 		(SyncDrawCommand, AsyncDrawCommand) = new Drawable ().GetDrawCommand ();
 		field.SetUp ();
-		StartCoroutine (field.DrawFirstCardPlacing ());
+		SyncDrawCommand.Execute (field.DrawFirstCardPlacing ());
 	}
 }
