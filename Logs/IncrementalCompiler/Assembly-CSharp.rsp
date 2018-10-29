@@ -304,7 +304,6 @@
 -i:D:/WorkSpace/Unity/Development/PandraCards/PandraCardsDevelopment/Assets/Scripts/Hand.cs
 -i:D:/WorkSpace/Unity/Development/PandraCards/PandraCardsDevelopment/Assets/Scripts/OneHand.cs
 -i:D:/WorkSpace/Unity/Development/PandraCards/PandraCardsDevelopment/Assets/Scripts/OnePlayArea.cs
--i:D:/WorkSpace/Unity/Development/PandraCards/PandraCardsDevelopment/Assets/Scripts/PlayArea.cs
 -i:D:/WorkSpace/Unity/Development/PandraCards/PandraCardsDevelopment/Assets/Scripts/Presenter/Store.cs
 -i:D:/WorkSpace/Unity/Development/PandraCards/PandraCardsDevelopment/Assets/Scripts/Test.cs
 -i:D:/WorkSpace/Unity/Development/PandraCards/PandraCardsDevelopment/Assets/Scripts/Test/Interface/IDeck.cs

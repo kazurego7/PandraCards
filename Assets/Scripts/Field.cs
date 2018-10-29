@@ -17,19 +17,15 @@ public class Field : MonoBehaviour {
 	}
 
 	public void SetUp () {
-		void SetUpDecks () {
-			foreach (var deck in decks) {
-				deck.SetUp ();
-			}
+		foreach (var deck in decks) {
+			deck.SetUp ();
 		}
-		void ReplenishHands () {
-			foreach (var hand in hands) {
-				hand.Replenish ();
-			}
+		foreach (var hand in hands) {
+			hand.Replenish ();
 		}
-		SetUpDecks ();
-		ReplenishHands ();
-		ReplenishPlayCards ();
+		foreach (var onePlayArea in playAreas) {
+			onePlayArea.Replenish ();
+		}
 	}
 
 	public void Delete () {
@@ -46,39 +42,28 @@ public class Field : MonoBehaviour {
 
 		discardsBox.Delete ();
 	}
-
-	void ReplenishPlayCards () {
-		foreach (var i in Enumerable.Range (0, hands.Count)) {
-			playAreas[i].FirstPut (decks[i].TopDraw ());
-		}
-	}
-
 	public void PlayCardsForHand (Hand playHand, OnePlayArea targetArea) {
-		// カードプレイ&ハンド補充 <- OnePlayAreaのメソッドであるべき PlayForHand
+
+		// カードプレイ&ハンド補充
 		if (!targetArea.CanPlay (playHand.GetSelectedCards ())) return;
 		targetArea.Play (playHand.RemoveSelectedCards ());
 		StartCoroutine (targetArea.DrawPlayMoves ());
 		playHand.Replenish ();
 		StartCoroutine (playHand.DrawReplenishCards (7));
 
-		// 次のカードがプレイできるように再配置する処理 <- 上と分割して、新たに命名 PrepareNextPlay
-		void RemovePlayAreaCards () {
-			foreach (var playArea in playAreas) {
-				discardsBox.Store (playArea.RemoveAll ());
-			}
-		}
-		bool CanNextPlay () {
-			var existPlayableCards = playAreas.SelectMany (playArea =>
-				hands.Select (hand =>
-					playArea.CanNextPlay (hand)
-				)).Any (judgement => judgement);
-			return existPlayableCards;
-		}
+		// 次のカードがプレイできるように再配置する処理
+		var canNextPlay = hands.Any (hand =>
+			playAreas.Any (onePlayArea =>
+				onePlayArea.CanNextPlay (hand)));
 
-		if (CanNextPlay ()) return;
+		if (canNextPlay) return; // 次プレイできれば、再配置処理は必要ない
 		Debug.Log ("CannotPlay!");
-		RemovePlayAreaCards ();
-		ReplenishPlayCards ();
+		foreach (var playArea in playAreas) { // プレイ済みのカードの廃棄処理
+			discardsBox.Store (playArea.RemoveAll ());
+		}
+		foreach (var onePlayArea in playAreas) { // プレイエリアへの再配置
+			onePlayArea.Replenish ();
+		}
 
 		StartCoroutine (DrawNextPlacing ());
 	}
@@ -89,8 +74,8 @@ public class Field : MonoBehaviour {
 		yield return shuffleDecks.LastOrDefault (coroutine => coroutine != null);
 
 		// 手札配置
-		var placeHands = hands.Select (hand => StartCoroutine (hand.DrawReplenishCards (7)));
-		yield return placeHands.LastOrDefault (coroutine => coroutine != null);
+		var replenishHands = hands.Select (hand => StartCoroutine (hand.DrawReplenishCards (7)));
+		yield return replenishHands.LastOrDefault (coroutine => coroutine != null);
 
 		// プレイエリア配置
 		var placePlayAreas = playAreas.Select (playArea => StartCoroutine (playArea.DrawCardPlacing ()));

@@ -15,17 +15,16 @@ public class DiscardsBox : MonoBehaviour {
 		private set;
 	}
 
-	public void Store (IList<IList<Card>> discard) {
-		Discard = Discard.Concat (discard).ToList ();
-		//DiscardNotice.Value = (discard, this);
-	}
-
 	public void Delete () {
 		foreach (var discard in Discard.SelectMany (x => x)) {
 			Destroy (discard.gameObject);
 		}
 	}
 
+	public void Store (IList<IList<Card>> discard) {
+		Discard = Discard.Concat (discard).ToList ();
+		//DiscardNotice.Value = (discard, this);
+	}
 	public IEnumerator DrawRemovePlayAreaCards () {
 		var startDelaySecond = 0.07f;
 		foreach (var discard in Discard.SelectMany (x => x)) {

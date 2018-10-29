@@ -10,6 +10,8 @@ public class OnePlayArea : MonoBehaviour {
 		get;
 	} = new List<IList<Card>> ();
 
+	[SerializeField] Deck yourDeck;
+
 	public IReactiveProperty < (IList<Card> playCards, OnePlayArea putArea) > PlayNotice {
 		private set;
 		get;
@@ -27,7 +29,6 @@ public class OnePlayArea : MonoBehaviour {
 			Destroy (removed.gameObject);
 		}
 	}
-
 	public bool CanPlay (IList<Card> playCards) {
 		var playColor = playCards.FirstOrDefault ()?.MyColor ?? Card.Color.NoColor;
 
@@ -63,10 +64,10 @@ public class OnePlayArea : MonoBehaviour {
 		return true;
 	}
 
-	public void FirstPut (Card card) {
-		if (card == null) return;
-		PlayedCards.Add (new List<Card> () { card });
-		FirstPutNotice.Value = (card, this);
+	public void Replenish () {
+		var drawCard = yourDeck.TopDraw ();
+		if (drawCard == null) return;
+		PlayedCards.Add (new List<Card> () { drawCard });
 	}
 
 	public IList<IList<Card>> RemoveAll () {
