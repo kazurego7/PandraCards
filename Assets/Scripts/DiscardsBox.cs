@@ -28,7 +28,7 @@ public class DiscardsBox : MonoBehaviour {
 	public IEnumerator DrawRemovePlayAreaCards () {
 		var startDelaySecond = 0.07f;
 		foreach (var discard in Discard.SelectMany (x => x)) {
-			StartCoroutine (discard.DrawMove (transform.position, 15));
+			StartCoroutine (discard.DrawMove (transform.position, 15).ToYieldInstruction ());
 			yield return new WaitForSeconds (startDelaySecond);
 		}
 		yield return null;

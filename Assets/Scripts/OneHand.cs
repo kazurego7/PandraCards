@@ -29,10 +29,11 @@ public class OneHand : MonoBehaviour {
 		return removed;
 	}
 
-	public IEnumerator DrawPutCards (int moveingFrame) {
-		if (PutCard == null) yield break;
+	public IObservable<Unit> DrawReplenish () {
+		var moveingFrame = 7;
+		if (PutCard == null) return Observable.ReturnUnit ();
 		var movePosition = transform.position + Card.thickness * Vector3.back;
-		yield return StartCoroutine (PutCard.DrawMove (movePosition, moveingFrame));
+		return PutCard.DrawMove (movePosition, moveingFrame);
 	}
 
 	public IReactiveProperty<bool> IsSelcted {

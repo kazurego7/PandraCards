@@ -43,11 +43,10 @@ public class Hand : MonoBehaviour {
 		return oneHands.Where (handPlace => handPlace.IsSelcted.Value).Select (selected => selected.RemoveCard ()).ToList ();
 	}
 
-	public IEnumerator DrawReplenishCards () {
-		var moveingFrame = 7;
-		foreach (var oneHand in oneHands) {
-			yield return StartCoroutine (oneHand.DrawPutCards (moveingFrame));
-		}
+	public IObservable<Unit> DrawReplenish () {
+		return oneHands
+			.Select (oneHand => oneHand.DrawReplenish ())
+			.Concat ();
 	}
 
 }

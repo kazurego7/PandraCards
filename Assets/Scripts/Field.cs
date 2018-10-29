@@ -49,9 +49,9 @@ public class Field : MonoBehaviour {
 		// カードプレイ&ハンド補充
 		if (!targetArea.CanPlay (playHand.GetSelectedCards ())) return;
 		targetArea.Play (playHand.RemoveSelectedCards ());
-		StartCoroutine (targetArea.DrawPlayMoves ());
+		StartCoroutine (targetArea.DrawPlay ());
 		playHand.Replenish ();
-		StartCoroutine (playHand.DrawReplenishCards ());
+		StartCoroutine (playHand.DrawReplenish ().ToYieldInstruction ());
 
 		// 次のカードがプレイできるように再配置する処理
 		var canNextPlay = hands.Any (hand =>
@@ -72,13 +72,13 @@ public class Field : MonoBehaviour {
 
 	public IObservable<Unit> DrawFirstCardPlacing () {
 		// デッキシャッフル
-		var shuffleDecks = decks.Select (deck => Observable.FromCoroutine (deck.ShuffleDraw)).Merge ();
+		var shuffleDecks = decks.Select (deck => deck.DrawShulle ()).Merge ();
 
 		// 手札配置
-		var replenishHands = hands.Select (hand => Observable.FromCoroutine (hand.DrawReplenishCards)).Merge ();
+		var replenishHands = hands.Select (hand => hand.DrawReplenish ()).Merge ();
 
 		// プレイエリア配置
-		var placePlayAreas = playAreas.Select (playArea => Observable.FromCoroutine (playArea.DrawCardPlacing)).Merge ();
+		var placePlayAreas = playAreas.Select (playArea => playArea.DrawReplenish ()).Merge ();
 		return Observable.Concat (shuffleDecks, replenishHands, placePlayAreas);
 	}
 
@@ -86,7 +86,7 @@ public class Field : MonoBehaviour {
 		yield return new WaitForSeconds (2);
 		yield return StartCoroutine (discardsBox.DrawRemovePlayAreaCards ());
 		foreach (var playArea in playAreas) {
-			StartCoroutine (playArea.DrawCardPlacing ());
+			StartCoroutine (playArea.DrawReplenish ().ToYieldInstruction ());
 		}
 		yield return null;
 	}

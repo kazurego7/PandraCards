@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UniRx;
@@ -105,7 +106,7 @@ public class OnePlayArea : MonoBehaviour {
 		return existHands && (canPlayStronger || canPlayWeaker || playAreaIsNoColor);
 	}
 
-	public IEnumerator DrawPlayMoves () {
+	public IEnumerator DrawPlay () {
 		var prevPlacedCardIndex = (PlayedCards.Count - 1) - 1; // prevPlacedCardIndex = placedCardIndex - 1
 		var prevPlacedCardZ = prevPlacedCardIndex >= 0 ?
 			PlayedCards[prevPlacedCardIndex].Last ().transform.position.z : // 注意!! 既にCardはPlayされ、placedCardsに格納されている
@@ -115,17 +116,17 @@ public class OnePlayArea : MonoBehaviour {
 			var leftmostDistance = 0.2f * (-(selectedCards.Count - 1) + 2 * index);
 			var heightVector = (prevPlacedCardZ + -Card.thickness * (index + 1)) * Vector3.forward; // 注意!! 左手座標系(手前の方がマイナス)
 			var movePosition = transform.position + leftmostDistance * Vector3.left + heightVector;
-			StartCoroutine (selectedCards[index].DrawMove (selectedCards[index].transform.position + heightVector));
-			StartCoroutine (selectedCards[index].DrawMove (movePosition, moveingFrame : 10));
+			StartCoroutine (selectedCards[index].DrawMove (selectedCards[index].transform.position + heightVector).ToYieldInstruction ());
+			StartCoroutine (selectedCards[index].DrawMove (movePosition, moveingFrame : 10).ToYieldInstruction ());
 		}
 		yield return null;
 	}
 
-	public IEnumerator DrawCardPlacing () {
+	public IObservable<Unit> DrawReplenish () {
 		var topPlacedCards = PlayedCards.FirstOrDefault ();
-		var placeToPlayArea = topPlacedCards?.Select ((card) => {
-			return StartCoroutine (card?.DrawMove (transform.position, moveingFrame : 10));
-		});
-		yield return placeToPlayArea?.LastOrDefault ((coroutine) => coroutine != null);
+		if (topPlacedCards == null) return Observable.ReturnUnit ();
+		var placeToPlayArea = topPlacedCards.Select ((card) =>
+			card.DrawMove (transform.position, moveingFrame : 10)).Merge ();
+		return placeToPlayArea;
 	}
 }

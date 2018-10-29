@@ -59,17 +59,12 @@ public class Deck : MonoBehaviour {
 		return;
 	}
 
-	public IEnumerator ShuffleDraw () {
-		// 各カードが動き始めるのを何秒遅延するか
-		var startDelaySecond = 0.01f;
-		Coroutine lastCoroutine = null;
-		foreach (var card in Cards) {
-			lastCoroutine = StartCoroutine (card.DrawShuffle ());
-			yield return new WaitForSeconds (startDelaySecond);
-		}
-
-		// 最後のコルーチンだけ返すことで、順序処理が行える?
-		yield return lastCoroutine;
+	public IObservable<Unit> DrawShulle () {
+		// 各カードが動き始めるのを何F遅延するか
+		var startDelay = 1;
+		return Observable
+			.TimerFrame (0, startDelay).Take (Cards.Count)
+			.SelectMany (count => Cards[(int) count].DrawShuffle ());
 	}
 
 	IEnumerator DrawAdjustCardHeights () {
