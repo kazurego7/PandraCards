@@ -10,6 +10,7 @@ public class Field : MonoBehaviour {
 	IList<Deck> decks;
 	IList<OnePlayArea> playAreas;
 	DiscardsBox discardsBox;
+	GameManager gameManager;
 
 	void Awake () {
 		hands = GetComponentsInChildren<Hand> ().ToList ();
@@ -67,6 +68,15 @@ public class Field : MonoBehaviour {
 			onePlayArea.Replenish ();
 		}
 
+		IEnumerator DrawNextPlacing () {
+			yield return new WaitForSeconds (2);
+			yield return StartCoroutine (discardsBox.DrawRemovePlayAreaCards ());
+			foreach (var playArea in playAreas) {
+				StartCoroutine (playArea.DrawReplenish ().ToYieldInstruction ());
+			}
+			yield return null;
+		}
+
 		StartCoroutine (DrawNextPlacing ());
 	}
 
@@ -80,14 +90,5 @@ public class Field : MonoBehaviour {
 		// プレイエリア配置
 		var placePlayAreas = playAreas.Select (playArea => playArea.DrawReplenish ()).Merge ();
 		return Observable.Concat (shuffleDecks, replenishHands, placePlayAreas);
-	}
-
-	IEnumerator DrawNextPlacing () {
-		yield return new WaitForSeconds (2);
-		yield return StartCoroutine (discardsBox.DrawRemovePlayAreaCards ());
-		foreach (var playArea in playAreas) {
-			StartCoroutine (playArea.DrawReplenish ().ToYieldInstruction ());
-		}
-		yield return null;
 	}
 }
