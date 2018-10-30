@@ -8,17 +8,7 @@ using UnityEngine;
 public class GameManager : MonoBehaviour {
 	[SerializeField] Field field;
 
-	public IReactiveCommand<IObservable<Unit>> SyncDrawCommand {
-		get;
-		private set;
-	}
-	public IReactiveCommand<IObservable<Unit>> AsyncDrawCommand {
-		get;
-		private set;
-	}
 	void Start () {
-		(SyncDrawCommand, AsyncDrawCommand) = new Drawable ().GetDrawCommand ();
 		field.SetUp ();
-		SyncDrawCommand.Execute (field.DrawFirstCardPlacing ());
 	}
 }

@@ -23,10 +23,24 @@ public class Deck : MonoBehaviour {
 	}
 
 	public void SetUp () {
+		void Shuffle () {
+			// Guidは一意でランダムな値を表す構造体
+			Cards = Cards.OrderBy (_ => Guid.NewGuid ()).ToList ();
+			ShuffledNotice.Value = Cards;
+			return;
+		}
+		void AdjustCardHeights () {
+			// デッキのそれぞれのカードの高さを厚みによって調節
+			foreach (var index in Enumerable.Range (0, Cards.Count)) {
+				var heightAjustedPosition = Cards[index].transform.position + index * Card.thickness * Vector3.back;
+				var card = Cards[index];
+				card.transform.Rotate (heightAjustedPosition);
+			}
+		}
 		Cards = deckReciper.CreateDeck ();
 
 		Shuffle ();
-		StartCoroutine (DrawAdjustCardHeights ());
+		AdjustCardHeights ();
 	}
 
 	public void Delete () {
@@ -36,27 +50,11 @@ public class Deck : MonoBehaviour {
 		}
 	}
 
-	public int CountCard () {
-		return Cards.Count;
-	}
-
 	public Card TopDraw () {
 		if (Cards.Count < 1) return null;
 		var top = Cards.Last ();
 		Cards.RemoveAt (Cards.Count - 1); // remove Last
 		return top;
-	}
-
-	public Card GetNthCardFromTop (int n) {
-		if (n > Cards.Count || n < 1) return null;
-		return Cards[n - 1];
-	}
-
-	public void Shuffle () {
-		// Guidは一意でランダムな値を表す構造体
-		Cards = Cards.OrderBy (_ => Guid.NewGuid ()).ToList ();
-		ShuffledNotice.Value = Cards;
-		return;
 	}
 
 	public IObservable<Unit> DrawShulle () {
@@ -65,15 +63,5 @@ public class Deck : MonoBehaviour {
 		return Observable
 			.TimerFrame (0, startDelay).Take (Cards.Count)
 			.SelectMany (count => Cards[(int) count].DrawShuffle ());
-	}
-
-	IEnumerator DrawAdjustCardHeights () {
-		// デッキのそれぞれのカードの高さを厚みによって調節
-		foreach (var index in Enumerable.Range (0, Cards.Count)) {
-			var heightAjustedPosition = Cards[index].transform.position + index * Card.thickness * Vector3.back;
-			var card = Cards[index];
-			card.transform.Rotate (heightAjustedPosition);
-		}
-		yield return null;
 	}
 }

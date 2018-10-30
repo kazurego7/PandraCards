@@ -10,25 +10,44 @@ public class Field : MonoBehaviour {
 	IList<Deck> decks;
 	IList<OnePlayArea> playAreas;
 	DiscardsBox discardsBox;
-	GameManager gameManager;
+	Drawable drawable;
 
 	void Awake () {
 		hands = GetComponentsInChildren<Hand> ().ToList ();
 		decks = GetComponentsInChildren<Deck> ().ToList ();
 		playAreas = GetComponentsInChildren<OnePlayArea> ().ToList ();
 		discardsBox = GetComponentInChildren<DiscardsBox> ();
+		drawable = GetComponentInParent<Drawable> ();
 	}
 
 	public void SetUp () {
+
+		// デッキシャッフル
+		// 処理
 		foreach (var deck in decks) {
 			deck.SetUp ();
 		}
+		// 描画
+		var drawShuffle = decks.Select (deck => deck.DrawShulle ()).Merge ();
+
+		// 手札配置
+		// 処理
 		foreach (var hand in hands) {
 			hand.Replenish ();
 		}
+		// 描画
+		var drawHandReplenish = hands.Select (hand => hand.DrawReplenish ()).Merge ();
+
+		// プレイエリア配置
+		// 処理
 		foreach (var onePlayArea in playAreas) {
 			onePlayArea.Replenish ();
 		}
+		// 描画
+		var drawPlayAreaReplenish = playAreas.Select (playArea => playArea.DrawReplenish ()).Merge ();
+
+		// 描画をdrawableに伝達
+		drawable.SyncCommand.Execute (Observable.Concat (drawShuffle, drawHandReplenish, drawPlayAreaReplenish));
 	}
 
 	public void Delete () {
@@ -45,50 +64,37 @@ public class Field : MonoBehaviour {
 
 		discardsBox.Delete ();
 	}
-	public void PlayCardsForHand (Hand playHand, OnePlayArea targetArea) {
+	public IObservable<Unit> PlayCardsForHand (Hand playHand, OnePlayArea targetArea) {
 
-		// カードプレイ&ハンド補充
-		if (!targetArea.CanPlay (playHand.GetSelectedCards ())) return;
+		// 
+		if (!targetArea.CanPlay (playHand.GetSelectedCards ())) return Observable.ReturnUnit ();
+		// カードプレイ
 		targetArea.Play (playHand.RemoveSelectedCards ());
-		StartCoroutine (targetArea.DrawPlay ());
+		var drawPlay = targetArea.DrawPlay ();
+		// ハンド補充
 		playHand.Replenish ();
-		StartCoroutine (playHand.DrawReplenish ().ToYieldInstruction ());
+		var drawHandReplenish = playHand.DrawReplenish ();
 
 		// 次のカードがプレイできるように再配置する処理
 		var canNextPlay = hands.Any (hand =>
 			playAreas.Any (onePlayArea =>
 				onePlayArea.CanNextPlay (hand)));
 
-		if (canNextPlay) return; // 次プレイできれば、再配置処理は必要ない
+		// 次プレイできれば、再配置処理は必要ない
+		if (canNextPlay) return drawPlay.Merge (drawHandReplenish);
 		Debug.Log ("CannotPlay!");
-		foreach (var playArea in playAreas) { // プレイ済みのカードの廃棄処理
+		// プレイ済みのカードの廃棄処理
+		foreach (var playArea in playAreas) {
 			discardsBox.Store (playArea.RemoveAll ());
 		}
-		foreach (var onePlayArea in playAreas) { // プレイエリアへの再配置
+		var drawRemoveForPlayArea = Observable.TimerFrame (120).AsUnitObservable ()
+			.Concat (discardsBox.DrawRemoveForPlayArea ());
+		// プレイエリアへの再配置
+		foreach (var onePlayArea in playAreas) {
 			onePlayArea.Replenish ();
 		}
+		var drawPlayAreaReplenish = playAreas.Select (playArea => playArea.DrawReplenish ()).Merge ();
 
-		IEnumerator DrawNextPlacing () {
-			yield return new WaitForSeconds (2);
-			yield return StartCoroutine (discardsBox.DrawRemovePlayAreaCards ());
-			foreach (var playArea in playAreas) {
-				StartCoroutine (playArea.DrawReplenish ().ToYieldInstruction ());
-			}
-			yield return null;
-		}
-
-		StartCoroutine (DrawNextPlacing ());
-	}
-
-	public IObservable<Unit> DrawFirstCardPlacing () {
-		// デッキシャッフル
-		var shuffleDecks = decks.Select (deck => deck.DrawShulle ()).Merge ();
-
-		// 手札配置
-		var replenishHands = hands.Select (hand => hand.DrawReplenish ()).Merge ();
-
-		// プレイエリア配置
-		var placePlayAreas = playAreas.Select (playArea => playArea.DrawReplenish ()).Merge ();
-		return Observable.Concat (shuffleDecks, replenishHands, placePlayAreas);
+		return drawPlay.Merge (drawHandReplenish).Concat (drawRemoveForPlayArea).Concat (drawPlayAreaReplenish);
 	}
 }

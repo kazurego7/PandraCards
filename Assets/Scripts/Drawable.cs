@@ -7,12 +7,20 @@ using UnityEngine;
 // 描画用のストリームへのイベントオブザーバブル(IObservable)のコマンド(ReactiveCommand)生成するためのクラス
 // イベントオブザーバブルが流れると順次処理される
 // 前のイベントの処理が終わる前に次のイベントが流れてくると、処理が終わるまで待機する
-public class Drawable {
-	public (IReactiveCommand<IObservable<Unit>> syncCmd, IReactiveCommand<IObservable<Unit>> asyncCmd) GetDrawCommand () {
-		var syncCommand = new ReactiveCommand<IObservable<Unit>> ();
-		var asyncCommand = new ReactiveCommand<IObservable<Unit>> ();
-		syncCommand.Concat ().Subscribe (); // 前のイベントの処理が終わる前に次のイベントが流れてくると、処理が終わるまで待機する
-		asyncCommand.Merge ().Subscribe (); // 前のイベントに関係なくイベントが流れる
-		return (syncCommand, asyncCommand);
+public class Drawable : MonoBehaviour {
+
+	public IReactiveCommand<IObservable<Unit>> SyncCommand {
+		get;
+		private set;
+	} = new ReactiveCommand<IObservable<Unit>> ();
+
+	public IReactiveCommand<IObservable<Unit>> AsyncCommand {
+		get;
+		private set;
+	} = new ReactiveCommand<IObservable<Unit>> ();
+
+	void Start () {
+		SyncCommand.Concat ().Subscribe (); // 前のイベントの処理が終わる前に次のイベントが流れてくると、処理が終わるまで待機する
+		AsyncCommand.Merge ().Subscribe (); // 前のイベントに関係なくイベントが流れる
 	}
 }

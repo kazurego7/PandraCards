@@ -106,20 +106,22 @@ public class OnePlayArea : MonoBehaviour {
 		return existHands && (canPlayStronger || canPlayWeaker || playAreaIsNoColor);
 	}
 
-	public IEnumerator DrawPlay () {
+	public IObservable<Unit> DrawPlay () {
 		var prevPlacedCardIndex = (PlayedCards.Count - 1) - 1; // prevPlacedCardIndex = placedCardIndex - 1
-		var prevPlacedCardZ = prevPlacedCardIndex >= 0 ?
-			PlayedCards[prevPlacedCardIndex].Last ().transform.position.z : // 注意!! 既にCardはPlayされ、placedCardsに格納されている
-			0;
+		if (prevPlacedCardIndex < 0) return Observable.ReturnUnit ();
+		var prevPlacedCardZ = prevPlacedCardIndex < 0 ?
+			0 :
+			PlayedCards[prevPlacedCardIndex].Last ().transform.position.z; // 注意!! 既にCardはPlayされ、placedCardsに格納されている
 		var selectedCards = PlayedCards.Last ();
-		foreach (var index in Enumerable.Range (0, selectedCards.Count)) {
-			var leftmostDistance = 0.2f * (-(selectedCards.Count - 1) + 2 * index);
-			var heightVector = (prevPlacedCardZ + -Card.thickness * (index + 1)) * Vector3.forward; // 注意!! 左手座標系(手前の方がマイナス)
-			var movePosition = transform.position + leftmostDistance * Vector3.left + heightVector;
-			StartCoroutine (selectedCards[index].DrawMove (selectedCards[index].transform.position + heightVector).ToYieldInstruction ());
-			StartCoroutine (selectedCards[index].DrawMove (movePosition, moveingFrame : 10).ToYieldInstruction ());
-		}
-		yield return null;
+
+		return Observable.Range (0, selectedCards.Count)
+			.SelectMany (index => {
+				var leftmostDistance = 0.2f * (-(selectedCards.Count - 1) + 2 * index);
+				var heightVector = (prevPlacedCardZ + Card.thickness * -(index + 1)) * Vector3.forward; // 注意!! 左手座標系(手前の方がマイナス)
+				var movePosition = transform.position + leftmostDistance * Vector3.left + heightVector;
+				return selectedCards[index].DrawMove (selectedCards[index].transform.position + heightVector)
+					.Concat (selectedCards[index].DrawMove (movePosition, moveingFrame : 10));
+			});
 	}
 
 	public IObservable<Unit> DrawReplenish () {

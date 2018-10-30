@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UniRx;
@@ -25,12 +26,14 @@ public class DiscardsBox : MonoBehaviour {
 		Discard = Discard.Concat (discard).ToList ();
 		//DiscardNotice.Value = (discard, this);
 	}
-	public IEnumerator DrawRemovePlayAreaCards () {
-		var startDelaySecond = 0.07f;
-		foreach (var discard in Discard.SelectMany (x => x)) {
-			StartCoroutine (discard.DrawMove (transform.position, 15).ToYieldInstruction ());
-			yield return new WaitForSeconds (startDelaySecond);
-		}
-		yield return null;
+
+	public IObservable<Unit> DrawRemoveForPlayArea () {
+		var startDelayFrame = 1;
+		var discards = Discard.SelectMany (x => x).ToList ();
+		return Observable
+			.IntervalFrame (startDelayFrame).Take (discards.Count)
+			.Select (count =>
+				discards[(int) count].DrawMove (transform.position, 15))
+			.Merge ();
 	}
 }
