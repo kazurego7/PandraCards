@@ -11,7 +11,7 @@ public class UIHandSelector : MonoBehaviour {
         UIHandPlaces = GetComponentsInChildren<UIHandPlace> ().ToList ();
     }
     public void SelectFrame (UIHandPlace selectedPlace) {
-        //Debug.Log ($"SelectFrame{selectedPlace.name}");
+        // Debug.Log ($"SelectFrame{selectedPlace.name}");
 
         var selectedColor = selectedPlace.OneHnad.PutCard?.MyColor ?? Card.Color.NoColor;
         bool IsSameColorToSelected (UIHandPlace place) {

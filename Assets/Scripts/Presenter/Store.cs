@@ -17,7 +17,7 @@ public class Store {
 	public Store () {
 		var replenishMessage = Observable.Merge (MyHandPresenter.Keys.Select (model => model.ReplenishedNotice));
 		var replenishDraw = replenishMessage.Select (msg => {
-			var cardView = CardPresenter[msg.mover];
+			var cardView = CardPresenter[msg.movee];
 			var oneHandView = MyHandPresenter[msg.target];
 			return OneHandView.Replenish (cardView, oneHandView);
 		});

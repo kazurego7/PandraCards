@@ -19,7 +19,7 @@ public class Drawable : MonoBehaviour {
 		private set;
 	} = new ReactiveCommand<IObservable<Unit>> ();
 
-	void Start () {
+	void Awake () {
 		SyncCommand.Concat ().Subscribe (); // 前のイベントの処理が終わる前に次のイベントが流れてくると、処理が終わるまで待機する
 		AsyncCommand.Merge ().Subscribe (); // 前のイベントに関係なくイベントが流れる
 	}

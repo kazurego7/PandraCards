@@ -11,8 +11,6 @@ public class OnePlayArea : MonoBehaviour {
 		get;
 	} = new List<IList<Card>> ();
 
-	[SerializeField] Deck yourDeck;
-
 	public IReactiveProperty < (IList<Card> playCards, OnePlayArea putArea) > PlayNotice {
 		private set;
 		get;
@@ -65,10 +63,9 @@ public class OnePlayArea : MonoBehaviour {
 		return true;
 	}
 
-	public void Replenish () {
-		var drawCard = yourDeck.TopDraw ();
-		if (drawCard == null) return;
-		PlayedCards.Add (new List<Card> () { drawCard });
+	public void Deal (Card card) {
+		if (card == null) return;
+		PlayedCards.Add (new List<Card> () { card });
 	}
 
 	public IList<IList<Card>> RemoveAll () {
@@ -124,7 +121,7 @@ public class OnePlayArea : MonoBehaviour {
 			});
 	}
 
-	public IObservable<Unit> DrawReplenish () {
+	public IObservable<Unit> DrawDeal () {
 		var topPlacedCards = PlayedCards.FirstOrDefault ();
 		if (topPlacedCards == null) return Observable.ReturnUnit ();
 		var placeToPlayArea = topPlacedCards.Select ((card) =>

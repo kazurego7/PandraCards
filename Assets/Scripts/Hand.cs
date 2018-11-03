@@ -6,46 +6,88 @@ using UniRx;
 using UnityEngine;
 
 public class Hand : MonoBehaviour {
-	Deck deck;
 	IList<OneHand> oneHands;
+	Drawable drawable;
 
 	void Awake () {
-		deck = transform.parent.GetComponentInChildren<Deck> ();
 		oneHands = GetComponentsInChildren<OneHand> ().ToList ();
 	}
 
 	public void Delete () {
 		StopAllCoroutines ();
 		foreach (var hand in oneHands) {
-			Destroy (hand.RemoveCard ()?.gameObject);
+			Destroy (hand.Remove ()?.gameObject);
 		}
 	}
 
-	public void Replenish () {
+	public void Deal (Deck yourDeck) {
 		foreach (var oneHand in oneHands) {
 			if (oneHand.PutCard == null) {
-				var drawCard = deck.TopDraw ();
+				var drawCard = yourDeck.TopDraw ();
 				// Debug.Log(drawCard);
-				oneHand.Replenish (drawCard);
+				oneHand.Deal (drawCard);
 			};
 		}
 	}
 
+	public void SelectFrame (OneHand selecting) {
+		var selectColor = selecting.PutCard?.MyColor;
+		if (selectColor == null) {
+			return;
+		}
+
+		var selecteds = oneHands.Where (oneHand => selecting != oneHand && oneHand.IsSelected);
+		if (!selecteds.Any ()) {
+			selecting.SelectFrame ();
+			drawable.SyncCommand.Execute (selecting.DrawFrame ());
+			return;
+		}
+
+		var selectedColor = selecteds
+			.Select (selected => selected.PutCard.MyColor)
+			.FirstOrDefault ();
+
+		if (selectedColor == selectColor) {
+			selecting.SelectFrame ();
+			drawable.SyncCommand.Execute (selecting.DrawFrame ());
+		} else {
+			foreach (var selected in selecteds) {
+				selected.DeselectFrame ();
+
+			}
+			selecting.SelectFrame ();
+
+			foreach (var selected in selecteds) {
+				drawable.SyncCommand.Execute (selected.DrawFrame ());
+			}
+			drawable.SyncCommand.Execute (selecting.DrawFrame ());
+		}
+	}
+
 	public IList<Card> GetAllCards () {
-		return oneHands.Select (handPlace => handPlace.PutCard)?.Where (card => card != null).ToList ();
+		return oneHands
+			.Select (oneHand => oneHand.PutCard) ?
+			.Where (card => card != null)
+			.ToList ();
 	}
 
 	public IList<Card> GetSelectedCards () {
-		return oneHands.Where (handPlace => handPlace.IsSelcted.Value).Select (selected => selected.PutCard).ToList ();
+		return oneHands
+			.Where (oneHand => oneHand.IsSelected)
+			.Select (selected => selected.PutCard)
+			.ToList ();
 	}
 
 	public IList<Card> RemoveSelectedCards () {
-		return oneHands.Where (handPlace => handPlace.IsSelcted.Value).Select (selected => selected.RemoveCard ()).ToList ();
+		return oneHands
+			.Where (oneHand => oneHand.IsSelected)
+			.Select (selected => selected.Remove ())
+			.ToList ();
 	}
 
-	public IObservable<Unit> DrawReplenish () {
+	public IObservable<Unit> DrawDeal () {
 		return oneHands
-			.Select (oneHand => oneHand.DrawReplenish ())
+			.Select (oneHand => oneHand.DrawDeal ())
 			.Concat ();
 	}
 

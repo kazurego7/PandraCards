@@ -5,7 +5,7 @@ using UnityEngine;
 public class UIHandPlace : MonoBehaviour {
 
 	[SerializeField] OneHand oneHand;
-	
+
 	UIHandSelector UIHandSelector;
 	GameObject frame;
 	public bool FrameActivity {
@@ -16,7 +16,7 @@ public class UIHandPlace : MonoBehaviour {
 	void Awake () {
 		frame = transform.GetChild (0).gameObject;
 		SetFrameActive (frame.activeInHierarchy);
-		UIHandSelector = transform.GetComponentInParent<UIHandSelector>();
+		UIHandSelector = transform.GetComponentInParent<UIHandSelector> ();
 	}
 
 	public OneHand OneHnad {
@@ -24,15 +24,15 @@ public class UIHandPlace : MonoBehaviour {
 	}
 
 	public void SetFrameActive (bool flag) {
-		oneHand.IsSelcted.Value = flag;
+		oneHand.IsSelected = flag;
 		FrameActivity = flag;
 	}
 	public void DrawFrame () {
 		frame.SetActive (FrameActivity);
 	}
 
-	public void SelectFrame() {
-		UIHandSelector.SelectFrame(this);
-		UIHandSelector.DrawFrames();
+	public void SelectFrame () {
+		UIHandSelector.SelectFrame (this);
+		UIHandSelector.DrawFrames ();
 	}
 }
