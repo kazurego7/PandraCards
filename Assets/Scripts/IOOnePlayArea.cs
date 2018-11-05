@@ -18,6 +18,7 @@ public class IOOnePlayArea : MonoBehaviour {
 		onePlayArea = GetComponent<OnePlayArea> ();
 		gameManager = GetComponentInParent<GameManager> ();
 		drawable = gameManager.GetComponent<Drawable> ();
+		decks = gameManager.GetComponentsInChildren<Deck> ();
 		hands = gameManager.GetComponentsInChildren<Hand> ();
 		onePlayAreas = gameManager.GetComponentsInChildren<OnePlayArea> ();
 		discardBox = gameManager.GetComponentInChildren<DiscardsBox> ();
