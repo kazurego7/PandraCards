@@ -49,8 +49,8 @@ public class IOOnePlayArea : MonoBehaviour {
 						.Any (onePlayArea => onePlayArea.CanNextPlay (hand)));
 				if (canNextPlay) return;
 				Debug.Log ("cannotPlay!");
-				foreach (var hand in hands) {
-					hand.Deal (decks[0]);
+				foreach (var onePlayArea in onePlayAreas) {
+					discardBox.Store (onePlayArea.RemoveAll ());
 				}
 
 				foreach (var onePlayArea in onePlayAreas) {
