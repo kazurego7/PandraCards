@@ -24,6 +24,9 @@ public class DiscardsBox : MonoBehaviour {
 
 	public void Store (IList<IList<Card>> discard) {
 		Discard = Discard.Concat (discard).ToList ();
+		foreach (var dc in Discard) {
+			Debug.Log (dc[0]);
+		}
 		//DiscardNotice.Value = (discard, this);
 	}
 
@@ -32,8 +35,9 @@ public class DiscardsBox : MonoBehaviour {
 		var discards = Discard.SelectMany (x => x).ToList ();
 		return Observable
 			.IntervalFrame (startDelayFrame).Take (discards.Count)
-			.Select (count =>
-				discards[(int) count].DrawMove (transform.position, 15))
+			.Select (count => {
+				return discards[(int) count].DrawMove (transform.position, 15);
+			})
 			.Merge ();
 	}
 }

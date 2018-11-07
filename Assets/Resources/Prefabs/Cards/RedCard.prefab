@@ -52,7 +52,6 @@ GameObject:
   m_Component:
   - component: {fileID: 4168628387485642}
   - component: {fileID: 210682702130695668}
-  - component: {fileID: 114482498373640296}
   - component: {fileID: 114054480343306670}
   m_Layer: 0
   m_Name: RedCard
@@ -143,18 +142,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1989908c64015224d899e2efa4313a6a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &114482498373640296
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1738134320104072}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5fad778c38ead8644ae52a7b6c13fbde, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  moveingFrame: 100
+  _myColor: 0
 --- !u!210 &210682702130695668
 SortingGroup:
   m_ObjectHideFlags: 1

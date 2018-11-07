@@ -30,39 +30,39 @@ public class Hand : MonoBehaviour {
 		}
 	}
 
-	public void SelectFrame (OneHand selecting) {
-		var selectColor = selecting.PutCard?.MyColor;
-		if (selectColor == null) {
-			return;
-		}
+	// public void SelectFrame (OneHand selecting) {
+	// 	var selectColor = selecting.PutCard?.MyColor;
+	// 	if (selectColor == null) {
+	// 		return;
+	// 	}
 
-		var selecteds = oneHands.Where (oneHand => selecting != oneHand && oneHand.IsSelected);
-		if (!selecteds.Any ()) {
-			selecting.SelectFrame ();
-			drawable.SyncCommand.Execute (selecting.DrawFrame ());
-			return;
-		}
+	// 	var selecteds = oneHands.Where (oneHand => selecting != oneHand && oneHand.IsSelected);
+	// 	if (!selecteds.Any ()) {
+	// 		selecting.SelectFrame ();
+	// 		drawable.SyncCommand.Execute (selecting.DrawFrame ());
+	// 		return;
+	// 	}
 
-		var selectedColor = selecteds
-			.Select (selected => selected.PutCard.MyColor)
-			.FirstOrDefault ();
+	// 	var selectedColor = selecteds
+	// 		.Select (selected => selected.PutCard.MyColor)
+	// 		.FirstOrDefault ();
 
-		if (selectedColor == selectColor) {
-			selecting.SelectFrame ();
-			drawable.SyncCommand.Execute (selecting.DrawFrame ());
-		} else {
-			foreach (var selected in selecteds) {
-				selected.DeselectFrame ();
+	// 	if (selectedColor == selectColor) {
+	// 		selecting.SelectFrame ();
+	// 		drawable.SyncCommand.Execute (selecting.DrawFrame ());
+	// 	} else {
+	// 		foreach (var selected in selecteds) {
+	// 			selected.DeselectFrame ();
 
-			}
-			selecting.SelectFrame ();
+	// 		}
+	// 		selecting.SelectFrame ();
 
-			foreach (var selected in selecteds) {
-				drawable.SyncCommand.Execute (selected.DrawFrame ());
-			}
-			drawable.SyncCommand.Execute (selecting.DrawFrame ());
-		}
-	}
+	// 		foreach (var selected in selecteds) {
+	// 			drawable.SyncCommand.Execute (selected.DrawFrame ());
+	// 		}
+	// 		drawable.SyncCommand.Execute (selecting.DrawFrame ());
+	// 	}
+	// }
 
 	public IList<Card> GetAllCards () {
 		return oneHands

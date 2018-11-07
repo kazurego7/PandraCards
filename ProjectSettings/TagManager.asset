@@ -44,3 +44,6 @@ TagManager:
   - name: Card
     uniqueID: 1457748967
     locked: 0
+  - name: SelectFrame
+    uniqueID: 172336497
+    locked: 0

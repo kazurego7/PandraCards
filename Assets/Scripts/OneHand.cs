@@ -24,7 +24,7 @@ public class OneHand : MonoBehaviour {
 	} = new ReactiveProperty < (Card, OneHand) > ();
 
 	void Awake () {
-		//selectFrame = transform.GetChild (0).gameObject;
+		selectFrame = transform.GetChild (0).gameObject;
 	}
 	public bool Deal (Card card) {
 		if (card == null) return false;
@@ -55,6 +55,8 @@ public class OneHand : MonoBehaviour {
 	}
 
 	public IObservable<Unit> DrawFrame () {
-		return Observable.ReturnUnit ().Do (_ => selectFrame.SetActive (IsSelected));
+		return Observable.ReturnUnit ().Do (_ => {
+			selectFrame.SetActive (IsSelected);
+		});
 	}
 }

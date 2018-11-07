@@ -7,16 +7,16 @@ using UniRx.Triggers;
 using UnityEngine;
 
 public class IOOneHand : MonoBehaviour {
-	OneHand oneHand;
+	OneHand thisHand;
 	IList<OneHand> otherHands;
 	Hand hand;
 	Drawable drawable;
 
 	void Awake () {
-		oneHand = GetComponent<OneHand> ();
+		thisHand = GetComponent<OneHand> ();
 		hand = GetComponentInParent<Hand> ();
 		otherHands = hand.GetComponentsInChildren<OneHand> ()
-			.Where (otherHand => otherHand != oneHand)
+			.Where (otherHand => otherHand != thisHand)
 			.ToList ();
 		drawable = GetComponentInParent<Drawable> ();
 	}
@@ -24,36 +24,48 @@ public class IOOneHand : MonoBehaviour {
 	void Start () {
 		this.OnMouseDownAsObservable ()
 			.Subscribe (_ => {
-				var selectColor = oneHand.PutCard?.MyColor;
-				if (selectColor == null) {
+				// IsSelected == true ならば PutCard != null
+				// ゆえに、IsSelected == true ならば Card.MyColor != null
+
+				// 選んだ場所にカードがなければ、選択できない
+				if (thisHand.PutCard == null) {
 					return;
 				}
 
+				// 選んだカードが選択されていれば、非選択に
+				if (thisHand.IsSelected) {
+					thisHand.DeselectFrame ();
+					drawable.SyncCommand.Execute (thisHand.DrawFrame ());
+					return;
+				}
+
+				// 1枚目のカードを選ぶ
 				var selecteds = otherHands.Where (other => other.IsSelected);
 				if (!selecteds.Any ()) {
-					oneHand.SelectFrame ();
-					drawable.SyncCommand.Execute (oneHand.DrawFrame ());
+					thisHand.SelectFrame ();
+					drawable.SyncCommand.Execute (thisHand.DrawFrame ());
 					return;
 				}
 
+				// 2枚目以降のカードを選ぶ
 				var selectedColor = selecteds
 					.Select (selected => selected.PutCard.MyColor)
 					.First ();
-
+				var selectColor = thisHand.PutCard.MyColor;
 				if (selectedColor == selectColor) {
-					oneHand.SelectFrame ();
-					drawable.SyncCommand.Execute (oneHand.DrawFrame ());
+					thisHand.SelectFrame ();
+					drawable.SyncCommand.Execute (thisHand.DrawFrame ());
 				} else {
 					foreach (var selected in selecteds) {
 						selected.DeselectFrame ();
 					}
-					oneHand.SelectFrame ();
-
-					var drawDeselectFrames = selecteds
-						.Select (selected => selected.DrawFrame ())
+					thisHand.SelectFrame ();
+					var drawDeselectFrame = otherHands
+						.Select (other => other.DrawFrame ())
 						.Merge ();
-					var drawSelectFrame = oneHand.DrawFrame ();
-					drawable.SyncCommand.Execute (drawDeselectFrames.Merge (drawSelectFrame));
+					var drawSelectFrame = thisHand.DrawFrame ();
+					var drawFrame = drawDeselectFrame.Merge (drawSelectFrame);
+					drawable.SyncCommand.Execute (drawFrame);
 				}
 			});
 	}
