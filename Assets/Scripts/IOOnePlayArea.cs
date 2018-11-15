@@ -31,7 +31,14 @@ public class IOOnePlayArea : MonoBehaviour {
 			.Subscribe (_ => {
 				// 	カードプレイ＆補充
 				var canNotPlay = !onePlayArea.CanPlay (hands[0].GetSelectedCards ());
-				if (canNotPlay) return;
+				if (canNotPlay) {
+					foreach (var onehand in oneHands) {
+						onehand.DeselectFrame ();
+					}
+					var drawDeselect = oneHands.Select (onehand => onehand.DrawFrame ()).Merge ();
+					drawable.SyncCommand.Execute (drawDeselect);
+					return;
+				}
 				onePlayArea.Play (hands[0].RemoveSelectedCards ());
 				hands[0].Deal (decks[0]);
 				foreach (var onehand in oneHands) {
@@ -60,7 +67,7 @@ public class IOOnePlayArea : MonoBehaviour {
 				var drawRemoveForPlayArea = Observable.TimerFrame (120).AsUnitObservable ()
 					.Concat (discardBox.DrawRemoveForPlayArea ());
 				var drawPlayAreaDeal = onePlayAreas.Select (onePlayArea => onePlayArea.DrawDeal ()).Merge ();
-				//drawable.SyncCommand.Execute (Observable.ReturnUnit ().ForEachAsync (a => Debug.Log ("ok")));
+
 				drawable.SyncCommand.Execute (drawRemoveForPlayArea.Concat (drawPlayAreaDeal));
 			});
 	}
