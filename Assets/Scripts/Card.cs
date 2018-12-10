@@ -25,7 +25,6 @@ public class Card : MonoBehaviour {
 	}
 
 	public IObservable<Unit> DrawShuffle () {
-		// 設定項目
 		var moveingFrame = 10;
 		var moveVec = transform.right * 3f;
 

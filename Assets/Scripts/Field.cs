@@ -41,7 +41,7 @@ public class Field : MonoBehaviour {
 		var drawPlayAreaDeal = playAreas.Select (playArea => playArea.DrawDeal ()).Merge ();
 
 		// 描画をdrawableに伝達
-		drawable.SyncCommand.Execute (Observable.Concat (drawShuffle, drawHandDeal, drawPlayAreaDeal));
+		drawable.SyncCommand.Execute (Observable.Concat (drawShuffle));
 	}
 
 	public void Delete () {

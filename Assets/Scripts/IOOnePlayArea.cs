@@ -44,7 +44,7 @@ public class IOOnePlayArea : MonoBehaviour {
 				drawable.SyncCommand.Execute (drawPlay.Merge (drawHandDeal).Merge (drawFrame));
 
 				// 次プレイできなければ、再配置処理
-				var canNextPlay = hands
+				var canNextPlay = hands // hands × onePlayAreas で CanNextPlay
 					.Any (hand => onePlayAreas
 						.Any (onePlayArea => onePlayArea.CanNextPlay (hand)));
 				if (canNextPlay) return;
