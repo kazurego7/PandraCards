@@ -57,11 +57,6 @@ public class Deck : MonoBehaviour {
 		return top;
 	}
 
-	public IObservable<Unit> SoundShuffle () {
-		var audioSouce = GetComponent<AudioSource> ();
-		return Observable.ReturnUnit ().Do (_ => audioSouce.Play ());
-	}
-
 	public IObservable<Unit> DrawShulle () {
 		var startDelay = 1; // 各カードが動き始めるのを何F遅延するか
 		var cardsAnimation = Observable
@@ -69,7 +64,7 @@ public class Deck : MonoBehaviour {
 			.Take (Cards.Count)
 			.Select (count => Cards[(int) count])
 			.SelectMany (card => card.DrawShuffle ());
-		return cardsAnimation.Merge (SoundShuffle ());
+		return cardsAnimation;
 
 	}
 }
