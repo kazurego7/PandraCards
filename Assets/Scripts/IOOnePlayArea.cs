@@ -11,9 +11,10 @@ public class IOOnePlayArea : MonoBehaviour {
 	Drawable drawable;
 	IList<Deck> decks;
 	IList<Hand> hands;
-	IList<OneHand> oneHands;
 	IList<OnePlayArea> onePlayAreas;
+	IList<ComboCounter> comboCounters;
 	DiscardsBox discardBox;
+	int playerNumber = 0;
 
 	void Awake () {
 		onePlayArea = GetComponent<OnePlayArea> ();
@@ -21,8 +22,8 @@ public class IOOnePlayArea : MonoBehaviour {
 		drawable = gameManager.GetComponent<Drawable> ();
 		decks = gameManager.GetComponentsInChildren<Deck> ();
 		hands = gameManager.GetComponentsInChildren<Hand> ();
-		oneHands = hands[0].GetComponentsInChildren<OneHand> ();
 		onePlayAreas = gameManager.GetComponentsInChildren<OnePlayArea> ();
+		comboCounters = gameManager.GetComponentsInChildren<ComboCounter> ();
 		discardBox = gameManager.GetComponentInChildren<DiscardsBox> ();
 	}
 
@@ -30,31 +31,31 @@ public class IOOnePlayArea : MonoBehaviour {
 		this.OnMouseDownAsObservable ()
 			.Subscribe (_ => {
 				// 	カードプレイ＆補充
-				var canNotPlay = !onePlayArea.CanPlay (hands[0].GetSelectedCards ());
-				if (canNotPlay) return;
-				onePlayArea.Play (hands[0].RemoveSelectedCards ());
-				hands[0].Deal (decks[0]);
-				foreach (var onehand in oneHands) {
-					onehand.DeselectFrame ();
-				}
+				var canCurrentPlay = onePlayArea.CanPlay (hands[0].GetSelectedCards ());
+				if (!canCurrentPlay) return;
+				onePlayArea.Play (hands[playerNumber].RemoveSelectedCards ());
+				hands[playerNumber].Deal (decks[playerNumber]);
+				hands[playerNumber].DecelectFrame ();
 
 				var drawPlay = onePlayArea.DrawPlay ();
-				var drawHandDeal = hands[0].DrawDeal ();
-				var drawFrame = oneHands.Select (onehand => onehand.DrawFrame ()).Merge ();
+				var drawHandDeal = hands[playerNumber].DrawDeal ();
+				var drawFrame = hands[playerNumber].DrawFrame ();
 				drawable.SyncCommand.Execute (drawPlay.Merge (drawHandDeal).Merge (drawFrame));
 
+				
 				// 次プレイできなければ、再配置処理
 				var canNextPlay = hands // hands × onePlayAreas で CanNextPlay
 					.Any (hand => onePlayAreas
 						.Any (onePlayArea => onePlayArea.CanNextPlay (hand)));
 				if (canNextPlay) return;
+
 				Debug.Log ("cannotPlay!");
 				foreach (var onePlayArea in onePlayAreas) {
 					discardBox.Store (onePlayArea.RemoveAll ());
 				}
 
 				foreach (var onePlayArea in onePlayAreas) {
-					onePlayArea.Deal (decks[0].TopDraw ());
+					onePlayArea.Deal (decks[playerNumber].TopDraw ());
 				}
 
 				var drawRemoveForPlayArea = Observable.TimerFrame (120).AsUnitObservable ()

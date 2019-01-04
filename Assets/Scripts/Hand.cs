@@ -49,10 +49,19 @@ public class Hand : MonoBehaviour {
 			.ToList ();
 	}
 
+	public void DecelectFrame () {
+		foreach (var onehand in oneHands) {
+			onehand.DeselectFrame ();
+		}
+	}
+
 	public IObservable<Unit> DrawDeal () {
 		return oneHands
 			.Select (oneHand => oneHand.DrawDeal ())
 			.Concat ();
 	}
 
+	public IObservable<Unit> DrawFrame () {
+		return oneHands.Select (onehand => onehand.DrawFrame ()).Merge ();
+	}
 }

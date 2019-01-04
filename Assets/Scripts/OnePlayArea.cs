@@ -11,15 +11,15 @@ public class OnePlayArea : MonoBehaviour {
 		get;
 	} = new List<IList<Card>> ();
 
-	public IReactiveProperty < (IList<Card> playCards, OnePlayArea putArea) > PlayNotice {
-		private set;
-		get;
-	} = new ReactiveProperty < (IList<Card>, OnePlayArea) > ();
+	// public IReactiveProperty < (IList<Card> playCards, OnePlayArea putArea) > PlayNotice {
+	// 	private set;
+	// 	get;
+	// } = new ReactiveProperty < (IList<Card>, OnePlayArea) > ();
 
-	public IReactiveProperty < (Card firstCard, OnePlayArea putArea) > FirstPutNotice {
-		private set;
-		get;
-	} = new ReactiveProperty < (Card, OnePlayArea) > ();
+	// public IReactiveProperty < (Card firstCard, OnePlayArea putArea) > FirstPutNotice {
+	// 	private set;
+	// 	get;
+	// } = new ReactiveProperty < (Card, OnePlayArea) > ();
 
 	public void Delete () {
 		StopAllCoroutines ();
@@ -34,33 +34,32 @@ public class OnePlayArea : MonoBehaviour {
 		var topPlacedCards = PlayedCards.LastOrDefault (); // 一番下が最初(first)
 		var topPlacedColor = topPlacedCards?.FirstOrDefault ()?.MyColor ?? Card.Color.NoColor;
 
-		var stronger2ndColors = new List < (Card.Color, Card.Color) > () {
+		var strongColorsThan2nd = new List < (Card.Color, Card.Color) > () {
 			(Card.Color.Blue, Card.Color.Red),
 			(Card.Color.Red, Card.Color.Green),
 			(Card.Color.Green, Card.Color.Blue)
 		};
 
-		var isStrongerColor = stronger2ndColors
+		var isStrongColor = strongColorsThan2nd
 			.Any (stronger2ndColor =>
 				stronger2ndColor.Item1 == playColor &&
 				stronger2ndColor.Item2 == topPlacedColor);
-		var playCardsCanPlayForStrongers = isStrongerColor && playCards.Count == topPlacedCards.Count;
+		var playCardsCanPlayForStrongers = isStrongColor && playCards.Count == topPlacedCards.Count;
 
-		var isWeakerColor = stronger2ndColors
+		var isWeakColor = strongColorsThan2nd
 			.Any (stronger2ndColor =>
 				stronger2ndColor.Item1 == topPlacedColor &&
 				stronger2ndColor.Item2 == playColor);
-		var playCardsCanPlayForWeakers = isWeakerColor && playCards.Count == topPlacedCards.Count + 1;
+		var playCardsCanPlayForWeaks = isWeakColor && playCards.Count == topPlacedCards.Count + 1;
 
 		var topPlacedCardsAreNoColor = topPlacedColor == Card.Color.NoColor && playCards.Count == 1;
 
-		return playCardsCanPlayForStrongers || playCardsCanPlayForWeakers || topPlacedCardsAreNoColor; // topが色無しなら無条件で置ける
+		return playCardsCanPlayForStrongers || playCardsCanPlayForWeaks || topPlacedCardsAreNoColor; // topが色無しなら無条件で置ける
 	}
-	public bool Play (IList<Card> cards) {
-		if (cards == null) return false;
+	public void Play (IList<Card> cards) {
+		if (cards == null) return;
 		PlayedCards.Add (cards);
-		PlayNotice.Value = (cards, this);
-		return true;
+		// PlayNotice.Value = (cards, this);
 	}
 
 	public void Deal (Card card) {

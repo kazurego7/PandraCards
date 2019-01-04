@@ -16,8 +16,8 @@ public class ComboCounter : MonoBehaviour {
 			_comboTimeRate = 0;
 			_comboCount = 0;
 		} else {
-			var reductionForSecondRate = 0.3f;
-			_comboTimeRate = _comboTimeRate - reductionForSecondRate * Time.deltaTime;
+			var reductionRateForSecond = 0.3f;
+			_comboTimeRate = _comboTimeRate - reductionRateForSecond * Time.deltaTime;
 		}
 
 		// 描画

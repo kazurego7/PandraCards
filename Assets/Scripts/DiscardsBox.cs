@@ -24,10 +24,6 @@ public class DiscardsBox : MonoBehaviour {
 
 	public void Store (IList<IList<Card>> discard) {
 		Discard = Discard.Concat (discard).ToList ();
-		foreach (var dc in Discard) {
-			Debug.Log (dc[0]);
-		}
-		//DiscardNotice.Value = (discard, this);
 	}
 
 	public IObservable<Unit> DrawRemoveForPlayArea () {

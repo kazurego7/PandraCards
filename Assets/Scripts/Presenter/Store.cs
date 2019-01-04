@@ -26,18 +26,18 @@ public class Store {
 			var cardViews = msg.Select (card => CardPresenter[card]).ToList ();
 			return DeckView.Shuffle (cardViews);
 		});
-		var playMessage = Observable.Merge (PlayAreaPresenter.Keys.Select (model => model.PlayNotice));
-		var playDraw = playMessage.Select (msg => {
-			var cardViews = msg.playCards.Select (card => CardPresenter[card]).ToList ();
-			var playAreaInfo = (msg.putArea, PlayAreaPresenter[msg.putArea]);
-			return PlayAreaView.Play (cardViews, playAreaInfo);
-		});
-		var firstPutMessage = Observable.Merge (PlayAreaPresenter.Keys.Select (model => model.FirstPutNotice));
-		var firstPutDraw = firstPutMessage.Select (msg => {
-			var cardView = CardPresenter[msg.firstCard];
-			var playAreaView = PlayAreaPresenter[msg.putArea];
-			return PlayAreaView.FirstPut (cardView, playAreaView);
-		});
+		// var playMessage = Observable.Merge (PlayAreaPresenter.Keys.Select (model => model.PlayNotice));
+		// var playDraw = playMessage.Select (msg => {
+		// 	var cardViews = msg.playCards.Select (card => CardPresenter[card]).ToList ();
+		// 	var playAreaInfo = (msg.putArea, PlayAreaPresenter[msg.putArea]);
+		// 	return PlayAreaView.Play (cardViews, playAreaInfo);
+		// });
+		// var firstPutMessage = Observable.Merge (PlayAreaPresenter.Keys.Select (model => model.FirstPutNotice));
+		// var firstPutDraw = firstPutMessage.Select (msg => {
+		// 	var cardView = CardPresenter[msg.firstCard];
+		// 	var playAreaView = PlayAreaPresenter[msg.putArea];
+		// 	return PlayAreaView.FirstPut (cardView, playAreaView);
+		// });
 		var discardMessage = DiscardBoxPresenter.model.DiscardNotice;
 		var discardDraw = discardMessage.Select (msg => {
 			var cardViews = msg.discards.SelectMany (cards => cards.Select (card => CardPresenter[card])).ToList ();
@@ -48,8 +48,8 @@ public class Store {
 		Merge (
 			replenishDraw,
 			shuffleDraw,
-			playDraw,
-			firstPutDraw,
+			// playDraw,
+			// firstPutDraw,
 			discardDraw
 		).Concat ().Subscribe ();
 	}
